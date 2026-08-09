@@ -48,7 +48,63 @@ export const FONTS = [
   },
 ];
 
-const DEFAULTS = { scale: 1, accent: 'tan', font: 'system' };
+// Kal Studio brand mode. Unlike the accents above, these repaint the surface itself, so
+// apply() writes them inline on :root and removes them again when the mode is switched
+// off — that hands control back to the :root defaults in css/style.css, no !important.
+export const KAL_MODES = [
+  { id: 'light', label: 'Light' },
+  { id: 'dark', label: 'Dark' },
+];
+
+const KAL_THEMES = {
+  light: {
+    colorScheme: 'light',
+    vars: {
+      '--bg': '#f5f2eb',       // Linne
+      '--line': '#9badb8',     // Dimma — the board's border colour; Näver is too close
+                               // to Linne to read as a rule or a slider track
+      '--fg': '#2b3a42',       // Djup
+      '--fg-dim': '#7a8e98',
+      '--accent': '#5c7a87',   // Fjord
+      '--accent-2': '#9badb8', // Dimma
+      '--panel-bg': '#e2ddd3', // Näver — the board's card surface
+    },
+  },
+  dark: {
+    colorScheme: 'dark',
+    vars: {
+      '--bg': '#2b3a42',       // Djup
+      '--line': '#3d5058',
+      '--fg': '#f5f2eb',       // Linne
+      '--fg-dim': '#9badb8',   // Dimma
+      '--accent': '#e2ddd3',   // Näver
+      '--accent-2': '#5c7a87', // Fjord
+      '--panel-bg': '#2b3a42',
+    },
+  },
+};
+
+// Every property either theme touches, so switching off clears the lot in one pass.
+const KAL_VARS = [...new Set(Object.values(KAL_THEMES).flatMap((t) => Object.keys(t.vars)))];
+
+// Bricolage Grotesque for the hero digits, DM Sans for everything else — the split the
+// brand board specifies. Unlike System Sans this needs the network; if the request fails
+// the stacks fall through to Helvetica and only the typeface is lost, not the palette.
+// Measured, per the rule the Spectral note above sets out: Bricolage gives identical
+// advance widths for 00:00 / 11:11 / 23:38 / 18:47, so it is safe on the clock. DM Sans
+// emphatically does not (00:00 is 534px where 11:11 is 247px at the same size) — every
+// numeric readout therefore uses --font-display, not --font-stack. Do not move the time,
+// temperature or hi/lo onto the body face.
+const KAL_FONT = {
+  stack: `'DM Sans','Helvetica Neue',Arial,sans-serif`,
+  display: `'Bricolage Grotesque','Helvetica Neue',Arial,sans-serif`,
+  url: 'https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..700&family=DM+Sans:wght@300;400;500&display=swap',
+};
+
+// Bricolage's lightest cut is 300 — the 200 the clock normally runs at does not exist.
+const KAL_TIME_WEIGHT = '300';
+
+const DEFAULTS = { scale: 1, accent: 'tan', font: 'system', kal: false, kalMode: 'light' };
 
 function load() {
   try {
@@ -82,18 +138,44 @@ function applyFont(font) {
     fontLink.remove();
     fontLink = null;
   }
-  document.documentElement.style.setProperty('--font-stack', font.stack);
+  const root = document.documentElement;
+  root.style.setProperty('--font-stack', font.stack);
+  // Only Kal mode splits display from body; everywhere else the two are the same face.
+  root.style.setProperty('--font-display', font.display || font.stack);
+}
+
+function setColorScheme(value) {
+  const meta = document.querySelector('meta[name="color-scheme"]');
+  if (meta) meta.content = value;
 }
 
 function apply(state) {
   const root = document.documentElement;
-  const accent = ACCENTS.find((a) => a.id === state.accent) || ACCENTS[0];
-  const font = FONTS.find((f) => f.id === state.font) || FONTS[0];
 
-  root.style.setProperty('--accent', accent.accent);
-  root.style.setProperty('--accent-2', accent.accent2);
   root.style.setProperty('--ui-scale', String(state.scale));
-  applyFont(font);
+
+  if (state.kal) {
+    const theme = KAL_THEMES[state.kalMode] || KAL_THEMES.light;
+    Object.entries(theme.vars).forEach(([name, value]) => root.style.setProperty(name, value));
+    root.style.setProperty('--time-weight', KAL_TIME_WEIGHT);
+    applyFont(KAL_FONT);
+    setColorScheme(theme.colorScheme);
+  } else {
+    // Drop the inline overrides so the :root defaults in css/style.css take back over,
+    // then re-state the accent and typeface the user had chosen before.
+    KAL_VARS.forEach((name) => root.style.removeProperty(name));
+    root.style.removeProperty('--time-weight');
+
+    const accent = ACCENTS.find((a) => a.id === state.accent) || ACCENTS[0];
+    const font = FONTS.find((f) => f.id === state.font) || FONTS[0];
+    root.style.setProperty('--accent', accent.accent);
+    root.style.setProperty('--accent-2', accent.accent2);
+    applyFont(font);
+    setColorScheme('dark');
+  }
+
+  document.body.classList.toggle('kal', state.kal);
+  document.body.classList.toggle('kal-dark', state.kal && state.kalMode === 'dark');
 }
 
 export function initSettings() {
@@ -106,6 +188,11 @@ export function initSettings() {
   const scaleValue = document.getElementById('scaleValue');
   const swatchRow = document.getElementById('accentSwatches');
   const fontRow = document.getElementById('fontChoices');
+  const accentField = document.getElementById('accentField');
+  const fontField = document.getElementById('fontField');
+  const kalSwitch = document.getElementById('kalSwitch');
+  const kalModeField = document.getElementById('kalModeField');
+  const kalModeRow = document.getElementById('kalModeChoices');
   const resetButton = document.getElementById('resetButton');
 
   panel.hidden = false; // the attribute only guards the pre-JS frame
@@ -180,12 +267,51 @@ export function initSettings() {
   }
   syncFont();
 
+  // --- Kal Studio ---
+
+  const kalModeChoices = KAL_MODES.map((option) => {
+    const button = document.createElement('button');
+    button.className = 'choice';
+    button.type = 'button';
+    button.role = 'radio';
+    button.textContent = option.label;
+    button.addEventListener('click', () => {
+      state.kalMode = option.id;
+      commit();
+      syncKal();
+    });
+    kalModeRow.appendChild(button);
+    return { option, button };
+  });
+
+  function syncKal() {
+    kalSwitch.setAttribute('aria-checked', String(state.kal));
+    kalModeField.hidden = !state.kal;
+    kalModeChoices.forEach(({ option, button }) => {
+      button.setAttribute('aria-checked', String(option.id === state.kalMode));
+    });
+    // The brand drives both colour and typeface, so these two have nothing to say while
+    // it is on. `inert` keeps them out of the tab order as well as out of reach.
+    [accentField, fontField].forEach((field) => {
+      field.toggleAttribute('data-disabled', state.kal);
+      field.inert = state.kal;
+    });
+  }
+
+  kalSwitch.addEventListener('click', () => {
+    state.kal = !state.kal;
+    commit();
+    syncKal();
+  });
+  syncKal();
+
   resetButton.addEventListener('click', () => {
     Object.assign(state, DEFAULTS);
     commit();
     showScale();
     syncAccent();
     syncFont();
+    syncKal();
   });
 
   // --- panel visibility ---

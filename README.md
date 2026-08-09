@@ -24,6 +24,11 @@ Move the mouse and a faint control appears in the bottom-right corner; click it 
 panel. `Esc` or a click anywhere outside closes it. Choices persist in `localStorage`.
 
 - **Scale** — 70%–160%, for tuning to the screen it ends up on.
+- **Kal Studio** — re-skins the whole interface in the Kal Studio brand: Bricolage
+  Grotesque over DM Sans, the Linne/Näver/Dimma/Fjord/Djup palette, and a small
+  *Clockspian - A Clock by Kal Studio* line in the bottom-left corner. Comes in **Light**
+  (Linne base) and **Dark** (Djup base). It supplies its own colour and type, so the
+  Accent and Typeface fields dim out while it is on and return untouched when it is off.
 - **Accent** — five curated pairs, all built for the same dark base.
 - **Typeface** — system sans, Inter, IBM Plex Mono, or Spectral.
 
@@ -31,6 +36,11 @@ panel. `Esc` or a click anywhere outside closes it. Choices persist in `localSto
 > equal width. Without them the clock's width lurches every time a `1` appears. Most
 > editorial serifs (including Georgia and Newsreader) fail this. Re-measure before
 > adding another option.
+>
+> Bricolage Grotesque passes. **DM Sans does not** — at 190px, `00:00` sets 534px wide
+> against 247px for `11:11`. That is why Kal mode routes every numeric readout through
+> `--font-display` (Bricolage) and leaves `--font-stack` (DM Sans) to labels and body
+> copy. Don't move the time, temperature or hi/lo onto the body face.
 
 ## Weather
 

@@ -48,6 +48,8 @@
 
     <div class="seconds-track" id="secondsTrack"></div>
 
+    <div class="brandmark">Clockspian - A Clock by Kal Studio</div>
+
     <button class="settings-toggle" id="settingsToggle" aria-label="Settings" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
@@ -62,11 +64,22 @@
     </section>
 
     <section class="field">
+      <span class="field-label">Kal Studio
+        <button class="switch" id="kalSwitch" type="button" role="switch" aria-checked="false" aria-label="Kal Studio design"><i></i></button>
+      </span>
+    </section>
+
+    <section class="field" id="kalModeField" hidden>
+      <span class="field-label">Palette</span>
+      <div class="choices" id="kalModeChoices" role="radiogroup" aria-label="Kal Studio palette"></div>
+    </section>
+
+    <section class="field" id="accentField">
       <span class="field-label">Accent</span>
       <div class="swatches" id="accentSwatches" role="radiogroup" aria-label="Accent colour"></div>
     </section>
 
-    <section class="field">
+    <section class="field" id="fontField">
       <span class="field-label">Typeface</span>
       <div class="choices" id="fontChoices" role="radiogroup" aria-label="Typeface"></div>
     </section>

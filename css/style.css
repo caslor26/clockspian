@@ -9,6 +9,11 @@
   --accent-2:#5c7a70;
   --ui-scale:1;
   --font-stack:'Helvetica Neue',Arial,sans-serif;
+  /* only Kal Studio mode splits these off from the body face / base weight */
+  --font-display:'Helvetica Neue',Arial,sans-serif;
+  --time-weight:200;
+
+  --panel-bg:var(--bg);
 }
 
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -18,6 +23,7 @@ html,body{
   color:var(--fg);
   font-family:var(--font-stack);
   overflow:hidden;
+  transition:background-color 0.4s ease, color 0.4s ease;
 }
 
 .stage{
@@ -31,6 +37,7 @@ html,body{
     radial-gradient(circle at 15% 85%, color-mix(in srgb, var(--accent-2) 16%, transparent), transparent 55%),
     radial-gradient(circle at 85% 15%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 50%),
     var(--bg);
+  transition:background 0.4s ease;
 }
 
 .center{
@@ -42,8 +49,9 @@ html,body{
 }
 
 .time{
+  font-family:var(--font-display);
   font-size:calc(clamp(72px, 15vw, 190px) * var(--ui-scale));
-  font-weight:200;
+  font-weight:var(--time-weight);
   letter-spacing:-0.02em;
   line-height:1;
   font-variant-numeric:tabular-nums;
@@ -103,6 +111,7 @@ html,body{
   gap:calc(6px * var(--ui-scale));
 }
 .temp{
+  font-family:var(--font-display);
   font-size:calc(clamp(40px,6vw,64px) * var(--ui-scale));
   font-weight:300;
   letter-spacing:-0.01em;
@@ -134,6 +143,7 @@ html,body{
 
 .range{
   display:flex;
+  font-family:var(--font-display);
   gap:calc(14px * var(--ui-scale));
   font-size:calc(clamp(12px,1.4vw,15px) * var(--ui-scale));
   color:var(--fg-dim);
@@ -186,6 +196,22 @@ html,body{
 /* no easing when the bar wraps back to zero at the top of a minute */
 .seconds-track.no-transition{ transition:none; }
 
+/* Sits below the .bl corner mark (which occupies 36-58px up from the bottom) and clears
+   the 2px seconds track, aligned to the same 36px left inset. Only shown in Kal mode. */
+.brandmark{
+  position:absolute;
+  bottom:14px; left:36px;
+  z-index:3;
+  font-size:calc(clamp(10px,1.1vw,12px) * var(--ui-scale));
+  font-weight:300;
+  letter-spacing:0.14em;
+  color:var(--fg-dim);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity 0.5s ease;
+}
+body.kal .brandmark{ opacity:0.75; }
+
 /* ---- settings ---- */
 
 .settings-toggle{
@@ -229,7 +255,7 @@ body.panel-open .settings-toggle{ opacity:0.75; }
   width:270px;
   height:100vh;
   padding:44px 32px;
-  background:var(--bg);
+  background:var(--panel-bg);
   border-left:1px solid var(--line);
   transform:translateX(100%);
   transition:transform 0.32s cubic-bezier(0.4,0,0.2,1);
@@ -246,8 +272,15 @@ body.panel-open .panel{ transform:translateX(0); }
 }
 
 .field{ display:flex; flex-direction:column; gap:14px; }
+/* .field sets display:flex, which outranks the UA rule for [hidden] — same trap the
+   .panel[hidden] line above documents. */
+.field[hidden]{ display:none; }
+/* Kal Studio drives colour and typeface itself; `inert` in settings.js does the real
+   work, this is the visual half. */
+.field[data-disabled]{ opacity:0.3; }
 .field-label{
   display:flex;
+  align-items:center;
   justify-content:space-between;
   font-size:11px;
   letter-spacing:0.18em;
@@ -309,6 +342,29 @@ input[type=range]::-moz-range-thumb{
 .choice[aria-checked=true]{ color:var(--fg); }
 .choice:focus-visible{ outline:1px solid var(--fg-dim); outline-offset:2px; }
 
+.switch{
+  position:relative;
+  flex-shrink:0;
+  width:30px; height:16px;
+  padding:0;
+  background:none;
+  border:1px solid var(--line);
+  border-radius:8px;
+  cursor:pointer;
+  transition:border-color 0.2s ease;
+}
+.switch i{
+  position:absolute;
+  top:2px; left:2px;
+  width:10px; height:10px;
+  border-radius:50%;
+  background:var(--fg-dim);
+  transition:transform 0.2s ease, background-color 0.2s ease;
+}
+.switch[aria-checked=true]{ border-color:var(--accent); }
+.switch[aria-checked=true] i{ transform:translateX(14px); background:var(--accent); }
+.switch:focus-visible{ outline:1px solid var(--fg-dim); outline-offset:3px; }
+
 .reset{
   margin-top:auto;
   padding:0;
@@ -327,4 +383,6 @@ input[type=range]::-moz-range-thumb{
   .time .colon{ animation:none; }
   .panel{ transition:none; }
   .seconds-track{ transition:none; }
+  html,body,.stage{ transition:none; }
+  .switch,.switch i{ transition:none; }
 }
