@@ -166,25 +166,6 @@ html,body{
 }
 .weather.stale .stale-dot{ opacity:0.8; }
 
-/* corner marks — minimal structural signature */
-.corner{
-  position:absolute;
-  width:22px;height:22px;
-  z-index:2;
-}
-.corner::before, .corner::after{
-  content:'';
-  position:absolute;
-  background:var(--fg-dim);
-  opacity:0.4;
-}
-.corner::before{ width:100%; height:1px; top:0; }
-.corner::after{ width:1px; height:100%; left:0; }
-.tl{ top:36px; left:36px; }
-.tr{ top:36px; right:36px; transform:scaleX(-1); }
-.bl{ bottom:36px; left:36px; transform:scaleY(-1); }
-.br{ bottom:36px; right:36px; transform:scale(-1,-1); }
-
 .seconds-track{
   position:absolute;
   bottom:0; left:0;
@@ -196,11 +177,11 @@ html,body{
 /* no easing when the bar wraps back to zero at the top of a minute */
 .seconds-track.no-transition{ transition:none; }
 
-/* Sits below the .bl corner mark (which occupies 36-58px up from the bottom) and clears
-   the 2px seconds track, aligned to the same 36px left inset. Only shown in Kal mode. */
+/* Mirrors the settings toggle's 30px inset so the two bottom corners sit as a pair.
+   Only shown in Kal mode. */
 .brandmark{
   position:absolute;
-  bottom:14px; left:36px;
+  bottom:30px; left:30px;
   z-index:3;
   font-size:calc(clamp(10px,1.1vw,12px) * var(--ui-scale));
   font-weight:300;
