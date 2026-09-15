@@ -238,6 +238,7 @@ body.panel-open .settings-toggle{ opacity:0.75; }
   padding:44px 32px;
   background:var(--panel-bg);
   border-left:1px solid var(--line);
+  overflow-y:auto;
   transform:translateX(100%);
   transition:transform 0.32s cubic-bezier(0.4,0,0.2,1);
 }
@@ -269,6 +270,11 @@ body.panel-open .panel{ transform:translateX(0); }
   color:var(--fg-dim);
 }
 .field-value{ color:var(--fg); letter-spacing:0.08em; }
+.field-note{
+  font-size:12px;
+  line-height:1.5;
+  color:var(--fg-dim);
+}
 
 input[type=range]{
   -webkit-appearance:none;

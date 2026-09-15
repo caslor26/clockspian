@@ -1,3 +1,5 @@
+import { LOCATION_MODES, getLocationState, onLocationChange, setLocationMode } from './location.js';
+
 // Persisted display settings. Everything is applied by writing CSS custom
 // properties onto :root — no component knows what the current theme is.
 
@@ -194,6 +196,8 @@ export function initSettings() {
   const kalModeField = document.getElementById('kalModeField');
   const kalModeRow = document.getElementById('kalModeChoices');
   const resetButton = document.getElementById('resetButton');
+  const locationRow = document.getElementById('locationChoices');
+  const locationNote = document.getElementById('locationNote');
 
   panel.hidden = false; // the attribute only guards the pre-JS frame
 
@@ -304,6 +308,39 @@ export function initSettings() {
     syncKal();
   });
   syncKal();
+
+  // --- location ---
+  // Not part of `state`: location.js persists it separately, and "Reset display" leaves it.
+
+  const locationChoices = LOCATION_MODES.map((option) => {
+    const button = document.createElement('button');
+    button.className = 'choice';
+    button.type = 'button';
+    button.role = 'radio';
+    button.textContent = option.label;
+    // Picking "My location" again is the retry — after a denial or a timeout it asks anew.
+    button.addEventListener('click', () => setLocationMode(option.id));
+    locationRow.appendChild(button);
+    return { option, button };
+  });
+
+  const LOCATION_NOTES = {
+    locating: 'Finding your location…',
+    denied: 'Location is blocked for this site. Allow it in the browser’s site settings, then choose My location again.',
+    unavailable: 'Couldn’t get a position right now. Choose My location to try again.',
+  };
+
+  function syncLocation() {
+    const { mode, status } = getLocationState();
+    locationChoices.forEach(({ option, button }) => {
+      button.setAttribute('aria-checked', String(option.id === mode));
+    });
+    const note = mode === 'auto' ? LOCATION_NOTES[status] : null;
+    locationNote.textContent = note || '';
+    locationNote.hidden = !note;
+  }
+  onLocationChange(syncLocation);
+  syncLocation();
 
   resetButton.addEventListener('click', () => {
     Object.assign(state, DEFAULTS);

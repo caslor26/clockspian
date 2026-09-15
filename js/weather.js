@@ -3,16 +3,19 @@
 // code, day/night, and today's high and low.
 
 import { glyphFor } from './icons.js';
+import { getLocation, onLocationChange } from './location.js';
 
-const LAT = 59.8586;
-const LON = 17.6389;
+function endpoint({ lat, lon }) {
+  return (
+    `https://api.open-meteo.com/v1/forecast` +
+    `?latitude=${lat}&longitude=${lon}` +
+    `&current=temperature_2m,weather_code,is_day` +
+    `&daily=temperature_2m_max,temperature_2m_min` +
+    `&timezone=auto&forecast_days=1`
+  );
+}
 
-const ENDPOINT =
-  `https://api.open-meteo.com/v1/forecast` +
-  `?latitude=${LAT}&longitude=${LON}` +
-  `&current=temperature_2m,weather_code,is_day` +
-  `&daily=temperature_2m_max,temperature_2m_min` +
-  `&timezone=auto&forecast_days=1`;
+const samePlace = (a, b) => a.lat === b.lat && a.lon === b.lon;
 
 const REFRESH_MS = 10 * 60 * 1000;
 const CACHE_KEY = 'clockspian.weather';
@@ -57,10 +60,13 @@ function describe(code) {
   return CONDITIONS[code] || UNKNOWN;
 }
 
-function readCache() {
+// A reading only counts for the place it was fetched for — otherwise a move from
+// Uppsala would show Uppsala's weather under the new town's name until the fetch lands.
+function readCache(place) {
   try {
     const raw = localStorage.getItem(CACHE_KEY);
-    return raw ? JSON.parse(raw) : null;
+    const reading = raw ? JSON.parse(raw) : null;
+    return reading && samePlace(reading, place) ? reading : null;
   } catch {
     return null;
   }
@@ -75,8 +81,8 @@ function writeCache(reading) {
   }
 }
 
-async function fetchReading() {
-  const response = await fetch(ENDPOINT, { cache: 'no-store' });
+async function fetchReading(place) {
+  const response = await fetch(endpoint(place), { cache: 'no-store' });
   if (!response.ok) throw new Error(`Open-Meteo responded ${response.status}`);
   const data = await response.json();
 
@@ -86,6 +92,8 @@ async function fetchReading() {
     isDay: data.current.is_day === 1,
     high: Math.round(data.daily.temperature_2m_max[0]),
     low: Math.round(data.daily.temperature_2m_min[0]),
+    lat: place.lat,
+    lon: place.lon,
     at: Date.now(),
   };
 }
@@ -97,6 +105,10 @@ export function initWeather() {
   const conditionEl = document.getElementById('condition');
   const hiEl = document.getElementById('hi');
   const loEl = document.getElementById('lo');
+  const placeEl = document.getElementById('place');
+
+  let place = getLocation();
+  placeEl.textContent = place.name;
 
   let lastGlyphKey = null;
 
@@ -125,21 +137,36 @@ export function initWeather() {
 
   // Paint the cached reading before the network settles, so a reload never
   // flashes placeholder dashes.
-  const cached = readCache();
-  if (cached) render(cached, Date.now() - cached.at > STALE_AFTER_MS);
-  else render(PLACEHOLDER, false);
+  function paintCached() {
+    const cached = readCache(place);
+    if (cached) render(cached, Date.now() - cached.at > STALE_AFTER_MS);
+    else render(PLACEHOLDER, false);
+  }
+  paintCached();
 
   async function refresh() {
+    const target = place;
     try {
-      const reading = await fetchReading();
+      const reading = await fetchReading(target);
+      // The location moved while this was in flight; its own refresh is on the way.
+      if (!samePlace(target, place)) return;
       writeCache(reading);
       render(reading, false);
     } catch {
+      if (!samePlace(target, place)) return;
       // Keep whatever is on screen and mark it as last-known. A dropped Wi-Fi
       // connection should never blank out the dashboard.
-      render(readCache() || PLACEHOLDER, true);
+      render(readCache(place) || PLACEHOLDER, true);
     }
   }
+
+  onLocationChange((next) => {
+    placeEl.textContent = next.name;
+    if (samePlace(next, place)) return; // a name arriving, or a status change
+    place = next;
+    paintCached();
+    refresh();
+  });
 
   refresh();
   setInterval(refresh, REFRESH_MS);

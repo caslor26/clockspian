@@ -31,7 +31,7 @@
         </div>
         <div class="condition-block">
           <div class="condition" id="condition">—</div>
-          <div class="place">Uppsala, Sweden</div>
+          <div class="place" id="place">Uppsala, Sweden</div>
           <div class="range">
             <span class="hi" id="hi">H --°</span>
             <span id="lo">L --°</span>
@@ -79,7 +79,15 @@
       <div class="choices" id="fontChoices" role="radiogroup" aria-label="Typeface"></div>
     </section>
 
-    <button class="reset" id="resetButton">Reset to defaults</button>
+    <h2 class="panel-title">Weather</h2>
+
+    <section class="field">
+      <span class="field-label">Location</span>
+      <div class="choices" id="locationChoices" role="radiogroup" aria-label="Weather location"></div>
+      <p class="field-note" id="locationNote" aria-live="polite" hidden></p>
+    </section>
+
+    <button class="reset" id="resetButton">Reset display</button>
   </aside>
 
   <script type="module" src="js/main.js"></script>

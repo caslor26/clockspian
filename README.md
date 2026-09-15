@@ -1,7 +1,8 @@
 # Clockspian
 
 An ambient clock and weather dashboard for a spare screen. Dark, quiet, glanceable:
-big tabular-numeral time, today's date, and current conditions for Uppsala, Sweden.
+big tabular-numeral time, today's date, and current conditions where you are — or
+Uppsala, Sweden, if the browser isn't told.
 
 Point a browser at it full-window and leave it there.
 
@@ -31,6 +32,8 @@ panel. `Esc` or a click anywhere outside closes it. Choices persist in `localSto
   Accent and Typeface fields dim out while it is on and return untouched when it is off.
 - **Accent** — five curated pairs, all built for the same dark base.
 - **Typeface** — system sans, Inter, IBM Plex Mono, or Spectral.
+- **Location** (under *Weather*) — *My location* or *Uppsala*. Stored separately, so
+  **Reset display** leaves it alone.
 
 > Every typeface here was measured to confirm it has **tabular figures** — digits of
 > equal width. Without them the clock's width lurches every time a `1` appears. Most
@@ -52,7 +55,21 @@ network reconnects.
 Readings are cached in `localStorage`. If a fetch fails the last known value stays on
 screen, dimmed, with a small dot beside it — the display never blanks out or breaks.
 
-Location is hardcoded in `js/weather.js` (`LAT`/`LON`).
+### Location
+
+On first load the browser asks for the user's location. Uppsala is drawn first and
+stays if the answer is no, the request times out, or geolocation is unavailable
+(it needs HTTPS or `localhost`). A granted position replaces it, rounded to two
+decimals (~1 km), and is remembered so a reload starts in the right place. The place
+name comes from BigDataCloud's free client-side reverse geocoder; if that fails the
+label reads *Current location*.
+
+The position is looked up on load and whenever *My location* is chosen, not on every
+refresh. Once a site is blocked it cannot re-prompt: the panel says so and points to
+the browser's site settings. Choosing *Uppsala* pins it without asking.
+
+The weather cache is keyed to the coordinates it was fetched for, so a reading never
+appears under another place's name.
 
 ## Layout
 
@@ -62,6 +79,7 @@ css/style.css     all styling; theme + scale are CSS custom properties on :root
 js/main.js        entry point
 js/clock.js       drift-corrected tick, date, seconds bar
 js/weather.js     Open-Meteo fetch, WMO mapping, caching, failure handling
+js/location.js    geolocation, Uppsala fallback, reverse geocoding
 js/icons.js       weather glyphs as inline SVG primitives
 js/settings.js    state, persistence, panel UI
 prototype/        the original single-file mockup, kept for reference
