@@ -4,6 +4,7 @@
 
 import { glyphFor } from './icons.js';
 import { getLocation, onLocationChange } from './location.js';
+import { isWeatherShown, onWeatherShownChange } from './settings.js';
 
 function endpoint({ lat, lon }) {
   return (
@@ -145,6 +146,8 @@ export function initWeather() {
   paintCached();
 
   async function refresh() {
+    // Hidden by "Show weather": no requests at all until it comes back.
+    if (!isWeatherShown()) return;
     const target = place;
     try {
       const reading = await fetchReading(target);
@@ -164,6 +167,12 @@ export function initWeather() {
     placeEl.textContent = next.name;
     if (samePlace(next, place)) return; // a name arriving, or a status change
     place = next;
+    paintCached();
+    refresh();
+  });
+
+  onWeatherShownChange((shown) => {
+    if (!shown) return;
     paintCached();
     refresh();
   });

@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Clockspian - A clock by Caspian</title>
-<meta name="color-scheme" content="dark">
+<meta name="color-scheme" content="light">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -75,6 +75,21 @@
     <h2 class="panel-title">Display</h2>
 
     <section class="field">
+      <span class="field-label">Light / dark
+        <button class="mode-switch" id="modeSwitch" type="button" role="switch" aria-checked="false" aria-label="Dark mode">
+          <i class="mode-knob"></i>
+          <!-- "sun" and "moon" from Lucide (lucide.dev), ISC licence -->
+          <svg class="mode-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>
+          </svg>
+          <svg class="mode-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+          </svg>
+        </button>
+      </span>
+    </section>
+
+    <section class="field">
       <label class="field-label" for="scaleInput">Scale <span class="field-value" id="scaleValue">100%</span></label>
       <input type="range" id="scaleInput" min="0.5" max="1.5" step="0.05" value="1">
     </section>
@@ -91,36 +106,27 @@
       </span>
     </section>
 
+    <h2 class="panel-title">Theme</h2>
+
     <section class="field">
-      <span class="field-label">Kal Studio
-        <button class="switch" id="kalSwitch" type="button" role="switch" aria-checked="false" aria-label="Kal Studio design"><i></i></button>
-      </span>
-    </section>
-
-    <section class="field" id="kalModeField" hidden>
-      <span class="field-label">Palette</span>
-      <div class="choices" id="kalModeChoices" role="radiogroup" aria-label="Kal Studio palette"></div>
-    </section>
-
-    <section class="field" id="accentField">
-      <span class="field-label">Accent</span>
-      <div class="swatches" id="accentSwatches" role="radiogroup" aria-label="Accent colour"></div>
-    </section>
-
-    <section class="field" id="fontField">
-      <span class="field-label">Typeface</span>
-      <div class="choices" id="fontChoices" role="radiogroup" aria-label="Typeface"></div>
+      <div class="choices" id="themeChoices" role="radiogroup" aria-label="Theme"></div>
     </section>
 
     <h2 class="panel-title">Weather</h2>
 
     <section class="field">
+      <span class="field-label">Show weather
+        <button class="switch" id="weatherSwitch" type="button" role="switch" aria-checked="true" aria-label="Show weather"><i></i></button>
+      </span>
+    </section>
+
+    <section class="field" id="locationField">
       <span class="field-label">Location</span>
       <div class="choices" id="locationChoices" role="radiogroup" aria-label="Weather location"></div>
       <p class="field-note" id="locationNote" aria-live="polite" hidden></p>
     </section>
 
-    <button class="reset" id="resetButton">Reset display</button>
+    <button class="reset" id="resetButton">Reset</button>
   </aside>
 
   <script type="module" src="js/main.js"></script>

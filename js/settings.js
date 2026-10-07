@@ -5,126 +5,210 @@ import { LOCATION_MODES, getLocationState, onLocationChange, setLocationMode } f
 
 const STORAGE_KEY = 'clockspian.settings';
 
-// Curated pairs, all checked against the #0f1416 base. --accent carries the
-// highlights (colon, sun, high temperature), --accent-2 the quieter structural
-// bits (seconds bar, date dot).
-export const ACCENTS = [
-  { id: 'tan',   label: 'Tan',   accent: '#c9b28a', accent2: '#5c7a70' },
-  { id: 'sage',  label: 'Sage',  accent: '#7d9b8f', accent2: '#5c7a70' },
-  { id: 'blue',  label: 'Blue',  accent: '#8aa4c9', accent2: '#5a6f8a' },
-  { id: 'clay',  label: 'Clay',  accent: '#c08e7d', accent2: '#8a6155' },
-  { id: 'mono',  label: 'Mono',  accent: '#d6d3c8', accent2: '#8a9490' },
-];
-
-// `url: null` means the system stack — no network request at all, which is why
-// it stays the default on a display that may boot before the Wi-Fi connects.
-export const FONTS = [
+// A theme is a typeface paired for good with a palette, and every theme carries both a
+// dark and a light palette — the sun/moon switch picks between them, independently of
+// which theme is chosen. apply() writes all of a palette's properties inline on :root
+// every time, so the defaults in css/style.css only cover the frame before JS runs.
+//
+// --accent carries the highlights (colon, sun, high temperature), --accent-2 the quieter
+// structural bits (seconds bar, date dot). Light accents run darker than their dark-mode
+// counterparts so the hi temperature still reads against a pale base.
+//
+// Every typeface here was measured for tabular figures — identical advance widths for
+// 00:00 / 11:11 / 23:38 / 18:47 — so the clock's width never lurches. Most editorial
+// serifs (Newsreader, Georgia) and many geometric sans (Lexend, Urbanist, Raleway) fail
+// this. Do not add or swap a typeface without re-measuring.
+//
+// `font.url: null` is the system stack — no network request at all, which is why
+// Clockspian stays the default on a display that may boot before the Wi-Fi connects.
+// `font.family` is the Google Fonts family the panel loads to preview each name.
+export const THEMES = [
   {
-    id: 'system',
-    label: 'System Sans',
-    stack: `'Helvetica Neue',Arial,sans-serif`,
-    url: null,
-  },
-  {
-    id: 'inter',
-    label: 'Inter',
-    stack: `'Inter','Helvetica Neue',Arial,sans-serif`,
-    url: 'https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400&display=swap',
-  },
-  {
-    id: 'plex-mono',
-    label: 'Plex Mono',
-    stack: `'IBM Plex Mono',ui-monospace,monospace`,
-    url: 'https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@200;300;400&display=swap',
-  },
-  {
-    // Spectral is the serif here because it ships genuine tabular figures — measured
-    // identical advance widths for 00:00 / 11:11 / 23:38. Most editorial serifs
-    // (Newsreader, and the Georgia fallback) use proportional oldstyle numerals, which
-    // make the clock's width lurch every time a 1 appears. Do not swap this for another
-    // serif without re-measuring.
-    id: 'spectral',
-    label: 'Spectral',
-    stack: `'Spectral',Georgia,serif`,
-    url: 'https://fonts.googleapis.com/css2?family=Spectral:wght@200;300;400&display=swap',
-  },
-];
-
-// Kal Studio brand mode. Unlike the accents above, these repaint the surface itself, so
-// apply() writes them inline on :root and removes them again when the mode is switched
-// off — that hands control back to the :root defaults in css/style.css, no !important.
-export const KAL_MODES = [
-  { id: 'light', label: 'Light' },
-  { id: 'dark', label: 'Dark' },
-];
-
-const KAL_THEMES = {
-  light: {
-    colorScheme: 'light',
-    vars: {
-      '--bg': '#f5f2eb',       // Linne
-      '--line': '#9badb8',     // Dimma — the board's border colour; Näver is too close
-                               // to Linne to read as a rule or a slider track
-      '--fg': '#2b3a42',       // Djup
-      '--fg-dim': '#7a8e98',
-      '--accent': '#5c7a87',   // Fjord
-      '--accent-2': '#9badb8', // Dimma
-      '--panel-bg': '#e2ddd3', // Näver — the board's card surface
+    id: 'clockspian',
+    label: 'Clockspian',
+    font: { stack: `'Helvetica Neue',Arial,sans-serif`, url: null },
+    palettes: {
+      dark: {
+        '--bg': '#0f1416', '--line': '#26312f', '--fg': '#f4f2ea', '--fg-dim': '#8a9490',
+        '--accent': '#c9b28a', '--accent-2': '#5c7a70',
+      },
+      light: {
+        '--bg': '#f4f2ea', '--line': '#d5d1c4', '--fg': '#1b2124', '--fg-dim': '#626b66',
+        '--accent': '#896b37', '--accent-2': '#6f8c82',
+      },
     },
   },
-  dark: {
-    colorScheme: 'dark',
-    vars: {
-      '--bg': '#2b3a42',       // Djup
-      '--line': '#3d5058',
-      '--fg': '#f5f2eb',       // Linne
-      '--fg-dim': '#9badb8',   // Dimma
-      '--accent': '#e2ddd3',   // Näver
-      '--accent-2': '#5c7a87', // Fjord
-      '--panel-bg': '#2b3a42',
+  {
+    // Kal Studio brand. Bricolage Grotesque for the hero digits, DM Sans for everything
+    // else — the split the brand board specifies. Bricolage measures tabular; DM Sans
+    // emphatically does not (00:00 is 534px where 11:11 is 247px at the same size), so
+    // every numeric readout uses --font-display, not --font-stack. Do not move the time,
+    // temperature or hi/lo onto the body face. Also the only theme with the brandmark.
+    id: 'kal',
+    label: 'Kal Studio',
+    brand: true,
+    font: {
+      stack: `'DM Sans','Helvetica Neue',Arial,sans-serif`,
+      display: `'Bricolage Grotesque','Helvetica Neue',Arial,sans-serif`,
+      url: 'https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..700&family=DM+Sans:wght@300;400;500&display=swap',
+      family: 'Bricolage+Grotesque',
+    },
+    // Bricolage's lightest cut is 300 — the 200 the clock normally runs at does not exist.
+    timeWeight: '300',
+    palettes: {
+      dark: {
+        '--bg': '#2b3a42',       // Djup
+        '--line': '#3d5058',
+        '--fg': '#f5f2eb',       // Linne
+        '--fg-dim': '#9badb8',   // Dimma
+        '--accent': '#e2ddd3',   // Näver
+        '--accent-2': '#5c7a87', // Fjord
+      },
+      light: {
+        '--bg': '#f5f2eb',       // Linne
+        '--line': '#9badb8',     // Dimma — the board's border colour; Näver is too close
+                                 // to Linne to read as a rule or a slider track
+        '--fg': '#2b3a42',       // Djup
+        '--fg-dim': '#7a8e98',
+        '--accent': '#5c7a87',   // Fjord
+        '--accent-2': '#9badb8', // Dimma
+        '--panel-bg': '#e2ddd3', // Näver — the board's card surface
+      },
     },
   },
-};
+  {
+    id: 'graphite',
+    label: 'Graphite',
+    font: {
+      stack: `'Inter','Helvetica Neue',Arial,sans-serif`,
+      url: 'https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400&display=swap',
+      family: 'Inter',
+    },
+    palettes: {
+      dark: {
+        '--bg': '#111213', '--line': '#2a2c2e', '--fg': '#efeee9', '--fg-dim': '#8b8e8f',
+        '--accent': '#d6d3c8', '--accent-2': '#8a9490',
+      },
+      light: {
+        '--bg': '#f3f3f1', '--line': '#d3d3d0', '--fg': '#161718', '--fg-dim': '#686b6d',
+        '--accent': '#4b4e50', '--accent-2': '#9a9d9e',
+      },
+    },
+  },
+  {
+    // Jost: geometric, Futura-like — the rounder counterpart to Inter's grotesk.
+    id: 'dusk',
+    label: 'Dusk',
+    font: {
+      stack: `'Jost','Helvetica Neue',Arial,sans-serif`,
+      url: 'https://fonts.googleapis.com/css2?family=Jost:wght@200;300;400&display=swap',
+      family: 'Jost',
+    },
+    palettes: {
+      dark: {
+        '--bg': '#0e1218', '--line': '#232b37', '--fg': '#eef1f5', '--fg-dim': '#8791a0',
+        '--accent': '#8aa4c9', '--accent-2': '#5a6f8a',
+      },
+      light: {
+        '--bg': '#eff2f6', '--line': '#cfd6e0', '--fg': '#172030', '--fg-dim': '#626e82',
+        '--accent': '#4a6890', '--accent-2': '#8fa3c0',
+      },
+    },
+  },
+  {
+    id: 'terminal',
+    label: 'Terminal',
+    font: {
+      stack: `'IBM Plex Mono',ui-monospace,monospace`,
+      url: 'https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@200;300;400&display=swap',
+      family: 'IBM+Plex+Mono',
+    },
+    palettes: {
+      dark: {
+        '--bg': '#0d1312', '--line': '#22302c', '--fg': '#e8eee9', '--fg-dim': '#81928b',
+        '--accent': '#7d9b8f', '--accent-2': '#4f6b61',
+      },
+      light: {
+        '--bg': '#eef2ef', '--line': '#cdd8d2', '--fg': '#15201c', '--fg-dim': '#5d6f68',
+        '--accent': '#4a7062', '--accent-2': '#8aa59a',
+      },
+    },
+  },
+  {
+    // Spectral is the serif because it ships genuine tabular figures — see above.
+    id: 'folio',
+    label: 'Folio',
+    font: {
+      stack: `'Spectral',Georgia,serif`,
+      url: 'https://fonts.googleapis.com/css2?family=Spectral:wght@200;300;400&display=swap',
+      family: 'Spectral',
+    },
+    palettes: {
+      dark: {
+        '--bg': '#141110', '--line': '#322a26', '--fg': '#f3ede6', '--fg-dim': '#988c84',
+        '--accent': '#c08e7d', '--accent-2': '#8a6155',
+      },
+      light: {
+        '--bg': '#f7f2ea', '--line': '#ddd3c6', '--fg': '#2a211c', '--fg-dim': '#76685e',
+        '--accent': '#9c5d48', '--accent-2': '#c4a392',
+      },
+    },
+  },
+];
 
-// Every property either theme touches, so switching off clears the lot in one pass.
-const KAL_VARS = [...new Set(Object.values(KAL_THEMES).flatMap((t) => Object.keys(t.vars)))];
+const DEFAULTS = { scale: 1, blink: true, bar: true, theme: 'clockspian', mode: 'light', weather: true };
 
-// Bricolage Grotesque for the hero digits, DM Sans for everything else — the split the
-// brand board specifies. Unlike System Sans this needs the network; if the request fails
-// the stacks fall through to Helvetica and only the typeface is lost, not the palette.
-// Measured, per the rule the Spectral note above sets out: Bricolage gives identical
-// advance widths for 00:00 / 11:11 / 23:38 / 18:47, so it is safe on the clock. DM Sans
-// emphatically does not (00:00 is 534px where 11:11 is 247px at the same size) — every
-// numeric readout therefore uses --font-display, not --font-stack. Do not move the time,
-// temperature or hi/lo onto the body face.
-const KAL_FONT = {
-  stack: `'DM Sans','Helvetica Neue',Arial,sans-serif`,
-  display: `'Bricolage Grotesque','Helvetica Neue',Arial,sans-serif`,
-  url: 'https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..700&family=DM+Sans:wght@300;400;500&display=swap',
-};
+// Settings saved before themes existed held a typeface, an accent and a Kal Studio
+// switch. Each typeface now lives in exactly one theme, so it alone decides the match.
+const LEGACY_FONTS = { system: 'clockspian', inter: 'graphite', 'plex-mono': 'terminal', spectral: 'folio' };
 
-// Bricolage's lightest cut is 300 — the 200 the clock normally runs at does not exist.
-const KAL_TIME_WEIGHT = '300';
-
-const DEFAULTS = { scale: 1, blink: true, bar: true, accent: 'tan', font: 'system', kal: false, kalMode: 'light' };
+function migrate(stored) {
+  if ('theme' in stored || !('font' in stored || 'kal' in stored)) return stored;
+  const { kal, kalMode, font, accent, ...rest } = stored;
+  return {
+    ...rest,
+    theme: kal ? 'kal' : LEGACY_FONTS[font] || DEFAULTS.theme,
+    // Kal Studio had its own light/dark; everything else was only ever dark, and stays so
+    // rather than turning light under someone who already has it set up.
+    mode: kal && kalMode !== 'dark' ? 'light' : 'dark',
+  };
+}
 
 function load() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    const stored = raw ? JSON.parse(raw) : {};
-    return { ...DEFAULTS, ...stored };
+    const loaded = { ...DEFAULTS, ...migrate(raw ? JSON.parse(raw) : {}) };
+    if (!THEMES.some((t) => t.id === loaded.theme)) loaded.theme = DEFAULTS.theme;
+    if (loaded.mode !== 'light' && loaded.mode !== 'dark') loaded.mode = DEFAULTS.mode;
+    return loaded;
   } catch {
     return { ...DEFAULTS };
   }
 }
 
-function save(state) {
+function save() {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   } catch {
     // Nothing to do — the setting still applies for this session.
   }
 }
+
+const state = load();
+
+// weather.js and main.js follow "Show weather" through these, the same way they follow
+// location.js — settings.js runs first, so the value is settled before either asks.
+const weatherListeners = new Set();
+
+export function isWeatherShown() {
+  return state.weather;
+}
+
+export function onWeatherShownChange(listener) {
+  weatherListeners.add(listener);
+}
+
+const themeById = (id) => THEMES.find((t) => t.id === id) || THEMES[0];
 
 // One reusable <link>; swapping href drops the previous font from the page.
 let fontLink = null;
@@ -142,7 +226,7 @@ function applyFont(font) {
   }
   const root = document.documentElement;
   root.style.setProperty('--font-stack', font.stack);
-  // Only Kal mode splits display from body; everywhere else the two are the same face.
+  // Only Kal Studio splits display from body; everywhere else the two are the same face.
   root.style.setProperty('--font-display', font.display || font.stack);
 }
 
@@ -151,54 +235,58 @@ function setColorScheme(value) {
   if (meta) meta.content = value;
 }
 
-function apply(state) {
+function apply() {
   const root = document.documentElement;
+  const theme = themeById(state.theme);
+  const palette = theme.palettes[state.mode];
 
   root.style.setProperty('--ui-scale', String(state.scale));
 
-  if (state.kal) {
-    const theme = KAL_THEMES[state.kalMode] || KAL_THEMES.light;
-    Object.entries(theme.vars).forEach(([name, value]) => root.style.setProperty(name, value));
-    root.style.setProperty('--time-weight', KAL_TIME_WEIGHT);
-    applyFont(KAL_FONT);
-    setColorScheme(theme.colorScheme);
-  } else {
-    // Drop the inline overrides so the :root defaults in css/style.css take back over,
-    // then re-state the accent and typeface the user had chosen before.
-    KAL_VARS.forEach((name) => root.style.removeProperty(name));
-    root.style.removeProperty('--time-weight');
+  Object.entries(palette).forEach(([name, value]) => root.style.setProperty(name, value));
+  // The panel sits on the page colour unless a palette names a surface of its own.
+  if (!palette['--panel-bg']) root.style.setProperty('--panel-bg', palette['--bg']);
 
-    const accent = ACCENTS.find((a) => a.id === state.accent) || ACCENTS[0];
-    const font = FONTS.find((f) => f.id === state.font) || FONTS[0];
-    root.style.setProperty('--accent', accent.accent);
-    root.style.setProperty('--accent-2', accent.accent2);
-    applyFont(font);
-    setColorScheme('dark');
-  }
+  if (theme.timeWeight) root.style.setProperty('--time-weight', theme.timeWeight);
+  else root.style.removeProperty('--time-weight');
+
+  applyFont(theme.font);
+  setColorScheme(state.mode);
 
   document.body.classList.toggle('no-blink', !state.blink);
   document.body.classList.toggle('no-bar', !state.bar);
-  document.body.classList.toggle('kal', state.kal);
-  document.body.classList.toggle('kal-dark', state.kal && state.kalMode === 'dark');
+  document.body.classList.toggle('no-weather', !state.weather);
+  document.body.classList.toggle('kal', Boolean(theme.brand));
+  document.body.classList.toggle('kal-dark', Boolean(theme.brand) && state.mode === 'dark');
+}
+
+// Each theme's name is set in its own display face. Only the active theme's font is
+// loaded for the clock, so the rest are fetched — just the glyphs of the names, via
+// `text=` — the first time the panel opens.
+let previewsLoaded = false;
+function loadThemePreviews() {
+  if (previewsLoaded) return;
+  previewsLoaded = true;
+  const families = THEMES.filter((t) => t.font.family).map((t) => `family=${t.font.family}:wght@400`);
+  const glyphs = [...new Set(THEMES.map((t) => t.label).join(''))].join('');
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = `https://fonts.googleapis.com/css2?${families.join('&')}&text=${encodeURIComponent(glyphs)}&display=swap`;
+  document.head.appendChild(link);
 }
 
 export function initSettings() {
-  const state = load();
-  apply(state);
+  apply();
 
   const toggle = document.getElementById('settingsToggle');
   const panel = document.getElementById('panel');
   const scaleInput = document.getElementById('scaleInput');
   const scaleValue = document.getElementById('scaleValue');
-  const swatchRow = document.getElementById('accentSwatches');
-  const fontRow = document.getElementById('fontChoices');
-  const accentField = document.getElementById('accentField');
-  const fontField = document.getElementById('fontField');
   const blinkSwitch = document.getElementById('blinkSwitch');
   const barSwitch = document.getElementById('barSwitch');
-  const kalSwitch = document.getElementById('kalSwitch');
-  const kalModeField = document.getElementById('kalModeField');
-  const kalModeRow = document.getElementById('kalModeChoices');
+  const modeSwitch = document.getElementById('modeSwitch');
+  const themeRow = document.getElementById('themeChoices');
+  const weatherSwitch = document.getElementById('weatherSwitch');
+  const locationField = document.getElementById('locationField');
   const resetButton = document.getElementById('resetButton');
   const locationRow = document.getElementById('locationChoices');
   const locationNote = document.getElementById('locationNote');
@@ -206,8 +294,8 @@ export function initSettings() {
   panel.hidden = false; // the attribute only guards the pre-JS frame
 
   function commit() {
-    apply(state);
-    save(state);
+    apply();
+    save();
   }
 
   // --- scale ---
@@ -241,95 +329,75 @@ export function initSettings() {
   });
   syncSeconds();
 
-  // --- accent ---
+  // --- theme, light/dark ---
 
-  const swatches = ACCENTS.map((option) => {
+  const themeChoices = THEMES.map((theme) => {
     const button = document.createElement('button');
-    button.className = 'swatch';
+    button.className = 'choice theme-choice';
     button.type = 'button';
     button.role = 'radio';
-    button.title = option.label;
-    button.setAttribute('aria-label', option.label);
-    button.innerHTML = `<i style="background:${option.accent}"></i>`;
+    const name = document.createElement('span');
+    name.textContent = theme.label;
+    // Preview each theme in its own face — the display face, since that sets the clock.
+    name.style.fontFamily = theme.font.display || theme.font.stack;
+    // A swatch of the theme in the current mode — page colour, accent — then a check on
+    // the chosen one. The two dots sit apart on purpose: nested, a dot in a ring reads as
+    // a selected radio button; in a bordered bar, as a tiny switch. Either way every row
+    // looks chosen.
+    const chip = document.createElement('span');
+    chip.className = 'theme-chip';
+    chip.setAttribute('aria-hidden', 'true');
+    chip.innerHTML = '<i></i><i></i>';
+    const check = document.createElement('span');
+    check.className = 'theme-check';
+    check.setAttribute('aria-hidden', 'true');
+    // "check" from Lucide (lucide.dev), ISC licence
+    check.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+    const marks = document.createElement('span');
+    marks.className = 'theme-marks';
+    marks.append(chip, check);
+    button.append(name, marks);
     button.addEventListener('click', () => {
-      state.accent = option.id;
+      state.theme = theme.id;
       commit();
-      syncAccent();
+      syncTheme();
     });
-    swatchRow.appendChild(button);
-    return { option, button };
+    themeRow.appendChild(button);
+    return { theme, button, chip };
   });
 
-  function syncAccent() {
-    swatches.forEach(({ option, button }) => {
-      button.setAttribute('aria-checked', String(option.id === state.accent));
+  function syncTheme() {
+    modeSwitch.setAttribute('aria-checked', String(state.mode === 'dark'));
+    themeChoices.forEach(({ theme, button, chip }) => {
+      const palette = theme.palettes[state.mode];
+      button.setAttribute('aria-checked', String(theme.id === state.theme));
+      chip.children[0].style.background = palette['--bg'];
+      chip.children[1].style.background = palette['--accent'];
     });
   }
-  syncAccent();
-
-  // --- font ---
-
-  const choices = FONTS.map((option) => {
-    const button = document.createElement('button');
-    button.className = 'choice';
-    button.type = 'button';
-    button.role = 'radio';
-    button.textContent = option.label;
-    // Preview each option in its own face.
-    button.style.fontFamily = option.stack;
-    button.addEventListener('click', () => {
-      state.font = option.id;
-      commit();
-      syncFont();
-    });
-    fontRow.appendChild(button);
-    return { option, button };
-  });
-
-  function syncFont() {
-    choices.forEach(({ option, button }) => {
-      button.setAttribute('aria-checked', String(option.id === state.font));
-    });
-  }
-  syncFont();
-
-  // --- Kal Studio ---
-
-  const kalModeChoices = KAL_MODES.map((option) => {
-    const button = document.createElement('button');
-    button.className = 'choice';
-    button.type = 'button';
-    button.role = 'radio';
-    button.textContent = option.label;
-    button.addEventListener('click', () => {
-      state.kalMode = option.id;
-      commit();
-      syncKal();
-    });
-    kalModeRow.appendChild(button);
-    return { option, button };
-  });
-
-  function syncKal() {
-    kalSwitch.setAttribute('aria-checked', String(state.kal));
-    kalModeField.hidden = !state.kal;
-    kalModeChoices.forEach(({ option, button }) => {
-      button.setAttribute('aria-checked', String(option.id === state.kalMode));
-    });
-    // The brand drives both colour and typeface, so these two have nothing to say while
-    // it is on. `inert` keeps them out of the tab order as well as out of reach.
-    [accentField, fontField].forEach((field) => {
-      field.toggleAttribute('data-disabled', state.kal);
-      field.inert = state.kal;
-    });
-  }
-
-  kalSwitch.addEventListener('click', () => {
-    state.kal = !state.kal;
+  modeSwitch.addEventListener('click', () => {
+    state.mode = state.mode === 'dark' ? 'light' : 'dark';
     commit();
-    syncKal();
+    syncTheme();
   });
-  syncKal();
+  syncTheme();
+
+  // --- weather ---
+
+  function syncWeather() {
+    weatherSwitch.setAttribute('aria-checked', String(state.weather));
+    // Where the weather is for means nothing while there is no weather.
+    locationField.hidden = !state.weather;
+  }
+  function setWeatherShown(shown) {
+    if (state.weather === shown) return;
+    state.weather = shown;
+    commit();
+    syncWeather();
+    weatherListeners.forEach((listener) => listener(shown));
+  }
+  weatherSwitch.addEventListener('click', () => setWeatherShown(!state.weather));
+  syncWeather();
 
   // --- location ---
   // Not part of `state`: location.js persists it separately, and "Reset display" leaves it.
@@ -365,13 +433,13 @@ export function initSettings() {
   syncLocation();
 
   resetButton.addEventListener('click', () => {
-    Object.assign(state, DEFAULTS);
+    const { weather, ...rest } = DEFAULTS;
+    Object.assign(state, rest);
     commit();
     showScale();
     syncSeconds();
-    syncAccent();
-    syncFont();
-    syncKal();
+    syncTheme();
+    setWeatherShown(weather);
   });
 
   // --- panel visibility ---
@@ -383,6 +451,7 @@ export function initSettings() {
 
   toggle.addEventListener('click', (event) => {
     event.stopPropagation();
+    loadThemePreviews();
     setOpen(!document.body.classList.contains('panel-open'));
   });
 

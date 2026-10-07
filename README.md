@@ -28,23 +28,36 @@ panel. `Esc` or a click anywhere outside closes it. Choices persist in `localSto
 - **Blinking colon** — on by default. Off holds the colon steady.
 - **Minute progress bar** — the thin line along the bottom edge that fills once a
   minute. On by default.
-- **Kal Studio** — re-skins the whole interface in the Kal Studio brand: Bricolage
-  Grotesque over DM Sans, the Linne/Näver/Dimma/Fjord/Djup palette, and the Kal Studio
-  mark with *Kal Studio · Clockspian* centred along the bottom edge. Comes in **Light**
-  (Linne base) and **Dark** (Djup base). It supplies its own colour and type, so the
-  Accent and Typeface fields dim out while it is on and return untouched when it is off.
-- **Accent** — five curated pairs, all built for the same dark base.
-- **Typeface** — system sans, Inter, IBM Plex Mono, or Spectral.
+- **Theme** — a typeface paired for good with a palette:
+
+  | Theme | Typeface | Accent |
+  |---|---|---|
+  | Clockspian *(default)* | System sans | Tan |
+  | Graphite | Inter | Off-white |
+  | Dusk | Jost | Blue |
+  | Terminal | IBM Plex Mono | Sage |
+  | Folio | Spectral | Clay |
+  | Kal Studio | Bricolage Grotesque over DM Sans | Linne/Näver/Dimma/Fjord/Djup |
+
+  Kal Studio also shows the Kal Studio mark with *Kal Studio · Clockspian* centred
+  along the bottom edge.
+- **Light / dark** — the sun/moon pill beside the Theme heading. Every theme has both
+  palettes; light is the default.
+- **Show weather** (under *Weather*) — off hides the weather block, stops the
+  Open-Meteo requests, and holds off the location prompt until it is back on.
 - **Location** (under *Weather*) — *My location* or *Uppsala*. Stored separately, so
-  **Reset display** leaves it alone.
+  **Reset** leaves it alone.
+
+Settings saved before themes existed are carried over: Kal Studio keeps its light or
+dark palette, and any other setup moves to the theme with its typeface, in dark.
 
 > Every typeface here was measured to confirm it has **tabular figures** — digits of
 > equal width. Without them the clock's width lurches every time a `1` appears. Most
 > editorial serifs (including Georgia and Newsreader) fail this. Re-measure before
-> adding another option.
+> adding another option. Jost passes; Lexend, Urbanist and Raleway were measured and do not.
 >
 > Bricolage Grotesque passes. **DM Sans does not** — at 190px, `00:00` sets 534px wide
-> against 247px for `11:11`. That is why Kal mode routes every numeric readout through
+> against 247px for `11:11`. That is why the Kal Studio theme routes every numeric readout through
 > `--font-display` (Bricolage) and leaves `--font-stack` (DM Sans) to labels and body
 > copy. Don't move the time, temperature or hi/lo onto the body face.
 
