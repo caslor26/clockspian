@@ -78,6 +78,7 @@ appears under another place's name.
 
 ```
 index.html        markup
+favicon.svg       tab icon
 css/style.css     all styling; theme + scale are CSS custom properties on :root
 js/main.js        entry point
 js/clock.js       drift-corrected tick, date, seconds bar
