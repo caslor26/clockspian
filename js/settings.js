@@ -106,7 +106,7 @@ const KAL_FONT = {
 // Bricolage's lightest cut is 300 — the 200 the clock normally runs at does not exist.
 const KAL_TIME_WEIGHT = '300';
 
-const DEFAULTS = { scale: 1, blink: true, accent: 'tan', font: 'system', kal: false, kalMode: 'light' };
+const DEFAULTS = { scale: 1, blink: true, bar: true, accent: 'tan', font: 'system', kal: false, kalMode: 'light' };
 
 function load() {
   try {
@@ -177,6 +177,7 @@ function apply(state) {
   }
 
   document.body.classList.toggle('no-blink', !state.blink);
+  document.body.classList.toggle('no-bar', !state.bar);
   document.body.classList.toggle('kal', state.kal);
   document.body.classList.toggle('kal-dark', state.kal && state.kalMode === 'dark');
 }
@@ -194,6 +195,7 @@ export function initSettings() {
   const accentField = document.getElementById('accentField');
   const fontField = document.getElementById('fontField');
   const blinkSwitch = document.getElementById('blinkSwitch');
+  const barSwitch = document.getElementById('barSwitch');
   const kalSwitch = document.getElementById('kalSwitch');
   const kalModeField = document.getElementById('kalModeField');
   const kalModeRow = document.getElementById('kalModeChoices');
@@ -221,17 +223,23 @@ export function initSettings() {
   });
   showScale();
 
-  // --- blinking seconds ---
+  // --- blinking colon, minute progress bar ---
 
-  function syncBlink() {
+  function syncSeconds() {
     blinkSwitch.setAttribute('aria-checked', String(state.blink));
+    barSwitch.setAttribute('aria-checked', String(state.bar));
   }
   blinkSwitch.addEventListener('click', () => {
     state.blink = !state.blink;
     commit();
-    syncBlink();
+    syncSeconds();
   });
-  syncBlink();
+  barSwitch.addEventListener('click', () => {
+    state.bar = !state.bar;
+    commit();
+    syncSeconds();
+  });
+  syncSeconds();
 
   // --- accent ---
 
@@ -360,7 +368,7 @@ export function initSettings() {
     Object.assign(state, DEFAULTS);
     commit();
     showScale();
-    syncBlink();
+    syncSeconds();
     syncAccent();
     syncFont();
     syncKal();

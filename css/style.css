@@ -179,9 +179,9 @@ html,body{
 /* no easing when the bar wraps back to zero at the top of a minute */
 .seconds-track.no-transition{ transition:none; }
 
-/* "Blinking seconds" off: the colon holds steady and the bar goes away */
+/* the two seconds settings, switched off */
 body.no-blink .time .colon{ animation:none; }
-body.no-blink .seconds-track{ display:none; }
+body.no-bar .seconds-track{ display:none; }
 
 /* Mirrors the settings toggle's 30px inset so the two bottom corners sit as a pair.
    Only shown in Kal mode. */
