@@ -25,6 +25,8 @@ Move the mouse and a faint control appears in the bottom-right corner; click it 
 panel. `Esc` or a click anywhere outside closes it. Choices persist in `localStorage`.
 
 - **Scale** — 50%–150%, for tuning to the screen it ends up on.
+- **Blinking seconds** — on by default. Off stops the colon blinking and hides the
+  seconds bar along the bottom edge.
 - **Kal Studio** — re-skins the whole interface in the Kal Studio brand: Bricolage
   Grotesque over DM Sans, the Linne/Näver/Dimma/Fjord/Djup palette, and a small
   *Clockspian - A Clock by Kal Studio* line in the bottom-left corner. Comes in **Light**

@@ -106,7 +106,7 @@ const KAL_FONT = {
 // Bricolage's lightest cut is 300 — the 200 the clock normally runs at does not exist.
 const KAL_TIME_WEIGHT = '300';
 
-const DEFAULTS = { scale: 1, accent: 'tan', font: 'system', kal: false, kalMode: 'light' };
+const DEFAULTS = { scale: 1, blink: true, accent: 'tan', font: 'system', kal: false, kalMode: 'light' };
 
 function load() {
   try {
@@ -176,6 +176,7 @@ function apply(state) {
     setColorScheme('dark');
   }
 
+  document.body.classList.toggle('no-blink', !state.blink);
   document.body.classList.toggle('kal', state.kal);
   document.body.classList.toggle('kal-dark', state.kal && state.kalMode === 'dark');
 }
@@ -192,6 +193,7 @@ export function initSettings() {
   const fontRow = document.getElementById('fontChoices');
   const accentField = document.getElementById('accentField');
   const fontField = document.getElementById('fontField');
+  const blinkSwitch = document.getElementById('blinkSwitch');
   const kalSwitch = document.getElementById('kalSwitch');
   const kalModeField = document.getElementById('kalModeField');
   const kalModeRow = document.getElementById('kalModeChoices');
@@ -218,6 +220,18 @@ export function initSettings() {
     commit();
   });
   showScale();
+
+  // --- blinking seconds ---
+
+  function syncBlink() {
+    blinkSwitch.setAttribute('aria-checked', String(state.blink));
+  }
+  blinkSwitch.addEventListener('click', () => {
+    state.blink = !state.blink;
+    commit();
+    syncBlink();
+  });
+  syncBlink();
 
   // --- accent ---
 
@@ -346,6 +360,7 @@ export function initSettings() {
     Object.assign(state, DEFAULTS);
     commit();
     showScale();
+    syncBlink();
     syncAccent();
     syncFont();
     syncKal();
