@@ -37,6 +37,7 @@ panel. `Esc` or a click anywhere outside closes it. Choices persist in `localSto
   | Sand | System sans | Tan |
   | Terminal | IBM Plex Mono | Sage |
   | Folio | Spectral | Clay |
+  | Claude | Anthropic Serif if installed, else Source Serif 4 | Claude clay |
   | Kal Studio | Bricolage Grotesque over DM Sans | Linne/Näver/Dimma/Fjord/Djup |
 
   Kal Studio also shows the Kal Studio mark with *Kal Studio · Clockspian* centred

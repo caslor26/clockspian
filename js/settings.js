@@ -158,6 +158,31 @@ export const THEMES = [
       },
     },
   },
+  {
+    // The Claude desktop app's look: its page colours and the clay of the Claude mark.
+    // Anthropic Serif is Anthropic's own face and isn't ours to serve, so it is only used
+    // where it is already installed; everywhere else Source Serif 4 stands in. Both
+    // measure tabular with 'tnum' on, which the clock sets — their default figures don't.
+    id: 'claude',
+    label: 'Claude',
+    font: {
+      stack: `'Anthropic Serif','Source Serif 4',Georgia,serif`,
+      url: 'https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,300;8..60,400&display=swap',
+      family: 'Source+Serif+4',
+    },
+    // Anthropic Serif's lightest cut is 300.
+    timeWeight: '300',
+    palettes: {
+      dark: {
+        '--bg': '#262624', '--line': '#3f3e3a', '--fg': '#faf9f5', '--fg-dim': '#9c9a92',
+        '--accent': '#d97757', '--accent-2': '#8f5a46',
+      },
+      light: {
+        '--bg': '#faf9f5', '--line': '#dedcd1', '--fg': '#141413', '--fg-dim': '#73726c',
+        '--accent': '#c6613f', '--accent-2': '#dfa48d',
+      },
+    },
+  },
 ];
 
 const DEFAULTS = { scale: 1, blink: true, bar: true, theme: 'clockspian', mode: 'light', weather: true };
