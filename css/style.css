@@ -171,7 +171,7 @@ html,body{
 .seconds-track{
   position:absolute;
   bottom:0; left:0;
-  height:2px;
+  height:3px;
   background:var(--accent-2);
   opacity:0.55;
   transition:width 1s linear;
