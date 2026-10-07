@@ -184,8 +184,8 @@ body.no-blink .time .colon{ animation:none; }
 body.no-bar .seconds-track{ display:none; }
 
 /* Centred along the bottom edge, 30px up like the settings toggle. Only shown in Kal
-   mode, where it borrows the logo's own lockup: the studio name sits beside the mark in
-   spaced capitals the way the logo sets STUDIO, then the app name in the display face. */
+   mode, where it follows the Kal Studio lockup: KAL in heavy Bricolage, STUDIO in spaced
+   DM Sans capitals, then the app name. */
 .brandmark{
   position:absolute;
   bottom:30px; left:50%;
@@ -194,6 +194,7 @@ body.no-bar .seconds-track{ display:none; }
   display:flex;
   align-items:center;
   gap:0.6em;
+  text-transform:uppercase;
   white-space:nowrap;
   font-size:calc(clamp(12px,1.3vw,14px) * var(--size));
   opacity:0;
@@ -205,15 +206,26 @@ body.kal .brandmark{ opacity:0.9; }
 .brandmark-app{
   font-family:var(--font-display);
   font-weight:600;
+  text-transform:none;
+  color:var(--fg);
+}
+.brandmark-kal{
+  font-family:var(--font-display);
+  font-weight:700;
+  letter-spacing:0.04em;
   color:var(--fg);
 }
 .brandmark-dot{ color:var(--accent-2); }
 .brandmark-studio{
+  margin-left:-0.15em;
+  font-family:var(--font-stack);
   font-size:0.8em;
+  font-weight:400;
   letter-spacing:0.22em;
-  text-transform:uppercase;
   color:var(--accent);
 }
+/* the logo sets STUDIO in Fjord on Linne but Dimma on Djup */
+body.kal-dark .brandmark-studio{ color:var(--fg-dim); }
 
 /* ---- settings ---- */
 
