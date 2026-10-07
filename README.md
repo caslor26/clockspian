@@ -24,7 +24,7 @@ A server is required — the app uses ES modules, which browsers refuse to load 
 Move the mouse and a faint control appears in the bottom-right corner; click it for the
 panel. `Esc` or a click anywhere outside closes it. Choices persist in `localStorage`.
 
-- **Scale** — 70%–160%, for tuning to the screen it ends up on.
+- **Scale** — 50%–150%, for tuning to the screen it ends up on.
 - **Kal Studio** — re-skins the whole interface in the Kal Studio brand: Bricolage
   Grotesque over DM Sans, the Linne/Näver/Dimma/Fjord/Djup palette, and a small
   *Clockspian - A Clock by Kal Studio* line in the bottom-left corner. Comes in **Light**

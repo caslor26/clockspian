@@ -8,6 +8,8 @@
   --accent:#c9b28a;
   --accent-2:#5c7a70;
   --ui-scale:1;
+  /* everything sized below runs through this; the slider's 100% is 1.4× the original design */
+  --size:calc(var(--ui-scale) * 1.4);
   --font-stack:'Helvetica Neue',Arial,sans-serif;
   /* only Kal Studio mode splits these off from the body face / base weight */
   --font-display:'Helvetica Neue',Arial,sans-serif;
@@ -44,13 +46,13 @@ html,body{
   display:flex;
   flex-direction:column;
   align-items:center;
-  gap:calc(clamp(18px, 3vh, 34px) * var(--ui-scale));
+  gap:calc(clamp(18px, 3vh, 34px) * var(--size));
   z-index:2;
 }
 
 .time{
   font-family:var(--font-display);
-  font-size:calc(clamp(72px, 15vw, 190px) * var(--ui-scale));
+  font-size:calc(clamp(72px, 15vw, 190px) * var(--size));
   font-weight:var(--time-weight);
   letter-spacing:-0.02em;
   line-height:1;
@@ -69,22 +71,22 @@ html,body{
 .date-row{
   display:flex;
   align-items:center;
-  gap:calc(16px * var(--ui-scale));
-  font-size:calc(clamp(13px,1.6vw,18px) * var(--ui-scale));
+  gap:calc(16px * var(--size));
+  font-size:calc(clamp(13px,1.6vw,18px) * var(--size));
   letter-spacing:0.24em;
   text-transform:uppercase;
   color:var(--fg-dim);
 }
 .date-row .dot{
-  width:calc(5px * var(--ui-scale));
-  height:calc(5px * var(--ui-scale));
+  width:calc(5px * var(--size));
+  height:calc(5px * var(--size));
   border-radius:50%;
   background:var(--accent-2);
 }
 
 .divider{
   width:1px;
-  height:calc(clamp(28px,5vh,56px) * var(--ui-scale));
+  height:calc(clamp(28px,5vh,56px) * var(--size));
   background:linear-gradient(var(--line), transparent);
 }
 
@@ -92,14 +94,14 @@ html,body{
   position:relative;
   display:flex;
   align-items:center;
-  gap:calc(clamp(20px,3vw,40px) * var(--ui-scale));
+  gap:calc(clamp(20px,3vw,40px) * var(--size));
   transition:opacity 0.6s ease;
 }
 .weather.stale{ opacity:0.55; }
 
 .glyph{
-  width:calc(56px * var(--ui-scale));
-  height:calc(56px * var(--ui-scale));
+  width:calc(56px * var(--size));
+  height:calc(56px * var(--size));
   flex-shrink:0;
   color:var(--fg-dim);
 }
@@ -108,18 +110,18 @@ html,body{
 .temp-block{
   display:flex;
   align-items:baseline;
-  gap:calc(6px * var(--ui-scale));
+  gap:calc(6px * var(--size));
 }
 .temp{
   font-family:var(--font-display);
-  font-size:calc(clamp(40px,6vw,64px) * var(--ui-scale));
+  font-size:calc(clamp(40px,6vw,64px) * var(--size));
   font-weight:300;
   letter-spacing:-0.01em;
   font-variant-numeric:tabular-nums;
   font-feature-settings:'tnum' 1;
 }
 .unit{
-  font-size:calc(clamp(18px,2.2vw,26px) * var(--ui-scale));
+  font-size:calc(clamp(18px,2.2vw,26px) * var(--size));
   color:var(--fg-dim);
   font-weight:300;
 }
@@ -127,15 +129,15 @@ html,body{
 .condition-block{
   display:flex;
   flex-direction:column;
-  gap:calc(6px * var(--ui-scale));
+  gap:calc(6px * var(--size));
 }
 .condition{
-  font-size:calc(clamp(14px,1.7vw,19px) * var(--ui-scale));
+  font-size:calc(clamp(14px,1.7vw,19px) * var(--size));
   color:var(--fg);
   letter-spacing:0.02em;
 }
 .place{
-  font-size:calc(clamp(11px,1.3vw,14px) * var(--ui-scale));
+  font-size:calc(clamp(11px,1.3vw,14px) * var(--size));
   letter-spacing:0.2em;
   text-transform:uppercase;
   color:var(--fg-dim);
@@ -144,8 +146,8 @@ html,body{
 .range{
   display:flex;
   font-family:var(--font-display);
-  gap:calc(14px * var(--ui-scale));
-  font-size:calc(clamp(12px,1.4vw,15px) * var(--ui-scale));
+  gap:calc(14px * var(--size));
+  font-size:calc(clamp(12px,1.4vw,15px) * var(--size));
   color:var(--fg-dim);
   letter-spacing:0.04em;
   font-variant-numeric:tabular-nums;
@@ -156,7 +158,7 @@ html,body{
 .stale-dot{
   position:absolute;
   top:50%;
-  right:calc(-18px * var(--ui-scale));
+  right:calc(-18px * var(--size));
   width:4px;height:4px;
   margin-top:-2px;
   border-radius:50%;
@@ -183,7 +185,7 @@ html,body{
   position:absolute;
   bottom:30px; left:30px;
   z-index:3;
-  font-size:calc(clamp(10px,1.1vw,12px) * var(--ui-scale));
+  font-size:calc(clamp(10px,1.1vw,12px) * var(--size));
   font-weight:300;
   letter-spacing:0.14em;
   color:var(--fg-dim);
