@@ -29,8 +29,8 @@ panel. `Esc` or a click anywhere outside closes it. Choices persist in `localSto
 - **Minute progress bar** — the thin line along the bottom edge that fills once a
   minute. On by default.
 - **Kal Studio** — re-skins the whole interface in the Kal Studio brand: Bricolage
-  Grotesque over DM Sans, the Linne/Näver/Dimma/Fjord/Djup palette, and a small
-  *Clockspian - A Clock by Kal Studio* line in the bottom-left corner. Comes in **Light**
+  Grotesque over DM Sans, the Linne/Näver/Dimma/Fjord/Djup palette, and the Kal Studio
+  mark with *Clockspian · Kal Studio* centred along the bottom edge. Comes in **Light**
   (Linne base) and **Dark** (Djup base). It supplies its own colour and type, so the
   Accent and Typeface fields dim out while it is on and return untouched when it is off.
 - **Accent** — five curated pairs, all built for the same dark base.

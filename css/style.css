@@ -183,20 +183,37 @@ html,body{
 body.no-blink .time .colon{ animation:none; }
 body.no-bar .seconds-track{ display:none; }
 
-/* Sits on the same 30px inset as the settings toggle. Only shown in Kal mode. */
+/* Centred along the bottom edge, 30px up like the settings toggle. Only shown in Kal
+   mode, where it borrows the logo's own lockup: the app name in the display face, the
+   studio in spaced capitals the way the logo sets STUDIO. */
 .brandmark{
   position:absolute;
-  bottom:30px; left:30px;
+  bottom:30px; left:50%;
+  transform:translateX(-50%);
   z-index:3;
-  font-size:calc(clamp(10px,1.1vw,12px) * var(--size));
-  font-weight:300;
-  letter-spacing:0.14em;
-  color:var(--fg-dim);
+  display:flex;
+  align-items:center;
+  gap:0.6em;
+  white-space:nowrap;
+  font-size:calc(clamp(12px,1.3vw,14px) * var(--size));
   opacity:0;
   pointer-events:none;
   transition:opacity 0.5s ease;
 }
-body.kal .brandmark{ opacity:0.75; }
+body.kal .brandmark{ opacity:0.9; }
+.brandmark-logo{ height:1.6em; width:auto; margin-right:0.2em; }
+.brandmark-app{
+  font-family:var(--font-display);
+  font-weight:600;
+  color:var(--fg);
+}
+.brandmark-dot{ color:var(--accent-2); }
+.brandmark-studio{
+  font-size:0.8em;
+  letter-spacing:0.22em;
+  text-transform:uppercase;
+  color:var(--accent);
+}
 
 /* ---- settings ---- */
 
