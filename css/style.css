@@ -184,8 +184,8 @@ body.no-blink .time .colon{ animation:none; }
 body.no-bar .seconds-track{ display:none; }
 
 /* Centred along the bottom edge, 30px up like the settings toggle. Only shown in Kal
-   mode, where it borrows the logo's own lockup: the app name in the display face, the
-   studio in spaced capitals the way the logo sets STUDIO. */
+   mode, where it borrows the logo's own lockup: the studio name sits beside the mark in
+   spaced capitals the way the logo sets STUDIO, then the app name in the display face. */
 .brandmark{
   position:absolute;
   bottom:30px; left:50%;

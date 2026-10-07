@@ -30,7 +30,7 @@ panel. `Esc` or a click anywhere outside closes it. Choices persist in `localSto
   minute. On by default.
 - **Kal Studio** — re-skins the whole interface in the Kal Studio brand: Bricolage
   Grotesque over DM Sans, the Linne/Näver/Dimma/Fjord/Djup palette, and the Kal Studio
-  mark with *Clockspian · Kal Studio* centred along the bottom edge. Comes in **Light**
+  mark with *Kal Studio · Clockspian* centred along the bottom edge. Comes in **Light**
   (Linne base) and **Dark** (Djup base). It supplies its own colour and type, so the
   Accent and Typeface fields dim out while it is on and return untouched when it is off.
 - **Accent** — five curated pairs, all built for the same dark base.
