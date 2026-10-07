@@ -21,7 +21,7 @@ A server is required — the app uses ES modules, which browsers refuse to load 
 
 ## Settings
 
-Move the mouse and a faint control appears in the bottom-right corner; click it for the
+Move the mouse and a faint gear appears in the top-right corner; click it for the
 panel. `Esc` or a click anywhere outside closes it. Choices persist in `localStorage`.
 
 - **Scale** — 50%–150%, for tuning to the screen it ends up on.
