@@ -1,4 +1,5 @@
 import { LOCATION_MODES, getLocationState, onLocationChange, setLocationMode } from './location.js';
+import { openAbout } from './about.js';
 
 // Persisted display settings. Everything is applied by writing CSS custom
 // properties onto :root — no component knows what the current theme is.
@@ -288,6 +289,7 @@ export function initSettings() {
   const weatherSwitch = document.getElementById('weatherSwitch');
   const locationField = document.getElementById('locationField');
   const resetButton = document.getElementById('resetButton');
+  const aboutButton = document.getElementById('aboutButton');
   const locationRow = document.getElementById('locationChoices');
   const locationNote = document.getElementById('locationNote');
 
@@ -448,6 +450,13 @@ export function initSettings() {
     document.body.classList.toggle('panel-open', open);
     toggle.setAttribute('aria-expanded', String(open));
   }
+
+  // The panel steps aside for it — the dialog covers the screen anyway, and any click
+  // inside would otherwise count as outside the panel and close it mid-read.
+  aboutButton.addEventListener('click', () => {
+    setOpen(false);
+    openAbout();
+  });
 
   toggle.addEventListener('click', (event) => {
     event.stopPropagation();

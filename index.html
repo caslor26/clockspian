@@ -126,8 +126,35 @@
       <p class="field-note" id="locationNote" aria-live="polite" hidden></p>
     </section>
 
-    <button class="reset" id="resetButton">Reset</button>
+    <div class="panel-footer">
+      <button class="text-button" id="aboutButton" type="button">What is this?</button>
+      <button class="text-button" id="resetButton" type="button">Reset</button>
+    </div>
   </aside>
+
+  <dialog class="about" id="about" aria-labelledby="aboutTitle">
+    <div class="about-body">
+      <h2 class="about-title" id="aboutTitle"><span aria-hidden="true">👋</span> Hello. This is a clock.</h2>
+      <p class="about-lead">Clockspian tells you the time. It also tells you the weather, which is frankly more than most clocks bother with. That’s the whole pitch.</p>
+
+      <h3><span class="about-emoji" aria-hidden="true">🖥️</span>What it’s for</h3>
+      <p>The spare monitor, the retired tablet, the TV nobody watches during the day. Open Clockspian full-screen, walk away, and let it be quietly, reliably correct about what time it is.</p>
+
+      <h3><span class="about-emoji" aria-hidden="true">🌦️</span>The weather bit</h3>
+      <p>Clockspian asks for your location so the forecast is for where you actually are. Say no and you get Uppsala, Sweden — lovely, but possibly not your town. Your position is rounded to about a kilometre and only used to look up the weather and the place’s name.</p>
+
+      <h3><span class="about-emoji" aria-hidden="true">⚙️</span>Making it yours</h3>
+      <p>Move the mouse or tap the screen and a small gear appears in the top-right corner. Behind it: themes, light and dark, size, and the power to stop the colon blinking if it’s started to feel judgemental. It all sticks for next time.</p>
+
+      <h3><span class="about-emoji" aria-hidden="true">🤷</span>That’s it, really</h3>
+      <p>No account, no ads, no notifications. If the internet wanders off, the time keeps going and the weather holds its last reading until it’s back. It is, after all, just a clock.</p>
+
+    </div>
+    <div class="about-footer">
+      <p class="about-hint">Need this again? Gear → What is this?</p>
+      <button class="about-close" id="aboutClose" type="button" autofocus>I get it, it’s a clock</button>
+    </div>
+  </dialog>
 
   <script type="module" src="js/main.js"></script>
 </body>
