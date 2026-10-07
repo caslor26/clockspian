@@ -85,6 +85,32 @@ export const THEMES = [
     },
   },
   {
+    // The Claude desktop app's look: its page colours and the clay of the Claude mark —
+    // named a little off-brand on purpose, since it borrows the look, not the name.
+    // Anthropic Serif is Anthropic's own face and isn't ours to serve, so it is only used
+    // where it is already installed; everywhere else Source Serif 4 stands in. Both
+    // measure tabular with 'tnum' on, which the clock sets — their default figures don't.
+    id: 'claude',
+    label: 'Clåde',
+    font: {
+      stack: `'Anthropic Serif','Source Serif 4',Georgia,serif`,
+      url: 'https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,300;8..60,400&display=swap',
+      family: 'Source+Serif+4',
+    },
+    // Anthropic Serif's lightest cut is 300.
+    timeWeight: '300',
+    palettes: {
+      dark: {
+        '--bg': '#262624', '--line': '#3f3e3a', '--fg': '#faf9f5', '--fg-dim': '#9c9a92',
+        '--accent': '#d97757', '--accent-2': '#8f5a46',
+      },
+      light: {
+        '--bg': '#faf9f5', '--line': '#dedcd1', '--fg': '#141413', '--fg-dim': '#73726c',
+        '--accent': '#c6613f', '--accent-2': '#dfa48d',
+      },
+    },
+  },
+  {
     id: 'graphite',
     label: 'Graphite',
     font: {
@@ -155,31 +181,6 @@ export const THEMES = [
       light: {
         '--bg': '#f7f2ea', '--line': '#ddd3c6', '--fg': '#2a211c', '--fg-dim': '#76685e',
         '--accent': '#9c5d48', '--accent-2': '#c4a392',
-      },
-    },
-  },
-  {
-    // The Claude desktop app's look: its page colours and the clay of the Claude mark.
-    // Anthropic Serif is Anthropic's own face and isn't ours to serve, so it is only used
-    // where it is already installed; everywhere else Source Serif 4 stands in. Both
-    // measure tabular with 'tnum' on, which the clock sets — their default figures don't.
-    id: 'claude',
-    label: 'Claude',
-    font: {
-      stack: `'Anthropic Serif','Source Serif 4',Georgia,serif`,
-      url: 'https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,300;8..60,400&display=swap',
-      family: 'Source+Serif+4',
-    },
-    // Anthropic Serif's lightest cut is 300.
-    timeWeight: '300',
-    palettes: {
-      dark: {
-        '--bg': '#262624', '--line': '#3f3e3a', '--fg': '#faf9f5', '--fg-dim': '#9c9a92',
-        '--accent': '#d97757', '--accent-2': '#8f5a46',
-      },
-      light: {
-        '--bg': '#faf9f5', '--line': '#dedcd1', '--fg': '#141413', '--fg-dim': '#73726c',
-        '--accent': '#c6613f', '--accent-2': '#dfa48d',
       },
     },
   },
