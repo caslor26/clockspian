@@ -13,24 +13,12 @@ function markSeen() {
   }
 }
 
-// Ask before anything else gets a chance to write to storage: a first visit is told by
-// there being nothing of Clockspian's there yet.
+// "First visit" means first since this dialog shipped: people who were already using
+// Clockspian get it once too, so the key is all that counts — not whether there are
+// settings or a cached reading.
 export function isFirstVisit() {
   try {
-    const seen = localStorage.getItem(SEEN_KEY);
-    // '0' is a first visit that was reloaded before the dialog was closed.
-    if (seen) return seen === '0';
-    // Anyone with settings, a location or a cached reading was here before this dialog
-    // existed — and their screen may be on a wall with nobody around to dismiss it.
-    for (let i = 0; i < localStorage.length; i++) {
-      if (localStorage.key(i).startsWith('clockspian.')) {
-        markSeen();
-        return false;
-      }
-    }
-    // Claimed now, before the weather cache lands and makes this look like a return.
-    localStorage.setItem(SEEN_KEY, '0');
-    return true;
+    return !localStorage.getItem(SEEN_KEY);
   } catch {
     // No storage means no way to remember it was seen, so it would greet every load.
     return false;

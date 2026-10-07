@@ -501,6 +501,12 @@ input[type=range]::-moz-range-thumb{
   flex-shrink:0;
   padding:0 36px 30px;
 }
+/* a rule between the text and the button, so text cut off by scrolling ends on a line */
+.about-footer::before{
+  content:'';
+  display:block;
+  border-top:1px solid var(--line);
+}
 .about-title{
   margin-bottom:12px;
   font-family:var(--font-display);
@@ -536,11 +542,6 @@ input[type=range]::-moz-range-thumb{
   color:var(--fg-dim);
 }
 .about .about-lead{ color:var(--fg); }
-.about .about-hint{
-  padding-top:16px;
-  border-top:1px solid var(--line);
-  font-size:12px;
-}
 .about-close{
   margin-top:20px;
   width:100%;

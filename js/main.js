@@ -4,7 +4,6 @@ import { initWeather } from './weather.js';
 import { startLocation } from './location.js';
 import { isFirstVisit, openAbout } from './about.js';
 
-// Before anything below can write to storage — an empty one is what marks a first visit.
 const firstVisit = isFirstVisit();
 
 // Settings first — it writes the theme custom properties, so everything that

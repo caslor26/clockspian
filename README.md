@@ -26,7 +26,7 @@ panel. `Esc` or a click anywhere outside closes it. Choices persist in `localSto
 
 - **Scale** — 50%–150%, for tuning to the screen it ends up on.
 - **Blinking colon** — on by default. Off holds the colon steady.
-- **Minute progress bar** — the thin line along the bottom edge that fills once a
+- **Bottom progress bar** — the thin line along the bottom edge that fills once a
   minute. On by default.
 - **Theme** — a typeface paired for good with a palette:
 
@@ -49,9 +49,8 @@ panel. `Esc` or a click anywhere outside closes it. Choices persist in `localSto
   **Reset** leaves it alone.
 
 - **What is this?** — reopens the intro that greets a first visit. It shows once, on
-  its own, and holds off the location prompt until it is closed so the two don't stack.
-  Browsers that already had Clockspian settings, a location or a cached reading count as
-  having seen it, so a screen already on a wall isn't left showing a dialog.
+  its own — to everyone, including browsers that used Clockspian before it existed — and
+  holds off the location prompt until it is closed so the two don't stack.
 
 Settings saved before themes existed are carried over: Kal Studio keeps its light or
 dark palette, and any other setup moves to the theme with its typeface, in dark.

@@ -313,7 +313,7 @@ export function initSettings() {
   });
   showScale();
 
-  // --- blinking colon, minute progress bar ---
+  // --- blinking colon, bottom progress bar ---
 
   function syncSeconds() {
     blinkSwitch.setAttribute('aria-checked', String(state.blink));
