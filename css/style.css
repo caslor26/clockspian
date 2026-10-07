@@ -1,18 +1,18 @@
 :root{
   /* Clockspian light, the default — js/settings.js overwrites all of these, so they only
      cover the frame before it runs */
-  --bg:#f4f2ea;
-  --line:#d5d1c4;
-  --fg:#1b2124;
-  --fg-dim:#626b66;
-  --accent:#896b37;
-  --accent-2:#6f8c82;
+  --bg:#eff2f6;
+  --line:#cfd6e0;
+  --fg:#172030;
+  --fg-dim:#626e82;
+  --accent:#4a6890;
+  --accent-2:#8fa3c0;
   --ui-scale:1;
   /* everything sized below runs through this; the slider's 100% is 1.4× the original design */
   --size:calc(var(--ui-scale) * 1.4);
-  --font-stack:'Helvetica Neue',Arial,sans-serif;
+  --font-stack:'Jost','Helvetica Neue',Arial,sans-serif;
   /* only the Kal Studio theme splits these off from the body face / base weight */
-  --font-display:'Helvetica Neue',Arial,sans-serif;
+  --font-display:'Jost','Helvetica Neue',Arial,sans-serif;
   --time-weight:200;
 
   --panel-bg:var(--bg);

@@ -20,22 +20,29 @@ const STORAGE_KEY = 'clockspian.settings';
 // serifs (Newsreader, Georgia) and many geometric sans (Lexend, Urbanist, Raleway) fail
 // this. Do not add or swap a typeface without re-measuring.
 //
-// `font.url: null` is the system stack — no network request at all, which is why
-// Clockspian stays the default on a display that may boot before the Wi-Fi connects.
+// `font.url: null` is the system stack — no network request at all. Every other face sits
+// on a Helvetica fallback, so a display that boots before the Wi-Fi connects still shows
+// the time, just in the fallback until the font arrives.
 // `font.family` is the Google Fonts family the panel loads to preview each name.
 export const THEMES = [
   {
+    // The default. Jost: geometric, Futura-like — the rounder counterpart to Inter's
+    // grotesk — over a cool blue palette. This was "Dusk" until it became the house look.
     id: 'clockspian',
     label: 'Clockspian',
-    font: { stack: `'Helvetica Neue',Arial,sans-serif`, url: null },
+    font: {
+      stack: `'Jost','Helvetica Neue',Arial,sans-serif`,
+      url: 'https://fonts.googleapis.com/css2?family=Jost:wght@200;300;400&display=swap',
+      family: 'Jost',
+    },
     palettes: {
       dark: {
-        '--bg': '#0f1416', '--line': '#26312f', '--fg': '#f4f2ea', '--fg-dim': '#8a9490',
-        '--accent': '#c9b28a', '--accent-2': '#5c7a70',
+        '--bg': '#0e1218', '--line': '#232b37', '--fg': '#eef1f5', '--fg-dim': '#8791a0',
+        '--accent': '#8aa4c9', '--accent-2': '#5a6f8a',
       },
       light: {
-        '--bg': '#f4f2ea', '--line': '#d5d1c4', '--fg': '#1b2124', '--fg-dim': '#626b66',
-        '--accent': '#896b37', '--accent-2': '#6f8c82',
+        '--bg': '#eff2f6', '--line': '#cfd6e0', '--fg': '#172030', '--fg-dim': '#626e82',
+        '--accent': '#4a6890', '--accent-2': '#8fa3c0',
       },
     },
   },
@@ -97,22 +104,18 @@ export const THEMES = [
     },
   },
   {
-    // Jost: geometric, Futura-like — the rounder counterpart to Inter's grotesk.
-    id: 'dusk',
-    label: 'Dusk',
-    font: {
-      stack: `'Jost','Helvetica Neue',Arial,sans-serif`,
-      url: 'https://fonts.googleapis.com/css2?family=Jost:wght@200;300;400&display=swap',
-      family: 'Jost',
-    },
+    // The original Clockspian look: the system sans on warm paper with a tan accent.
+    id: 'sand',
+    label: 'Sand',
+    font: { stack: `'Helvetica Neue',Arial,sans-serif`, url: null },
     palettes: {
       dark: {
-        '--bg': '#0e1218', '--line': '#232b37', '--fg': '#eef1f5', '--fg-dim': '#8791a0',
-        '--accent': '#8aa4c9', '--accent-2': '#5a6f8a',
+        '--bg': '#0f1416', '--line': '#26312f', '--fg': '#f4f2ea', '--fg-dim': '#8a9490',
+        '--accent': '#c9b28a', '--accent-2': '#5c7a70',
       },
       light: {
-        '--bg': '#eff2f6', '--line': '#cfd6e0', '--fg': '#172030', '--fg-dim': '#626e82',
-        '--accent': '#4a6890', '--accent-2': '#8fa3c0',
+        '--bg': '#f4f2ea', '--line': '#d5d1c4', '--fg': '#1b2124', '--fg-dim': '#626b66',
+        '--accent': '#896b37', '--accent-2': '#6f8c82',
       },
     },
   },
@@ -161,7 +164,7 @@ const DEFAULTS = { scale: 1, blink: true, bar: true, theme: 'clockspian', mode: 
 
 // Settings saved before themes existed held a typeface, an accent and a Kal Studio
 // switch. Each typeface now lives in exactly one theme, so it alone decides the match.
-const LEGACY_FONTS = { system: 'clockspian', inter: 'graphite', 'plex-mono': 'terminal', spectral: 'folio' };
+const LEGACY_FONTS = { system: 'sand', inter: 'graphite', 'plex-mono': 'terminal', spectral: 'folio' };
 
 function migrate(stored) {
   if ('theme' in stored || !('font' in stored || 'kal' in stored)) return stored;
@@ -175,10 +178,17 @@ function migrate(stored) {
   };
 }
 
+// Theme ids that have since changed. Dusk became the default and took the Clockspian
+// name; the look that was Clockspian is now Sand. A stored 'clockspian' is left alone, so
+// it moves to the new default — almost always it was only ever the default, saved along
+// with some other setting, not a choice.
+const RENAMED_THEMES = { dusk: 'clockspian' };
+
 function load() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     const loaded = { ...DEFAULTS, ...migrate(raw ? JSON.parse(raw) : {}) };
+    loaded.theme = RENAMED_THEMES[loaded.theme] || loaded.theme;
     if (!THEMES.some((t) => t.id === loaded.theme)) loaded.theme = DEFAULTS.theme;
     if (loaded.mode !== 'light' && loaded.mode !== 'dark') loaded.mode = DEFAULTS.mode;
     return loaded;

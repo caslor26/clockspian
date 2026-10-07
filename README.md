@@ -32,9 +32,9 @@ panel. `Esc` or a click anywhere outside closes it. Choices persist in `localSto
 
   | Theme | Typeface | Accent |
   |---|---|---|
-  | Clockspian *(default)* | System sans | Tan |
+  | Clockspian *(default)* | Jost | Blue |
   | Graphite | Inter | Off-white |
-  | Dusk | Jost | Blue |
+  | Sand | System sans | Tan |
   | Terminal | IBM Plex Mono | Sage |
   | Folio | Spectral | Clay |
   | Kal Studio | Bricolage Grotesque over DM Sans | Linne/Näver/Dimma/Fjord/Djup |
@@ -54,6 +54,10 @@ panel. `Esc` or a click anywhere outside closes it. Choices persist in `localSto
 
 Settings saved before themes existed are carried over: Kal Studio keeps its light or
 dark palette, and any other setup moves to the theme with its typeface, in dark.
+
+Clockspian used to be the system-sans tan theme, now called Sand; the blue Jost theme,
+once Dusk, took its name as the default. Anyone who had picked Dusk keeps it, and anyone
+stored on Clockspian moves to the new default — Sand is one click away.
 
 > Every typeface here was measured to confirm it has **tabular figures** — digits of
 > equal width. Without them the clock's width lurches every time a `1` appears. Most
