@@ -338,16 +338,62 @@ export function initSettings() {
 
   // --- scale ---
 
-  function showScale() {
-    scaleInput.value = String(state.scale);
+  // Dragging is continuous, so the clock follows the finger, but every value lands on a
+  // 5% step: the label shows the step the thumb is nearest, and letting go glides there.
+  const SCALE_STEP = 0.05;
+  const GLIDE_MS = 200; // matches the --ui-scale transition in style.css
+  const snapScale = (value) => Math.round(value / SCALE_STEP) / (1 / SCALE_STEP); // 0.85, not 0.8500000000000001
+  let glide = 0;
+
+  function placeThumb(value) {
+    scaleInput.value = String(value);
     const { min, max } = scaleInput;
-    scaleInput.style.setProperty('--fill', `${((state.scale - min) / (max - min)) * 100}%`);
+    scaleInput.style.setProperty('--fill', `${((value - min) / (max - min)) * 100}%`);
+  }
+  function showScale() {
+    cancelAnimationFrame(glide);
+    placeThumb(state.scale);
     scaleValue.textContent = `${Math.round(state.scale * 100)}%`;
   }
-  scaleInput.addEventListener('input', () => {
-    state.scale = Number(scaleInput.value);
-    showScale();
+
+  // The clock eases to the new size through its CSS transition; the thumb, which CSS
+  // cannot move, is walked along the same curve.
+  function glideScale(to) {
+    cancelAnimationFrame(glide);
+    const from = Number(scaleInput.value);
+    state.scale = to;
+    scaleValue.textContent = `${Math.round(to * 100)}%`;
     commit();
+    const start = performance.now();
+    const frame = (now) => {
+      const t = Math.min(1, (now - start) / GLIDE_MS);
+      placeThumb(from + (to - from) * (1 - (1 - t) ** 3));
+      if (t < 1) glide = requestAnimationFrame(frame);
+    };
+    glide = requestAnimationFrame(frame);
+  }
+
+  scaleInput.addEventListener('input', () => {
+    cancelAnimationFrame(glide);
+    state.scale = Number(scaleInput.value);
+    placeThumb(state.scale);
+    scaleValue.textContent = `${Math.round(snapScale(state.scale) * 100)}%`;
+    apply();
+  });
+  scaleInput.addEventListener('change', () => glideScale(snapScale(state.scale)));
+
+  // With step="any" the browser's own arrow-key step is meaningless, so keys move whole steps.
+  const SCALE_KEYS = { ArrowRight: 1, ArrowUp: 1, PageUp: 2, ArrowLeft: -1, ArrowDown: -1, PageDown: -2 };
+  scaleInput.addEventListener('keydown', (event) => {
+    const min = Number(scaleInput.min);
+    const max = Number(scaleInput.max);
+    let to;
+    if (event.key in SCALE_KEYS) to = snapScale(state.scale) + SCALE_KEYS[event.key] * SCALE_STEP;
+    else if (event.key === 'Home') to = min;
+    else if (event.key === 'End') to = max;
+    else return;
+    event.preventDefault();
+    glideScale(snapScale(Math.min(max, Math.max(min, to))));
   });
   showScale();
 
