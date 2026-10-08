@@ -486,8 +486,74 @@ input[type=range]:focus-visible{ outline:1px solid var(--fg-dim); outline-offset
 .text-button:hover{ color:var(--fg); }
 .text-button:focus-visible{ outline:1px solid var(--fg-dim); outline-offset:3px; }
 
+.panel-version{
+  align-self:center;
+  margin-top:-10px;
+  padding:0;
+  font-family:inherit;
+  font-size:11px;
+  letter-spacing:0.12em;
+  font-variant-numeric:tabular-nums;
+  color:var(--fg-dim);
+  opacity:0.7;
+  background:none;
+  border:none;
+  cursor:pointer;
+}
+.panel-version:hover{ opacity:1; color:var(--fg); }
+.panel-version:focus-visible{ opacity:1; outline:1px solid var(--fg-dim); outline-offset:3px; }
+
 @media (max-width:480px){
   .panel{ right:16px; }
+}
+
+/* ---- what's new ---- */
+
+/* The note after an update: a quiet pill just left of the gear, in the panel's surface.
+   Unlike the gear it stays visible while the pointer is still — on an unattended screen
+   it is the only way anyone finds out — but it never covers the clock. */
+.news{
+  --card:color-mix(in srgb, var(--panel-bg) 92%, var(--fg));
+  position:absolute;
+  top:24px; right:62px;
+  z-index:6;
+  display:none;
+  align-items:center;
+  gap:7px;
+  padding:7px 13px 7px 11px;
+  font-family:'Helvetica Neue',Arial,sans-serif;
+  font-size:11px;
+  letter-spacing:0.16em;
+  text-transform:uppercase;
+  white-space:nowrap;
+  color:var(--fg-dim);
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:999px;
+  cursor:pointer;
+  transition:color 0.2s ease, opacity 0.2s ease;
+}
+.news.shown{ display:flex; animation:news-in 0.6s ease 0.8s backwards; }
+.news svg{ width:14px; height:14px; color:var(--accent); }
+.news:hover{ color:var(--fg); }
+.news:focus-visible{ outline:1px solid var(--fg-dim); outline-offset:3px; }
+/* the open panel sits right below; the pill steps out of its way */
+body.panel-open .news{ opacity:0; pointer-events:none; }
+@keyframes news-in{ from{ opacity:0; transform:translateY(-4px); } }
+
+/* one block per release in the dialog, newest first, under a version-and-date line */
+.release-version{
+  margin-bottom:-6px;
+  font-variant-numeric:tabular-nums;
+}
+.release + .release{
+  margin-top:30px;
+  padding-top:24px;
+  border-top:1px solid var(--line);
+}
+
+@media (max-width:480px){
+  .news{ top:22px; right:58px; }
 }
 
 /* ---- what is this? ---- */
@@ -604,5 +670,5 @@ input[type=range]:focus-visible{ outline:1px solid var(--fg-dim); outline-offset
   .seconds-track{ transition:none; }
   html,body,.stage{ transition:none; }
   .switch,.switch i,.mode-knob,.mode-switch svg,.choice,.theme-dot{ transition:none; }
-  .about[open],.about[open]::backdrop{ animation:none; }
+  .about[open],.about[open]::backdrop,.news.shown{ animation:none; }
 }

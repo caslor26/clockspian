@@ -3,6 +3,8 @@ import { initClock } from './clock.js';
 import { initWeather } from './weather.js';
 import { startLocation } from './location.js';
 import { isFirstVisit, openAbout } from './about.js';
+import { initWhatsNew } from './whatsnew.js';
+import { watchForUpdates } from './updates.js';
 
 const firstVisit = isFirstVisit();
 
@@ -11,6 +13,8 @@ const firstVisit = isFirstVisit();
 initSettings();
 initClock();
 initWeather();
+initWhatsNew(firstVisit);
+watchForUpdates();
 
 // On a first visit the intro explains the location prompt, so the browser asks once it
 // is closed rather than on top of it.

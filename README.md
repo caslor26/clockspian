@@ -52,6 +52,7 @@ panel. `Esc` or a click anywhere outside closes it. Choices persist in `localSto
 - **What is this?** — reopens the intro that greets a first visit. It shows once, on
   its own — to everyone, including browsers that used Clockspian before it existed — and
   holds off the location prompt until it is closed so the two don't stack.
+- **Version** — centred under the footer. Click it for every release's notes.
 
 Settings saved before themes existed are carried over: Kal Studio keeps its light or
 dark palette, and any other setup moves to the theme with its typeface, in dark.
@@ -96,6 +97,26 @@ the browser's site settings. Choosing *Uppsala* pins it without asking.
 The weather cache is keyed to the coordinates it was fetched for, so a reading never
 appears under another place's name.
 
+## Releases
+
+Clockspian follows `major.minor.patch`. Every release is an entry at the top of
+`js/version.js` — version, date, and a few notes (emoji, heading, a sentence or two in
+the voice of the intro). The newest entry *is* the version; nothing else needs bumping.
+
+- **Feature release (x.y.0)** — the next time Clockspian loads, a small *What's new*
+  pill appears beside the gear. It never covers the clock; clicking it shows the notes
+  for every release since the one last seen, and closing those puts it away.
+- **Patch release (x.y.1, …)** — goes out quietly. Its notes show alongside the next
+  feature release, or under the version number in settings.
+- A first visit gets the intro instead, and counts the current version as seen.
+
+Every change that people will notice ships with its release entry, in the same PR.
+
+Open tabs keep up on their own: once an hour, and whenever the tab comes back into
+view (at most every 10 minutes), `js/updates.js` reads the live `js/version.js` — a few
+KB — and reloads if the newest version there differs. It waits while the settings panel
+or a dialog is open.
+
 ## Layout
 
 ```
@@ -109,6 +130,9 @@ js/location.js    geolocation, Uppsala fallback, reverse geocoding
 js/icons.js       weather glyphs as inline SVG primitives
 js/settings.js    state, persistence, panel UI
 js/about.js       the "What is this?" dialog and first-visit check
+js/version.js     every release and its notes, newest first
+js/whatsnew.js    the What's new pill and release-notes dialog
+js/updates.js     hourly check for a newer deploy; reloads to pick it up
 prototype/        the original single-file mockup, kept for reference
 ```
 

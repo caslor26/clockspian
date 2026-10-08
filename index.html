@@ -71,6 +71,15 @@
     </button>
   </div>
 
+  <button class="news" id="news" type="button">
+    <!-- "sparkles" from Lucide (lucide.dev), ISC licence -->
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/>
+      <path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/>
+    </svg>
+    What’s new
+  </button>
+
   <aside class="panel" id="panel" aria-label="Settings" hidden>
     <h2 class="panel-title">Display</h2>
 
@@ -130,6 +139,7 @@
       <button class="text-button" id="aboutButton" type="button">What is this?</button>
       <button class="text-button" id="resetButton" type="button">Reset</button>
     </div>
+    <button class="panel-version" id="versionButton" type="button" title="What’s new"></button>
   </aside>
 
   <dialog class="about" id="about" aria-labelledby="aboutTitle">
@@ -152,6 +162,14 @@
     </div>
     <div class="about-footer">
       <button class="about-close" id="aboutClose" type="button" autofocus>I get it, it’s a clock</button>
+    </div>
+  </dialog>
+
+  <dialog class="about" id="whatsNew" aria-labelledby="whatsNewTitle">
+    <!-- filled from js/version.js -->
+    <div class="about-body" id="whatsNewBody"></div>
+    <div class="about-footer">
+      <button class="about-close" id="whatsNewClose" type="button" autofocus>Lovely, thanks</button>
     </div>
   </dialog>
 

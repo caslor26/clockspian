@@ -1,5 +1,7 @@
 import { LOCATION_MODES, getLocationState, onLocationChange, setLocationMode } from './location.js';
 import { openAbout } from './about.js';
+import { openWhatsNew } from './whatsnew.js';
+import { VERSION } from './version.js';
 
 // Persisted display settings. Everything is applied by writing CSS custom
 // properties onto :root — no component knows what the current theme is.
@@ -326,6 +328,7 @@ export function initSettings() {
   const locationField = document.getElementById('locationField');
   const resetButton = document.getElementById('resetButton');
   const aboutButton = document.getElementById('aboutButton');
+  const versionButton = document.getElementById('versionButton');
   const locationRow = document.getElementById('locationChoices');
   const locationNote = document.getElementById('locationNote');
 
@@ -526,6 +529,12 @@ export function initSettings() {
   aboutButton.addEventListener('click', () => {
     setOpen(false);
     openAbout();
+  });
+
+  versionButton.textContent = `Version ${VERSION}`;
+  versionButton.addEventListener('click', () => {
+    setOpen(false);
+    openWhatsNew();
   });
 
   toggle.addEventListener('click', (event) => {
