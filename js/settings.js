@@ -340,6 +340,8 @@ export function initSettings() {
 
   function showScale() {
     scaleInput.value = String(state.scale);
+    const { min, max } = scaleInput;
+    scaleInput.style.setProperty('--fill', `${((state.scale - min) / (max - min)) * 100}%`);
     scaleValue.textContent = `${Math.round(state.scale * 100)}%`;
   }
   scaleInput.addEventListener('input', () => {
@@ -378,39 +380,25 @@ export function initSettings() {
     name.textContent = theme.label;
     // Preview each theme in its own face — the display face, since that sets the clock.
     name.style.fontFamily = theme.font.display || theme.font.stack;
-    // A swatch of the theme in the current mode — page colour, accent — then a check on
-    // the chosen one. The two dots sit apart on purpose: nested, a dot in a ring reads as
-    // a selected radio button; in a bordered bar, as a tiny switch. Either way every row
-    // looks chosen.
-    const chip = document.createElement('span');
-    chip.className = 'theme-chip';
-    chip.setAttribute('aria-hidden', 'true');
-    chip.innerHTML = '<i></i><i></i>';
-    const check = document.createElement('span');
-    check.className = 'theme-check';
-    check.setAttribute('aria-hidden', 'true');
-    // "check" from Lucide (lucide.dev), ISC licence
-    check.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
-    const marks = document.createElement('span');
-    marks.className = 'theme-marks';
-    marks.append(chip, check);
-    button.append(name, marks);
+    // A dot of the theme's accent in the current mode, ahead of the name.
+    const dot = document.createElement('span');
+    dot.className = 'theme-dot';
+    dot.setAttribute('aria-hidden', 'true');
+    button.append(dot, name);
     button.addEventListener('click', () => {
       state.theme = theme.id;
       commit();
       syncTheme();
     });
     themeRow.appendChild(button);
-    return { theme, button, chip };
+    return { theme, button, dot };
   });
 
   function syncTheme() {
     modeSwitch.setAttribute('aria-checked', String(state.mode === 'dark'));
-    themeChoices.forEach(({ theme, button, chip }) => {
-      const palette = theme.palettes[state.mode];
+    themeChoices.forEach(({ theme, button, dot }) => {
       button.setAttribute('aria-checked', String(theme.id === state.theme));
-      chip.children[0].style.background = palette['--bg'];
-      chip.children[1].style.background = palette['--accent'];
+      dot.style.background = theme.palettes[state.mode]['--accent'];
     });
   }
   modeSwitch.addEventListener('click', () => {
