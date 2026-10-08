@@ -10,6 +10,17 @@
 // the "What is this?" dialog.
 export const RELEASES = [
   {
+    version: '1.1.1',
+    date: '2026-10-08',
+    notes: [
+      {
+        emoji: '📏',
+        title: 'A seconds bar you can actually see',
+        text: 'The bar along the bottom is thicker now, filled in the theme’s accent, and runs along a faint rail, so you can see how far into the minute you are. It still knows its place.',
+      },
+    ],
+  },
+  {
     version: '1.1.0',
     date: '2026-10-08',
     notes: [

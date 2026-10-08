@@ -175,20 +175,28 @@ html,body{
 }
 .weather.stale .stale-dot{ opacity:0.8; }
 
-.seconds-track{
+/* The minute's progress along the bottom edge. A faint full-width rail shows where the
+   bar is headed, so even a few seconds in it reads as progress rather than a stray mark.
+   It sizes with the clock, and fills in the full accent so it holds its own against the bg. */
+.seconds-rail{
   position:absolute;
-  bottom:0; left:0;
-  height:3px;
-  background:var(--accent-2);
-  opacity:0.55;
-  transition:width 1s linear;
+  bottom:0; left:0; right:0;
+  height:calc(4px * var(--size));
+  background:color-mix(in srgb, var(--line) 70%, transparent);
+  transition:background-color 0.4s ease;
+}
+.seconds-track{
+  height:100%;
+  width:0;
+  background:var(--accent);
+  transition:width 1s linear, background-color 0.4s ease;
 }
 /* no easing when the bar wraps back to zero at the top of a minute */
 .seconds-track.no-transition{ transition:none; }
 
 /* the two seconds settings, switched off */
 body.no-blink .time .colon{ animation:none; }
-body.no-bar .seconds-track{ display:none; }
+body.no-bar .seconds-rail{ display:none; }
 /* Show weather off: the clock and date re-centre on their own */
 body.no-weather .divider,
 body.no-weather .weather{ display:none; }

@@ -13,8 +13,8 @@ const STORAGE_KEY = 'clockspian.settings';
 // which theme is chosen. apply() writes all of a palette's properties inline on :root
 // every time, so the defaults in css/style.css only cover the frame before JS runs.
 //
-// --accent carries the highlights (colon, sun, high temperature), --accent-2 the quieter
-// structural bits (seconds bar, date dot). Light accents run darker than their dark-mode
+// --accent carries the highlights (colon, sun, high temperature, seconds bar), --accent-2 the quieter
+// structural bits (date dot, brandmark dots). Light accents run darker than their dark-mode
 // counterparts so the hi temperature still reads against a pale base.
 //
 // Every typeface here was measured for tabular figures — identical advance widths for
