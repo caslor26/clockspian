@@ -39,6 +39,9 @@ panel. `Esc` or a click anywhere outside closes it. Choices persist in `localSto
   | Terminal | IBM Plex Mono | Sage |
   | Folio | Spectral | Clay |
   | Kal | Bricolage Grotesque over DM Sans | Linne/Näver/Dimma/Fjord/Djup |
+  | Glöd | Barlow Condensed | Amber |
+  | Ljung | Manrope | Heather |
+  | Signal | Archivo Expanded | Signal red |
 - **Light / dark** — the sun/moon pill beside the Theme heading. Every theme has both
   palettes; light is the default.
 - **Show weather** (under *Weather*) — off hides the weather block, stops the

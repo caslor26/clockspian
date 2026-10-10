@@ -10,6 +10,17 @@
 // the "What is this?" dialog.
 export const RELEASES = [
   {
+    version: '1.2.0',
+    date: '2026-10-10',
+    notes: [
+      {
+        emoji: '🎨',
+        title: 'Three new themes',
+        text: 'Glöd glows amber in the dark, easy on the eyes at 3 a.m. Ljung goes quietly violet. Signal is black, white and one red, like a railway clock that’s never once been late.',
+      },
+    ],
+  },
+  {
     version: '1.1.1',
     date: '2026-10-08',
     notes: [
