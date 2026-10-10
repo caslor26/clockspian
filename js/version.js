@@ -18,6 +18,11 @@ export const RELEASES = [
         title: 'Three new themes',
         text: 'Ember glows amber in the dark, easy on the eyes at 3 a.m. Heather goes quietly violet. Lagoon is cool teal with soft, rounded numbers, for when the time should feel like a holiday.',
       },
+      {
+        emoji: '🧩',
+        title: 'Themes, two by two',
+        text: 'Ten themes made a long list, so the settings menu now lines them up in pairs. Everything fits on screen again, no scrolling for the Reset button.',
+      },
     ],
   },
   {
