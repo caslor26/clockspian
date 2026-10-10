@@ -337,7 +337,8 @@ input[type=range]:focus-visible{ outline:1px solid var(--fg-dim); outline-offset
 
 /* Rows that light up under the pointer and stay lit when chosen. They reach a little past
    the text column on both sides so the highlight frames the text rather than hugging it. */
-.choices{ display:flex; flex-direction:column; gap:2px; margin:0 -12px; }
+/* two to a row, so ten themes still leave the panel short enough for a 1080p window */
+.choices{ display:grid; grid-template-columns:1fr 1fr; gap:2px 4px; margin:0 -12px; }
 .choice{
   display:flex;
   align-items:center;
