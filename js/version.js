@@ -18,6 +18,11 @@ export const RELEASES = [
         title: 'Kal travels lighter',
         text: 'The Kal Studio theme is now just Kal, and it no longer signs its name along the bottom. Same colours, less fuss.',
       },
+      {
+        emoji: '🌊',
+        title: 'Say hello to Fjord',
+        text: 'The default theme finally has a name of its own: Fjord. Same cool blue, same clock. Clockspian is the app, not a theme.',
+      },
     ],
   },
   {

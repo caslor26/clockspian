@@ -32,7 +32,7 @@ panel. `Esc` or a click anywhere outside closes it. Choices persist in `localSto
 
   | Theme | Typeface | Accent |
   |---|---|---|
-  | Clockspian *(default)* | Jost | Blue |
+  | Fjord *(default)* | Jost | Blue |
   | Clåde | Anthropic Serif if installed, else Source Serif 4 | Claude clay |
   | Graphite | Inter | Off-white |
   | Sand | System sans | Tan |
@@ -56,7 +56,8 @@ dark palette, and any other setup moves to the theme with its typeface, in dark.
 
 Clockspian used to be the system-sans tan theme, now called Sand; the blue Jost theme,
 once Dusk, took its name as the default. Anyone who had picked Dusk keeps it, and anyone
-stored on Clockspian moves to the new default — Sand is one click away.
+stored on Clockspian moves to the new default — Sand is one click away. The default has
+since been renamed Fjord, but keeps the `clockspian` id, so nothing moves.
 
 > Every typeface here was measured to confirm it has **tabular figures** — digits of
 > equal width. Without them the clock's width lurches every time a `1` appears. Most

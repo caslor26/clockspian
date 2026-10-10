@@ -29,9 +29,10 @@ const STORAGE_KEY = 'clockspian.settings';
 export const THEMES = [
   {
     // The default. Jost: geometric, Futura-like — the rounder counterpart to Inter's
-    // grotesk — over a cool blue palette. This was "Dusk" until it became the house look.
+    // grotesk — over a cool blue palette. Shown as "Fjord"; once "Dusk", then "Clockspian".
+    // The id stays 'clockspian' so stored settings keep pointing here.
     id: 'clockspian',
-    label: 'Clockspian',
+    label: 'Fjord',
     font: {
       stack: `'Jost','Helvetica Neue',Arial,sans-serif`,
       url: 'https://fonts.googleapis.com/css2?family=Jost:wght@200;300;400&display=swap',
