@@ -11,7 +11,7 @@
   /* everything sized below runs through this; the slider's 100% is 1.4× the original design */
   --size:calc(var(--ui-scale) * 1.4);
   --font-stack:'Jost','Helvetica Neue',Arial,sans-serif;
-  /* only the Kal Studio theme splits these off from the body face / base weight */
+  /* only the Kal theme splits these off from the body face / base weight */
   --font-display:'Jost','Helvetica Neue',Arial,sans-serif;
   --time-weight:200;
 
@@ -202,8 +202,8 @@ body.no-weather .divider,
 body.no-weather .weather{ display:none; }
 
 /* Centred along the bottom edge, 30px up like the settings toggle. Only shown in the
-   Kal Studio theme, where it follows the Kal Studio lockup: KAL in heavy Bricolage, STUDIO in spaced
-   DM Sans capitals, then the app name. */
+   Kal theme, where it follows the Kal Studio wordmark: KAL in heavy Bricolage, STUDIO in spaced
+   DM Sans capitals. */
 .brandmark{
   position:absolute;
   bottom:30px; left:50%;
@@ -220,20 +220,12 @@ body.no-weather .weather{ display:none; }
   transition:opacity 0.5s ease;
 }
 body.kal .brandmark{ opacity:0.9; }
-.brandmark-logo{ height:1.6em; width:auto; margin-right:0.2em; }
-.brandmark-app{
-  font-family:var(--font-display);
-  font-weight:600;
-  text-transform:none;
-  color:var(--fg);
-}
 .brandmark-kal{
   font-family:var(--font-display);
   font-weight:700;
   letter-spacing:0.04em;
   color:var(--fg);
 }
-.brandmark-dot{ color:var(--accent-2); }
 .brandmark-studio{
   margin-left:-0.15em;
   font-family:var(--font-stack);

@@ -14,7 +14,7 @@ const STORAGE_KEY = 'clockspian.settings';
 // every time, so the defaults in css/style.css only cover the frame before JS runs.
 //
 // --accent carries the highlights (colon, sun, high temperature, seconds bar), --accent-2 the quieter
-// structural bits (date dot, brandmark dots). Light accents run darker than their dark-mode
+// structural bits (date dot). Light accents run darker than their dark-mode
 // counterparts so the hi temperature still reads against a pale base.
 //
 // Every typeface here was measured for tabular figures — identical advance widths for
@@ -55,7 +55,7 @@ export const THEMES = [
     // every numeric readout uses --font-display, not --font-stack. Do not move the time,
     // temperature or hi/lo onto the body face. Also the only theme with the brandmark.
     id: 'kal',
-    label: 'Kal Studio',
+    label: 'Kal',
     brand: true,
     font: {
       stack: `'DM Sans','Helvetica Neue',Arial,sans-serif`,
@@ -200,7 +200,7 @@ function migrate(stored) {
   return {
     ...rest,
     theme: kal ? 'kal' : LEGACY_FONTS[font] || DEFAULTS.theme,
-    // Kal Studio had its own light/dark; everything else was only ever dark, and stays so
+    // Kal had its own light/dark; everything else was only ever dark, and stays so
     // rather than turning light under someone who already has it set up.
     mode: kal && kalMode !== 'dark' ? 'light' : 'dark',
   };
@@ -265,7 +265,7 @@ function applyFont(font) {
   }
   const root = document.documentElement;
   root.style.setProperty('--font-stack', font.stack);
-  // Only Kal Studio splits display from body; everywhere else the two are the same face.
+  // Only Kal splits display from body; everywhere else the two are the same face.
   root.style.setProperty('--font-display', font.display || font.stack);
 }
 

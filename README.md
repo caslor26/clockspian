@@ -38,10 +38,9 @@ panel. `Esc` or a click anywhere outside closes it. Choices persist in `localSto
   | Sand | System sans | Tan |
   | Terminal | IBM Plex Mono | Sage |
   | Folio | Spectral | Clay |
-  | Kal Studio | Bricolage Grotesque over DM Sans | Linne/Näver/Dimma/Fjord/Djup |
+  | Kal | Bricolage Grotesque over DM Sans | Linne/Näver/Dimma/Fjord/Djup |
 
-  Kal Studio also shows the Kal Studio mark with *Kal Studio · Clockspian* centred
-  along the bottom edge.
+  Kal also shows the *Kal Studio* wordmark centred along the bottom edge.
 - **Light / dark** — the sun/moon pill beside the Theme heading. Every theme has both
   palettes; light is the default.
 - **Show weather** (under *Weather*) — off hides the weather block, stops the
@@ -54,7 +53,7 @@ panel. `Esc` or a click anywhere outside closes it. Choices persist in `localSto
   holds off the location prompt until it is closed so the two don't stack.
 - **Version** — centred under the footer. Click it for every release's notes.
 
-Settings saved before themes existed are carried over: Kal Studio keeps its light or
+Settings saved before themes existed are carried over: Kal keeps its light or
 dark palette, and any other setup moves to the theme with its typeface, in dark.
 
 Clockspian used to be the system-sans tan theme, now called Sand; the blue Jost theme,
@@ -67,7 +66,7 @@ stored on Clockspian moves to the new default — Sand is one click away.
 > adding another option. Jost passes; Lexend, Urbanist and Raleway were measured and do not.
 >
 > Bricolage Grotesque passes. **DM Sans does not** — at 190px, `00:00` sets 534px wide
-> against 247px for `11:11`. That is why the Kal Studio theme routes every numeric readout through
+> against 247px for `11:11`. That is why the Kal theme routes every numeric readout through
 > `--font-display` (Bricolage) and leaves `--font-stack` (DM Sans) to labels and body
 > copy. Don't move the time, temperature or hi/lo onto the body face.
 

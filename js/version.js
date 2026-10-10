@@ -10,6 +10,17 @@
 // the "What is this?" dialog.
 export const RELEASES = [
   {
+    version: '1.1.2',
+    date: '2026-10-10',
+    notes: [
+      {
+        emoji: '🏔️',
+        title: 'Kal travels lighter',
+        text: 'The Kal Studio theme is now just Kal, and its footer has shed the logo and the app name. Same colours, fewer words.',
+      },
+    ],
+  },
+  {
     version: '1.1.1',
     date: '2026-10-08',
     notes: [
