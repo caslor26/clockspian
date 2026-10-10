@@ -390,7 +390,6 @@ export function initSettings() {
   const themeRow = document.getElementById('themeChoices');
   const weatherSwitch = document.getElementById('weatherSwitch');
   const locationField = document.getElementById('locationField');
-  const resetButton = document.getElementById('resetButton');
   const aboutButton = document.getElementById('aboutButton');
   const versionButton = document.getElementById('versionButton');
   const locationRow = document.getElementById('locationChoices');
@@ -540,7 +539,7 @@ export function initSettings() {
   syncWeather();
 
   // --- location ---
-  // Not part of `state`: location.js persists it separately, and "Reset display" leaves it.
+  // Not part of `state`: location.js persists it separately.
 
   const locationChoices = LOCATION_MODES.map((option) => {
     const button = document.createElement('button');
@@ -571,16 +570,6 @@ export function initSettings() {
   }
   onLocationChange(syncLocation);
   syncLocation();
-
-  resetButton.addEventListener('click', () => {
-    const { weather, ...rest } = DEFAULTS;
-    Object.assign(state, rest);
-    commit();
-    showScale();
-    syncSeconds();
-    syncTheme();
-    setWeatherShown(weather);
-  });
 
   // --- panel visibility ---
 

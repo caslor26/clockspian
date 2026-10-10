@@ -3,9 +3,6 @@
 // Two modes: 'auto' asks the browser for a position (the first visit prompts), 'default'
 // pins Uppsala without asking. Anything short of a granted position — denied, timed out,
 // no Geolocation API, not a secure context — leaves Uppsala on screen.
-//
-// Kept apart from the display settings on purpose: "Reset to defaults" in the panel is
-// about how the screen looks, and should not quietly start asking for a position again.
 
 export const DEFAULT_PLACE = { lat: 59.8586, lon: 17.6389, name: 'Uppsala, Sweden' };
 

@@ -4,11 +4,17 @@
 //
 // A new x.y.0 shows its notes to everyone the next time Clockspian loads. A patch
 // (x.y.1 and on) goes out quietly, its notes only showing alongside the next x.y.0 or
-// under the version number in settings.
+// under the version number in settings. A patch with nothing worth telling anyone can
+// leave `notes` empty: it still bumps the version, but "What's new" skips it.
 //
 // Each note is an emoji, a short heading and a sentence or two — in the same voice as
 // the "What is this?" dialog.
 export const RELEASES = [
+  {
+    version: '1.2.1',
+    date: '2026-10-10',
+    notes: [],
+  },
   {
     version: '1.2.0',
     date: '2026-10-10',

@@ -91,7 +91,7 @@ function setUp() {
 // Every release, or only those newer than `since`.
 export function openWhatsNew(since = null) {
   if (!dialog) setUp();
-  const releases = since ? RELEASES.filter((r) => isNewer(r.version, since)) : RELEASES;
+  const releases = RELEASES.filter((r) => r.notes.length && (!since || isNewer(r.version, since)));
   const body = document.getElementById('whatsNewBody');
   const title = element('h2', 'about-title', 'What’s new');
   title.id = 'whatsNewTitle';
