@@ -53,10 +53,9 @@ export const THEMES = [
     // else — the split the brand board specifies. Bricolage measures tabular; DM Sans
     // emphatically does not (00:00 is 534px where 11:11 is 247px at the same size), so
     // every numeric readout uses --font-display, not --font-stack. Do not move the time,
-    // temperature or hi/lo onto the body face. Also the only theme with the brandmark.
+    // temperature or hi/lo onto the body face.
     id: 'kal',
     label: 'Kal',
-    brand: true,
     font: {
       stack: `'DM Sans','Helvetica Neue',Arial,sans-serif`,
       display: `'Bricolage Grotesque','Helvetica Neue',Arial,sans-serif`,
@@ -294,8 +293,6 @@ function apply() {
   document.body.classList.toggle('no-blink', !state.blink);
   document.body.classList.toggle('no-bar', !state.bar);
   document.body.classList.toggle('no-weather', !state.weather);
-  document.body.classList.toggle('kal', Boolean(theme.brand));
-  document.body.classList.toggle('kal-dark', Boolean(theme.brand) && state.mode === 'dark');
 }
 
 // Each theme's name is set in its own display face. Only the active theme's font is

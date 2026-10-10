@@ -39,8 +39,6 @@ panel. `Esc` or a click anywhere outside closes it. Choices persist in `localSto
   | Terminal | IBM Plex Mono | Sage |
   | Folio | Spectral | Clay |
   | Kal | Bricolage Grotesque over DM Sans | Linne/Näver/Dimma/Fjord/Djup |
-
-  Kal also shows the *Kal Studio* wordmark centred along the bottom edge.
 - **Light / dark** — the sun/moon pill beside the Theme heading. Every theme has both
   palettes; light is the default.
 - **Show weather** (under *Weather*) — off hides the weather block, stops the

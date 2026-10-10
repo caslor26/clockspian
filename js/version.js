@@ -16,7 +16,7 @@ export const RELEASES = [
       {
         emoji: '🏔️',
         title: 'Kal travels lighter',
-        text: 'The Kal Studio theme is now just Kal, and its footer has shed the logo and the app name. Same colours, fewer words.',
+        text: 'The Kal Studio theme is now just Kal, and it no longer signs its name along the bottom. Same colours, less fuss.',
       },
     ],
   },
