@@ -25,8 +25,7 @@ const STORAGE_KEY = 'clockspian.settings';
 // `font.url: null` is the system stack — no network request at all. Every other face sits
 // on a Helvetica fallback, so a display that boots before the Wi-Fi connects still shows
 // the time, just in the fallback until the font arrives.
-// `font.family` is the Google Fonts family the panel loads to preview each name, at
-// `font.previewAxes` if the face needs more than its regular weight to look like itself.
+// `font.family` is the Google Fonts family the panel loads to preview each name.
 export const THEMES = [
   {
     // The default. Jost: geometric, Futura-like — the rounder counterpart to Inter's
@@ -188,10 +187,13 @@ export const THEMES = [
     },
   },
   {
-    // Ember: amber on warm black, for a clock on the nightstand — no blue in the dark
-    // palette at all. Barlow Condensed is the one narrow face in the set.
-    id: 'glod',
-    label: 'Glöd',
+    // Amber on warm black, for a clock on the nightstand — no blue in the dark palette
+    // at all. Barlow Condensed is the one narrow face in the set.
+    id: 'ember',
+    label: 'Ember',
+    // Condensed, with a small x-height: at the panel's 16px its name reads a size
+    // smaller than the rest, so it is set up a little and opened out.
+    labelStyle: { fontSize: '19px', letterSpacing: '0.04em' },
     font: {
       stack: `'Barlow Condensed','Helvetica Neue',Arial,sans-serif`,
       url: 'https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@200;300;400&display=swap',
@@ -209,9 +211,9 @@ export const THEMES = [
     },
   },
   {
-    // Heather: the one violet in the set, kept muted. Manrope's lightest cut is 200.
-    id: 'ljung',
-    label: 'Ljung',
+    // The one violet in the set, kept muted. Manrope's lightest cut is 200.
+    id: 'heather',
+    label: 'Heather',
     font: {
       stack: `'Manrope','Helvetica Neue',Arial,sans-serif`,
       url: 'https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400&display=swap',
@@ -229,25 +231,24 @@ export const THEMES = [
     },
   },
   {
-    // Black and white with one signal red, after the railway clock. Archivo is loaded
-    // only at its widest (wdth 125), so it matches at that width without a font-stretch —
-    // the panel preview has to ask for the same width, or the name shows at normal width.
-    id: 'signal',
-    label: 'Signal',
+    // Sea glass: a clear cyan-teal, well clear of Terminal's sage, in the one
+    // rounded face in the set. Nunito measures tabular; Fraunces and Roboto Slab,
+    // tried for this slot, do not.
+    id: 'lagoon',
+    label: 'Lagoon',
     font: {
-      stack: `'Archivo','Helvetica Neue',Arial,sans-serif`,
-      url: 'https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@125,200;125,300;125,400&display=swap',
-      family: 'Archivo',
-      previewAxes: 'wdth,wght@125,400',
+      stack: `'Nunito','Helvetica Neue',Arial,sans-serif`,
+      url: 'https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400&display=swap',
+      family: 'Nunito',
     },
     palettes: {
       dark: {
-        '--bg': '#0b0b0b', '--line': '#262626', '--fg': '#f5f5f2', '--fg-dim': '#8c8c88',
-        '--accent': '#ff4b3a', '--accent-2': '#6e6e6a',
+        '--bg': '#0a1618', '--line': '#1b3236', '--fg': '#e4f3f4', '--fg-dim': '#7c9ca0',
+        '--accent': '#52c7c9', '--accent-2': '#2b6c70',
       },
       light: {
-        '--bg': '#fbfbf8', '--line': '#dcdcd6', '--fg': '#0d0d0d', '--fg-dim': '#6a6a66',
-        '--accent': '#d92b1c', '--accent-2': '#a8a8a2',
+        '--bg': '#e8f3f4', '--line': '#c4dde0', '--fg': '#0d2629', '--fg-dim': '#557478',
+        '--accent': '#0e8790', '--accent-2': '#85bfc4',
       },
     },
   },
@@ -368,8 +369,7 @@ let previewsLoaded = false;
 function loadThemePreviews() {
   if (previewsLoaded) return;
   previewsLoaded = true;
-  const families = THEMES.filter((t) => t.font.family)
-    .map((t) => `family=${t.font.family}:${t.font.previewAxes || 'wght@400'}`);
+  const families = THEMES.filter((t) => t.font.family).map((t) => `family=${t.font.family}:wght@400`);
   const glyphs = [...new Set(THEMES.map((t) => t.label).join(''))].join('');
   const link = document.createElement('link');
   link.rel = 'stylesheet';
@@ -493,6 +493,7 @@ export function initSettings() {
     name.textContent = theme.label;
     // Preview each theme in its own face — the display face, since that sets the clock.
     name.style.fontFamily = theme.font.display || theme.font.stack;
+    Object.assign(name.style, theme.labelStyle);
     // A dot of the theme's accent in the current mode, ahead of the name.
     const dot = document.createElement('span');
     dot.className = 'theme-dot';

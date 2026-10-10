@@ -16,7 +16,7 @@ export const RELEASES = [
       {
         emoji: '🎨',
         title: 'Three new themes',
-        text: 'Glöd glows amber in the dark, easy on the eyes at 3 a.m. Ljung goes quietly violet. Signal is black, white and one red, like a railway clock that’s never once been late.',
+        text: 'Ember glows amber in the dark, easy on the eyes at 3 a.m. Heather goes quietly violet. Lagoon is cool teal with soft, rounded numbers, for when the time should feel like a holiday.',
       },
     ],
   },
