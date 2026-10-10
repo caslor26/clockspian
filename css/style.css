@@ -430,8 +430,7 @@ input[type=range]:focus-visible{ outline:1px solid var(--fg-dim); outline-offset
 
 .panel-footer{
   display:flex;
-  justify-content:space-between;
-  gap:16px;
+  justify-content:center;
   margin-top:2px;
   padding-top:16px;
   border-top:1px solid color-mix(in srgb, var(--line) 70%, transparent);
