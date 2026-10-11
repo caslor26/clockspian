@@ -11,6 +11,22 @@
 // the "What is this?" dialog.
 export const RELEASES = [
   {
+    version: '1.3.0',
+    date: '2026-10-11',
+    notes: [
+      {
+        emoji: '⏳',
+        title: 'Count down to something',
+        text: 'Lunch, Friday, Christmas, the holiday you keep checking the calendar for. Give it a name and a date in settings and Clockspian quietly counts down under the date. It remembers, too, so closing the tab won’t cancel Christmas.',
+      },
+      {
+        emoji: '🎛️',
+        title: 'Switches where they belong',
+        text: 'Countdown and Weather now switch on and off right from their headings, so the settings menu still fits without scrolling.',
+      },
+    ],
+  },
+  {
     version: '1.2.1',
     date: '2026-10-10',
     notes: [],

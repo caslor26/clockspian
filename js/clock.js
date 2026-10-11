@@ -3,6 +3,14 @@ const MONTHS = ['January','February','March','April','May','June','July','August
 
 const pad = (n) => String(n).padStart(2, '0');
 
+// Anything else that changes with the seconds (the countdown) rides this clock's tick
+// rather than running a timer of its own, so the two can never drift out of step.
+const tickListeners = new Set();
+
+export function onTick(listener) {
+  tickListeners.add(listener);
+}
+
 export function initClock() {
   const timeEl = document.getElementById('time');
   const weekdayEl = document.getElementById('weekday');
@@ -42,6 +50,8 @@ export function initClock() {
     } else {
       track.style.width = `${(seconds / 60) * 100}%`;
     }
+
+    tickListeners.forEach((listener) => listener(now));
   }
 
   // setInterval(1000) drifts, and stalls entirely while the lid is shut. Re-aim at

@@ -44,10 +44,17 @@ panel. `Esc` or a click anywhere outside closes it. Choices persist in `localSto
   | Lagoon | Nunito | Teal |
 - **Light / dark** — the sun/moon pill beside the Theme heading. Every theme has both
   palettes; light is the default.
-- **Show weather** (under *Weather*) — off hides the weather block, stops the
-  Open-Meteo requests, and holds off the location prompt until it is back on.
-- **Location** (under *Weather*) — *My location* or *Uppsala*. Stored separately, so
-  **Reset** leaves it alone.
+- **Countdown** — the switch on the *Countdown* heading; off by default. On, it takes a
+  name, a date and an optional time (none means midnight) and shows the time left as a
+  quiet line under the date: whole calendar days beyond 48 hours, hours and minutes
+  inside them, minutes and seconds in the last hour. At zero it blinks "now" for an hour,
+  then steps aside. It stores the wall-clock date and time as typed, not the time
+  remaining, so a closed tab is still right when it reopens. Stored separately, in
+  `clockspian.countdown`.
+- **Weather** — the switch on the *Weather* heading. Off hides the weather block, stops
+  the Open-Meteo requests, and holds off the location prompt until it is back on.
+- **Location** (under *Weather*) — *My location* or *Uppsala*. Stored separately, in
+  `clockspian.location`.
 
 - **What is this?** — reopens the intro that greets a first visit. It shows once, on
   its own — to everyone, including browsers that used Clockspian before it existed — and

@@ -21,6 +21,12 @@
         <span id="date">—</span>
       </div>
 
+      <div class="countdown" id="countdown" hidden>
+        <span id="countdownLabelText"></span>
+        <span class="dot"></span>
+        <span class="countdown-value" id="countdownValue"></span>
+      </div>
+
       <div class="divider"></div>
 
       <div class="weather" id="weather">
@@ -102,16 +108,24 @@
       <div class="choices" id="themeChoices" role="radiogroup" aria-label="Theme"></div>
     </section>
 
-    <h2 class="panel-title">Weather</h2>
+    <h2 class="panel-title">Countdown
+      <button class="switch" id="countdownSwitch" type="button" role="switch" aria-checked="false" aria-label="Show countdown"><i></i></button>
+    </h2>
 
-    <section class="field">
-      <span class="field-label">Show weather
-        <button class="switch" id="weatherSwitch" type="button" role="switch" aria-checked="true" aria-label="Show weather"><i></i></button>
-      </span>
+    <section class="field" id="countdownField">
+      <input class="text-input" id="countdownName" type="text" maxlength="24" placeholder="Name it — Lunch, Christmas…" aria-label="Countdown name" autocomplete="off">
+      <div class="input-row">
+        <input class="text-input" id="countdownDate" type="date" aria-label="Date">
+        <input class="text-input" id="countdownTime" type="time" aria-label="Time (optional)">
+      </div>
+      <p class="field-note" id="countdownNote" aria-live="polite" hidden></p>
     </section>
 
+    <h2 class="panel-title">Weather
+      <button class="switch" id="weatherSwitch" type="button" role="switch" aria-checked="true" aria-label="Show weather"><i></i></button>
+    </h2>
+
     <section class="field" id="locationField">
-      <span class="field-label">Location</span>
       <div class="choices" id="locationChoices" role="radiogroup" aria-label="Weather location"></div>
       <p class="field-note" id="locationNote" aria-live="polite" hidden></p>
     </section>
@@ -134,7 +148,7 @@
       <p>Clockspian asks for your location so the forecast is for where you actually are. Say no and you get Uppsala, Sweden — lovely, but possibly not your town. Your position is rounded to about a kilometre and only used to look up the weather and the place’s name.</p>
 
       <h3><span class="about-emoji" aria-hidden="true">⚙️</span>Making it yours</h3>
-      <p>Move the mouse or tap the screen and a small gear appears in the top-right corner. Behind it: themes, light and dark, size, and the power to stop the colon blinking if it’s started to feel judgemental. It all sticks for next time.</p>
+      <p>Move the mouse or tap the screen and a small gear appears in the top-right corner. Behind it: themes, light and dark, size, a countdown to lunch (or Christmas), and the power to stop the colon blinking if it’s started to feel judgemental. It all sticks for next time.</p>
 
       <h3><span class="about-emoji" aria-hidden="true">🤷</span>That’s it, really</h3>
       <p>No account, no ads, no notifications. If the internet wanders off, the time keeps going and the weather holds its last reading until it’s back. It is, after all, just a clock.</p>

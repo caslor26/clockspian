@@ -2,6 +2,7 @@ import { LOCATION_MODES, getLocationState, onLocationChange, setLocationMode } f
 import { openAbout } from './about.js';
 import { openWhatsNew } from './whatsnew.js';
 import { VERSION } from './version.js';
+import { getCountdown, setCountdown, onCountdownChange, countdownStatus } from './countdown.js';
 
 // Persisted display settings. Everything is applied by writing CSS custom
 // properties onto :root — no component knows what the current theme is.
@@ -394,6 +395,12 @@ export function initSettings() {
   const versionButton = document.getElementById('versionButton');
   const locationRow = document.getElementById('locationChoices');
   const locationNote = document.getElementById('locationNote');
+  const countdownSwitch = document.getElementById('countdownSwitch');
+  const countdownField = document.getElementById('countdownField');
+  const countdownName = document.getElementById('countdownName');
+  const countdownDate = document.getElementById('countdownDate');
+  const countdownTime = document.getElementById('countdownTime');
+  const countdownNote = document.getElementById('countdownNote');
 
   panel.hidden = false; // the attribute only guards the pre-JS frame
 
@@ -571,9 +578,37 @@ export function initSettings() {
   onLocationChange(syncLocation);
   syncLocation();
 
+  // --- countdown ---
+  // Not part of `state`: countdown.js persists it separately.
+
+  const COUNTDOWN_NOTES = {
+    unset: 'Pick a date to start counting. The time is optional.',
+    past: 'That moment has passed. Pick a new date to count again.',
+  };
+
+  function syncCountdown() {
+    const countdown = getCountdown();
+    countdownSwitch.setAttribute('aria-checked', String(countdown.on));
+    countdownField.hidden = !countdown.on;
+    // Only fill fields that aren't being typed in, so a re-sync never moves the caret.
+    if (document.activeElement !== countdownName) countdownName.value = countdown.label;
+    if (document.activeElement !== countdownDate) countdownDate.value = countdown.date;
+    if (document.activeElement !== countdownTime) countdownTime.value = countdown.time;
+    const note = COUNTDOWN_NOTES[countdownStatus()];
+    countdownNote.textContent = note || '';
+    countdownNote.hidden = !note;
+  }
+  countdownSwitch.addEventListener('click', () => setCountdown({ on: !getCountdown().on }));
+  countdownName.addEventListener('input', () => setCountdown({ label: countdownName.value }));
+  countdownDate.addEventListener('input', () => setCountdown({ date: countdownDate.value }));
+  countdownTime.addEventListener('input', () => setCountdown({ time: countdownTime.value }));
+  onCountdownChange(syncCountdown);
+  syncCountdown();
+
   // --- panel visibility ---
 
   function setOpen(open) {
+    if (open) syncCountdown(); // the moment may have passed while the panel was shut
     document.body.classList.toggle('panel-open', open);
     toggle.setAttribute('aria-expanded', String(open));
   }

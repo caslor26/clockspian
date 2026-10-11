@@ -1,5 +1,6 @@
 import { initSettings, isWeatherShown, onWeatherShownChange } from './settings.js';
 import { initClock } from './clock.js';
+import { initCountdown } from './countdown.js';
 import { initWeather } from './weather.js';
 import { startLocation } from './location.js';
 import { isFirstVisit, openAbout } from './about.js';
@@ -12,6 +13,7 @@ const firstVisit = isFirstVisit();
 // follows renders in the right accent and scale on the first frame.
 initSettings();
 initClock();
+initCountdown();
 initWeather();
 initWhatsNew(firstVisit);
 watchForUpdates();
