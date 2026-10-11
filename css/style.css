@@ -504,21 +504,44 @@ input[type=range]:focus-visible{ outline:1px solid var(--fg-dim); outline-offset
 .text-button:hover{ color:var(--fg); }
 .text-button:focus-visible{ outline:1px solid var(--fg-dim); outline-offset:3px; }
 
+/* The signature under the footer: the mark in the theme's own accent and text colour, the
+   name in Jost's tracked capitals whatever the theme, then the version. */
 .panel-version{
   align-self:center;
+  display:flex;
+  align-items:center;
+  gap:9px;
   margin-top:-10px;
   padding:0;
   font-family:inherit;
   font-size:11px;
   letter-spacing:0.12em;
   font-variant-numeric:tabular-nums;
+  white-space:nowrap;
   color:var(--fg-dim);
   opacity:0.7;
   background:none;
   border:none;
   cursor:pointer;
+  transition:opacity 0.15s ease;
 }
-.panel-version:hover{ opacity:1; color:var(--fg); }
+.panel-version:hover{ opacity:1; }
+.brand-mark{ width:15px; height:15px; flex-shrink:0; }
+.brand-dial{ stroke:var(--accent); }
+.brand-hands{ stroke:var(--fg); }
+.brand-name{
+  margin-right:-0.24em; /* the tracking's trailing space, so the gap to the dot stays even */
+  font-family:'Jost','Helvetica Neue',Arial,sans-serif;
+  font-weight:400;
+  letter-spacing:0.24em;
+  text-transform:uppercase;
+  color:var(--fg);
+}
+.panel-version .dot{
+  width:3px; height:3px;
+  border-radius:50%;
+  background:var(--accent-2);
+}
 .panel-version:focus-visible{ opacity:1; outline:1px solid var(--fg-dim); outline-offset:3px; }
 
 @media (max-width:480px){

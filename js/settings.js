@@ -371,7 +371,8 @@ function loadThemePreviews() {
   if (previewsLoaded) return;
   previewsLoaded = true;
   const families = THEMES.filter((t) => t.font.family).map((t) => `family=${t.font.family}:wght@400`);
-  const glyphs = [...new Set(THEMES.map((t) => t.label).join(''))].join('');
+  // plus the wordmark at the foot of the panel, which is always set in Jost
+  const glyphs = [...new Set(THEMES.map((t) => t.label).join('') + 'CLOCKSPIAN')].join('');
   const link = document.createElement('link');
   link.rel = 'stylesheet';
   link.href = `https://fonts.googleapis.com/css2?${families.join('&')}&text=${encodeURIComponent(glyphs)}&display=swap`;
@@ -620,7 +621,7 @@ export function initSettings() {
     openAbout();
   });
 
-  versionButton.textContent = `Version ${VERSION}`;
+  document.getElementById('versionNumber').textContent = `Version ${VERSION}`;
   versionButton.addEventListener('click', () => {
     setOpen(false);
     openWhatsNew();

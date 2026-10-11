@@ -11,6 +11,17 @@
 // the "What is this?" dialog.
 export const RELEASES = [
   {
+    version: '1.3.1',
+    date: '2026-10-11',
+    notes: [
+      {
+        emoji: '🕒',
+        title: 'Clockspian has a face',
+        text: 'A new little logo in your browser tab and at the bottom of settings: a dial for the C, and the hands at three o’clock for the L. It’s a clock that spells its maker’s initials, which is about as vain as a clock gets.',
+      },
+    ],
+  },
+  {
     version: '1.3.0',
     date: '2026-10-11',
     notes: [

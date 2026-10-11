@@ -133,7 +133,17 @@
     <div class="panel-footer">
       <button class="text-button" id="aboutButton" type="button">What is this?</button>
     </div>
-    <button class="panel-version" id="versionButton" type="button" title="What’s new"></button>
+    <!-- The signature: the mark, the name and the running version. The mark is a C and an
+         L: the dial, open on the right, and the hands at three o'clock. -->
+    <button class="panel-version" id="versionButton" type="button" title="What’s new">
+      <svg class="brand-mark" viewBox="0 0 64 64" fill="none" stroke-width="7" aria-hidden="true">
+        <path class="brand-dial" d="M47.56 16.44A22 22 0 1 0 47.56 47.56"/>
+        <path class="brand-hands" d="M32 15V32H46"/>
+      </svg>
+      <span class="brand-name">Clockspian</span>
+      <span class="dot"></span>
+      <span id="versionNumber"></span>
+    </button>
   </aside>
 
   <dialog class="about" id="about" aria-labelledby="aboutTitle">
