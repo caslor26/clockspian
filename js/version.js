@@ -11,6 +11,17 @@
 // the "What is this?" dialog.
 export const RELEASES = [
   {
+    version: '1.3.2',
+    date: '2026-10-12',
+    notes: [
+      {
+        emoji: '🍽️',
+        title: 'A shorter “now”',
+        text: 'When a countdown arrives, “now” hangs around for five minutes and then bows out, instead of lingering for an hour like the last guest at lunch.',
+      },
+    ],
+  },
+  {
     version: '1.3.1',
     date: '2026-10-11',
     notes: [

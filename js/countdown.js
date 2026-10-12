@@ -11,7 +11,7 @@ import { onTick } from './clock.js';
 const STORAGE_KEY = 'clockspian.countdown';
 
 // How long "now" stays up once the moment arrives, before the line steps aside.
-const AFTERGLOW_MS = 60 * 60 * 1000;
+const AFTERGLOW_MS = 5 * 60 * 1000;
 
 const DEFAULTS = { on: false, label: '', date: '', time: '' };
 
