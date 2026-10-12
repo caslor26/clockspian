@@ -47,7 +47,7 @@ panel. `Esc` or a click anywhere outside closes it. Choices persist in `localSto
 - **Countdown** — the switch on the *Countdown* heading; off by default. On, it takes a
   name, a date and an optional time (none means midnight) and shows the time left as a
   quiet line under the date: whole calendar days beyond 48 hours, hours and minutes
-  inside them, minutes and seconds in the last hour. At zero it blinks "now" for an hour,
+  inside them, minutes and seconds in the last hour. At zero it blinks "now" for five minutes,
   then steps aside. It stores the wall-clock date and time as typed, not the time
   remaining, so a closed tab is still right when it reopens. Stored separately, in
   `clockspian.countdown`.
@@ -141,6 +141,8 @@ js/about.js       the "What is this?" dialog and first-visit check
 js/version.js     every release and its notes, newest first
 js/whatsnew.js    the What's new pill and release-notes dialog
 js/updates.js     hourly check for a newer deploy; reloads to pick it up
+watch/index.html  /watch — the promo films, with link previews for sharing
+media/            the films and their posters, exported from promo/ (which stays out of git)
 prototype/        the original single-file mockup, kept for reference
 ```
 

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clockspian - The films</title>
+<meta name="description" content="Two short films about a clock: the tour, and the countdown.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+
+<!-- Link previews: what iMessage, Slack, Discord and friends show when /watch is pasted.
+     Crawlers need absolute URLs. -->
+<meta property="og:type" content="video.other">
+<meta property="og:site_name" content="Clockspian">
+<meta property="og:title" content="Clockspian - It’s a clock. Here it is moving.">
+<meta property="og:description" content="Two short films about a clock: the tour, and the countdown.">
+<meta property="og:url" content="https://clockspian.vercel.app/watch/">
+<meta property="og:image" content="https://clockspian.vercel.app/media/clockspian.jpg">
+<meta property="og:image:width" content="1280">
+<meta property="og:image:height" content="720">
+<meta property="og:video" content="https://clockspian.vercel.app/media/clockspian.mp4">
+<meta property="og:video:type" content="video/mp4">
+<meta property="og:video:width" content="1920">
+<meta property="og:video:height" content="1080">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@200;300;400&display=swap">
+<style>
+/* Fjord, the default theme, in whichever of light and dark the visitor's system asks for.
+   Standalone on purpose: the clock's stylesheet sizes everything for a full-screen stage. */
+:root{
+  color-scheme:light dark;
+  --bg:#eff2f6; --line:#cfd6e0; --fg:#172030; --fg-dim:#626e82;
+  --accent:#4a6890; --accent-2:#8fa3c0;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0e1218; --line:#232b37; --fg:#eef1f5; --fg-dim:#8791a0;
+    --accent:#8aa4c9; --accent-2:#5a6f8a;
+  }
+}
+
+*{ margin:0; padding:0; box-sizing:border-box; }
+body{
+  background:var(--bg);
+  color:var(--fg);
+  font-family:'Helvetica Neue',Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+main{
+  width:min(960px, 100% - 32px);
+  margin:0 auto;
+  padding:56px 0 72px;
+}
+
+/* the same signature as the bottom of the settings panel */
+.brand{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  font-family:'Jost','Helvetica Neue',Arial,sans-serif;
+  font-size:12px;
+  letter-spacing:0.24em;
+  text-transform:uppercase;
+  color:var(--fg);
+  text-decoration:none;
+}
+.brand svg{ width:18px; height:18px; }
+.brand-dial{ stroke:var(--accent); }
+.brand-hands{ stroke:var(--fg); }
+
+h1{
+  margin:28px 0 12px;
+  font-family:'Jost','Helvetica Neue',Arial,sans-serif;
+  font-size:clamp(34px, 6vw, 56px);
+  font-weight:200;
+  letter-spacing:-0.01em;
+  line-height:1.1;
+}
+.lead{
+  max-width:34em;
+  font-size:16px;
+  line-height:1.6;
+  color:var(--fg-dim);
+}
+
+.film{ margin-top:56px; }
+.film h2{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-bottom:6px;
+  font-size:11px;
+  font-weight:400;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  color:var(--accent);
+}
+.film h2 span{ font-size:16px; letter-spacing:0; }
+.film p{
+  margin-bottom:16px;
+  font-size:14px;
+  line-height:1.6;
+  color:var(--fg-dim);
+}
+video{
+  display:block;
+  width:100%;
+  height:auto;
+  background:#000;
+  border:1px solid var(--line);
+  border-radius:12px;
+}
+/* The countdown film has a portrait cut. On a portrait phone that one shows instead;
+   preload="none" means the hidden one never downloads. */
+.portrait{ display:none; }
+@media (orientation:portrait) and (max-width:600px){
+  .landscape{ display:none; }
+  .portrait{ display:block; max-height:80vh; width:auto; max-width:100%; margin:0 auto; }
+}
+
+.actions{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:12px 20px;
+  margin-top:64px;
+  padding-top:28px;
+  border-top:1px solid var(--line);
+}
+.open{
+  padding:12px 22px;
+  font-size:13px;
+  letter-spacing:0.06em;
+  color:var(--bg);
+  background:var(--fg);
+  border-radius:8px;
+  text-decoration:none;
+  transition:opacity 0.2s ease;
+}
+.open:hover{ opacity:0.85; }
+.share{
+  padding:0;
+  font:inherit;
+  font-size:13px;
+  letter-spacing:0.06em;
+  color:var(--fg-dim);
+  background:none;
+  border:none;
+  cursor:pointer;
+}
+.share:hover{ color:var(--fg); }
+.open:focus-visible,.share:focus-visible,.brand:focus-visible{ outline:1px solid var(--fg-dim); outline-offset:3px; }
+
+@media (max-width:480px){
+  main{ padding-top:36px; }
+  .film{ margin-top:44px; }
+}
+</style>
+</head>
+<body>
+<main>
+  <a class="brand" href="/">
+    <svg viewBox="0 0 64 64" fill="none" stroke-width="7" aria-hidden="true">
+      <path class="brand-dial" d="M47.56 16.44A22 22 0 1 0 47.56 47.56"/>
+      <path class="brand-hands" d="M32 15V32H46"/>
+    </svg>
+    Clockspian
+  </a>
+
+  <h1>It’s a clock.<br>Here it is moving.</h1>
+  <p class="lead">Two short films about a clock for your spare screen. Sound on if you like; the clock won’t mind either way.</p>
+
+  <section class="film" id="tour">
+    <h2><span aria-hidden="true">🎬</span>The tour</h2>
+    <p>Thirty-four seconds: the time, the weather, ten looks and the whole pitch.</p>
+    <video controls playsinline preload="none" poster="/media/clockspian.jpg" width="1920" height="1080">
+      <source src="/media/clockspian.mp4" type="video/mp4">
+    </video>
+  </section>
+
+  <section class="film" id="countdown">
+    <h2><span aria-hidden="true">⏳</span>Count down to something</h2>
+    <p>Twenty-six seconds on the newest trick: lunch, Friday or Christmas, counting down quietly under the date.</p>
+    <video class="landscape" controls playsinline preload="none" poster="/media/countdown.jpg" width="1920" height="1080">
+      <source src="/media/countdown.mp4" type="video/mp4">
+    </video>
+    <video class="portrait" controls playsinline preload="none" poster="/media/countdown-vertical.jpg" width="1080" height="1920">
+      <source src="/media/countdown-vertical.mp4" type="video/mp4">
+    </video>
+  </section>
+
+  <div class="actions">
+    <a class="open" href="/">Open Clockspian</a>
+    <button class="share" id="share" type="button">Share these films</button>
+  </div>
+</main>
+
+<script>
+  // The phone's own share sheet where there is one; otherwise the link goes on the clipboard.
+  const share = document.getElementById('share');
+  const url = 'https://clockspian.vercel.app/watch/';
+  share.addEventListener('click', async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: 'Clockspian', text: 'It’s a clock. Here it is moving.', url });
+      } catch {
+        // Dismissing the sheet counts as an error. It isn't one.
+      }
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+      share.textContent = 'Link copied';
+    } catch {
+      share.textContent = url;
+    }
+    setTimeout(() => { share.textContent = 'Share these films'; }, 2400);
+  });
+</script>
+</body>
+</html>

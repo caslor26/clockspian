@@ -8,8 +8,21 @@
 // leave `notes` empty: it still bumps the version, but "What's new" skips it.
 //
 // Each note is an emoji, a short heading and a sentence or two — in the same voice as
-// the "What is this?" dialog.
+// the "What is this?" dialog — and, if there's somewhere to go, a `link: { href, text }`
+// shown after the text.
 export const RELEASES = [
+  {
+    version: '1.4.0',
+    date: '2026-10-12',
+    notes: [
+      {
+        emoji: '🎬',
+        title: 'Clockspian, the motion picture',
+        text: 'Two short films about a clock: the grand tour, and a second one starring the countdown. Watch them, or send them to someone whose spare screen is going to waste.',
+        link: { href: '/watch/', text: 'Roll the films' },
+      },
+    ],
+  },
   {
     version: '1.3.2',
     date: '2026-10-12',
@@ -40,6 +53,7 @@ export const RELEASES = [
         emoji: '⏳',
         title: 'Count down to something',
         text: 'Lunch, Friday, Christmas, the holiday you keep checking the calendar for. Give it a name and a date in settings and Clockspian quietly counts down under the date. It remembers, too, so closing the tab won’t cancel Christmas.',
+        link: { href: '/watch/#countdown', text: 'See it in action' },
       },
       {
         emoji: '🎛️',

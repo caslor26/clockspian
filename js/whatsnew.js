@@ -65,7 +65,17 @@ function renderRelease(release) {
     const emoji = element('span', 'about-emoji', note.emoji);
     emoji.setAttribute('aria-hidden', 'true');
     heading.append(emoji, note.title);
-    section.append(heading, element('p', null, note.text));
+    const text = element('p', null, note.text);
+    // A note can end on a link — to the films, say. It opens in a new tab: the clock
+    // stays where it is.
+    if (note.link) {
+      const link = element('a', 'about-link', note.link.text);
+      link.href = note.link.href;
+      link.target = '_blank';
+      link.rel = 'noopener';
+      text.append(' ', link);
+    }
+    section.append(heading, text);
   }
   return section;
 }
