@@ -3,3 +3,11 @@
 HANDOFF.md
 .env*
 promo/
+
+# Locally installed agent skills
+.agents/
+.claude/skills/
+skills-lock.json
+
+# /brag-slim output
+brag-output*/
