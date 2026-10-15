@@ -146,24 +146,38 @@
     </button>
   </aside>
 
-  <dialog class="about" id="about" aria-labelledby="aboutTitle">
+  <dialog class="about intro" id="about" aria-labelledby="aboutTitle">
     <div class="about-body">
       <h2 class="about-title" id="aboutTitle"><span aria-hidden="true">👋</span> Hello. This is a clock.</h2>
-      <p class="about-lead">Clockspian tells you the time. It also tells you the weather, which is frankly more than most clocks bother with. That’s the whole pitch.</p>
-      <p class="about-film">Rather watch than read? <a class="about-link" href="/watch/" target="_blank" rel="noopener">Here’s the half-minute film</a>.</p>
+      <p class="about-lead">It’s for your laptop screen, open beside your monitors all day and showing your wallpaper to nobody. Give it something to do.</p>
 
-      <h3><span class="about-emoji" aria-hidden="true">🖥️</span>What it’s for</h3>
-      <p>The spare monitor, the retired tablet, the TV nobody watches during the day. Open Clockspian full-screen, walk away, and let it be quietly, reliably correct about what time it is.</p>
+      <div class="about-points">
+        <div>
+          <h3><span class="about-emoji" aria-hidden="true">💻</span>The laptop screen</h3>
+          <p>Work on the big screens. Leave Clockspian on the small one.</p>
+        </div>
+        <div>
+          <h3><span class="about-emoji" aria-hidden="true">🤍</span>Clean on purpose</h3>
+          <p>Big numbers, quiet colours, ten themes. No account, no ads, no pings.</p>
+        </div>
+        <div>
+          <h3><span class="about-emoji" aria-hidden="true">🌦️</span>Just enough</h3>
+          <p>The time, the date, the weather, and a countdown if you want one.</p>
+        </div>
+      </div>
 
-      <h3><span class="about-emoji" aria-hidden="true">🌦️</span>The weather bit</h3>
-      <p>Clockspian asks for your location so the forecast is for where you actually are. Say no and you get Uppsala, Sweden — lovely, but possibly not your town. Your position is rounded to about a kilometre and only used to look up the weather and the place’s name.</p>
+      <!-- js/about.js swaps the key for ⌃⌘F on a Mac and drops the Fn hint -->
+      <div class="about-tip">
+        <h3><span class="about-emoji" aria-hidden="true">⌨️</span>The important bit</h3>
+        <p>Click the clock on your laptop screen and press <kbd class="fullscreen-key">F11</kbd>. The tabs and address bar slide away and it’s just the clock, edge to edge.</p>
+        <p class="about-small"><kbd class="fullscreen-key">F11</kbd> again brings them back.<span class="fn-hint"> Nothing happening? Try <kbd>Fn</kbd> + <kbd>F11</kbd>.</span></p>
+      </div>
 
-      <h3><span class="about-emoji" aria-hidden="true">⚙️</span>Making it yours</h3>
-      <p>Move the mouse or tap the screen and a small gear appears in the top-right corner. Behind it: themes, light and dark, size, a countdown to lunch (or Christmas), and the power to stop the colon blinking if it’s started to feel judgemental. It all sticks for next time.</p>
-
-      <h3><span class="about-emoji" aria-hidden="true">🤷</span>That’s it, really</h3>
-      <p>No account, no ads, no notifications. If the internet wanders off, the time keeps going and the weather holds its last reading until it’s back. It is, after all, just a clock.</p>
-
+      <ul class="about-fine">
+        <li><span aria-hidden="true">📍</span><span>Your browser asks where you are so the weather is local, rounded to about a kilometre. Say no and you get Uppsala, Sweden.</span></li>
+        <li><span aria-hidden="true">⚙️</span><span>Move the mouse and a gear appears top right, with themes, light and dark, size and the countdown.</span></li>
+        <li><span aria-hidden="true">🎬</span><span>Rather watch? <a class="about-link" href="/watch/" target="_blank" rel="noopener">Here’s the half-minute film</a>.</span></li>
+      </ul>
     </div>
     <div class="about-footer">
       <button class="about-close" id="aboutClose" type="button" autofocus>I get it, it’s a clock</button>

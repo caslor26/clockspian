@@ -28,8 +28,18 @@ export function isFirstVisit() {
 let dialog = null;
 let waiting = [];
 
+// Full screen is F11 in every browser except on a Mac, where it's ⌃⌘F and the Fn hint
+// for laptops whose top row does media keys first doesn't apply.
+function fitKeysToPlatform() {
+  const platform = navigator.userAgentData?.platform || navigator.platform || '';
+  if (!/mac/i.test(platform)) return;
+  dialog.querySelectorAll('.fullscreen-key').forEach((key) => { key.textContent = '⌃⌘F'; });
+  dialog.querySelector('.fn-hint').hidden = true;
+}
+
 function setUp() {
   dialog = document.getElementById('about');
+  fitKeysToPlatform();
   document.getElementById('aboutClose').addEventListener('click', () => dialog.close());
   // A click that lands on the <dialog> itself, not its content, was on the backdrop.
   dialog.addEventListener('click', (event) => {

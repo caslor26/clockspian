@@ -12,6 +12,17 @@
 // shown after the text.
 export const RELEASES = [
   {
+    version: '1.5.0',
+    date: '2026-10-15',
+    notes: [
+      {
+        emoji: '⌨️',
+        title: 'The F11 trick',
+        text: 'Clockspian looks its best on the laptop screen beside your monitors, with nothing else around it. Click the clock and press F11 (⌃⌘F on a Mac) and the tabs and address bar slide away, leaving just the clock, edge to edge. The “What is this?” intro has been rewritten around it, too.',
+      },
+    ],
+  },
+  {
     version: '1.4.0',
     date: '2026-10-12',
     notes: [

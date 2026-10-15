@@ -682,7 +682,68 @@ body.panel-open .news{ opacity:0; pointer-events:none; }
   color:var(--fg-dim);
 }
 .about .about-lead{ color:var(--fg); }
-.about .about-film{ margin-bottom:6px; }
+
+/* The intro is wider than the release notes: its three points sit side by side. */
+.about.intro{ width:min(600px, calc(100vw - 32px)); }
+.about-points{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0, 1fr));
+  gap:20px;
+  margin-top:22px;
+}
+.about-points h3{
+  flex-direction:column;
+  align-items:flex-start;
+  gap:7px;
+  margin:0 0 6px;
+}
+.about-points .about-emoji{ font-size:19px; }
+.about-points p{ font-size:13.5px; line-height:1.55; }
+
+/* The F11 tip: the one boxed thing in the intro, tinted with the theme's accent. */
+.about-tip{
+  margin-top:24px;
+  padding:15px 18px 16px;
+  border-radius:12px;
+  background:color-mix(in srgb, var(--accent) 9%, var(--panel-bg));
+  border:1px solid color-mix(in srgb, var(--accent) 30%, var(--line));
+}
+.about-tip h3{ margin:0 0 6px; }
+.about .about-tip p{ line-height:1.65; color:var(--fg); }
+.about .about-tip .about-small{ margin-top:6px; font-size:12.5px; color:var(--fg-dim); }
+.about kbd{
+  position:relative;
+  top:-1px;
+  display:inline-block;
+  min-width:1.8em;
+  padding:0 6px;
+  font-family:inherit;
+  font-size:12px;
+  font-weight:500;
+  line-height:1.6;
+  text-align:center;
+  color:var(--fg);
+  background:var(--panel-bg);
+  border:1px solid var(--line);
+  border-bottom-width:2px;
+  border-radius:5px;
+}
+
+/* Weather, settings and the film: one quiet line each, under an emoji. */
+.about-fine{
+  display:grid;
+  gap:8px;
+  margin-top:22px;
+  padding:0;
+  list-style:none;
+}
+.about-fine li{
+  display:grid;
+  grid-template-columns:24px minmax(0, 1fr);
+  font-size:13px;
+  line-height:1.55;
+  color:var(--fg-dim);
+}
 .about-link{
   color:var(--accent);
   text-decoration:underline;
@@ -708,6 +769,13 @@ body.panel-open .news{ opacity:0; pointer-events:none; }
 }
 .about-close:hover{ opacity:0.85; }
 .about-close:focus-visible{ outline:1px solid var(--fg); outline-offset:3px; }
+
+/* too narrow for three columns: the points stack, each heading back on one line */
+@media (max-width:600px){
+  .about-points{ grid-template-columns:minmax(0, 1fr); gap:14px; }
+  .about-points h3{ flex-direction:row; align-items:center; gap:8px; }
+  .about-points .about-emoji{ font-size:16px; }
+}
 
 @media (max-width:480px){
   .about-body{ padding:28px 22px 8px; }
