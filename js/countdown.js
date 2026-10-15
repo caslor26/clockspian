@@ -15,7 +15,8 @@ const STORAGE_KEY = 'clockspian.countdown';
 const AFTERGLOW_MS = 5 * 60 * 1000;
 const ARRIVAL_MS = 60 * 1000;
 
-const DEFAULTS = { on: false, label: '', date: '', time: '' };
+// `insane` is Insane mode: see js/insane.js for what happens at zero.
+const DEFAULTS = { on: false, label: '', date: '', time: '', insane: false };
 
 function load() {
   try {
@@ -49,6 +50,15 @@ export function setCountdown(changes) {
 
 export function onCountdownChange(listener) {
   listeners.add(listener);
+}
+
+// Told once, on the tick that crosses zero, while the countdown is on. Not on a load or
+// an edit that lands after the moment, and not if the screen first sees it more than a
+// minute late, so it only ever goes off in front of someone.
+const arrivalListeners = new Set();
+
+export function onCountdownArrive(listener) {
+  arrivalListeners.add(listener);
 }
 
 // No time means the start of the day — Christmas needs only a date.
@@ -94,8 +104,15 @@ export function initCountdown() {
   const dotEl = el.querySelector('.dot');
   const valueEl = document.getElementById('countdownValue');
 
+  let lastStatus = null;
+
   function render(now = new Date()) {
     const status = countdownStatus(now);
+    const crossed = lastStatus === 'counting' && status === 'arrived';
+    lastStatus = status;
+    if (crossed && state.on && now - countdownTarget() < ARRIVAL_MS) {
+      arrivalListeners.forEach((listener) => listener(getCountdown()));
+    }
     const shown = state.on && (status === 'counting' || status === 'arrived');
     el.hidden = !shown;
     if (!shown) return;

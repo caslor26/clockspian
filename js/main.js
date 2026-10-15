@@ -1,6 +1,7 @@
 import { initSettings, isWeatherShown, onWeatherShownChange } from './settings.js';
 import { initClock } from './clock.js';
 import { initCountdown } from './countdown.js';
+import { initInsane } from './insane.js';
 import { initWeather } from './weather.js';
 import { startLocation } from './location.js';
 import { isFirstVisit, openAbout } from './about.js';
@@ -14,6 +15,7 @@ const firstVisit = isFirstVisit();
 initSettings();
 initClock();
 initCountdown();
+initInsane();
 initWeather();
 initWhatsNew(firstVisit);
 watchForUpdates();

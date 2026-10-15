@@ -3,6 +3,7 @@ import { openAbout } from './about.js';
 import { openWhatsNew } from './whatsnew.js';
 import { VERSION } from './version.js';
 import { getCountdown, setCountdown, onCountdownChange, countdownStatus } from './countdown.js';
+import { primeAudio } from './insane.js';
 
 // Persisted display settings. Everything is applied by writing CSS custom
 // properties onto :root — no component knows what the current theme is.
@@ -402,6 +403,9 @@ export function initSettings() {
   const countdownDate = document.getElementById('countdownDate');
   const countdownTime = document.getElementById('countdownTime');
   const countdownNote = document.getElementById('countdownNote');
+  const insaneSwitch = document.getElementById('insaneSwitch');
+  const insaneNote = document.getElementById('insaneNote');
+  const insaneWarning = document.getElementById('insaneWarning');
 
   panel.hidden = false; // the attribute only guards the pre-JS frame
 
@@ -598,6 +602,8 @@ export function initSettings() {
     const note = COUNTDOWN_NOTES[countdownStatus()];
     countdownNote.textContent = note || '';
     countdownNote.hidden = !note;
+    insaneSwitch.setAttribute('aria-checked', String(countdown.insane));
+    insaneNote.hidden = !countdown.insane;
   }
   countdownSwitch.addEventListener('click', () => setCountdown({ on: !getCountdown().on }));
   countdownName.addEventListener('input', () => setCountdown({ label: countdownName.value }));
@@ -605,6 +611,32 @@ export function initSettings() {
   countdownTime.addEventListener('input', () => setCountdown({ time: countdownTime.value }));
   onCountdownChange(syncCountdown);
   syncCountdown();
+
+  // --- insane mode ---
+  // Off is one click. On has to get past the warning first.
+
+  insaneSwitch.addEventListener('click', () => {
+    if (getCountdown().insane) {
+      setCountdown({ insane: false });
+      return;
+    }
+    insaneWarning.returnValue = '';
+    insaneWarning.showModal();
+  });
+  // The click that says yes is the one the browser counts as permission to make noise
+  // later, so the sound is unlocked right in it rather than in the close that follows.
+  document.getElementById('insaneConfirm').addEventListener('click', primeAudio);
+  insaneWarning.addEventListener('close', () => {
+    if (insaneWarning.returnValue === 'go') setCountdown({ insane: true });
+  });
+  // Kept from the document's outside-the-panel check, so the panel is still open behind
+  // it to show the switch flip. A click on the <dialog> itself was on the backdrop.
+  insaneWarning.addEventListener('click', (event) => {
+    event.stopPropagation();
+    if (event.target === insaneWarning) insaneWarning.close();
+  });
+  // Likewise its Esc, which should close the warning and leave the panel open.
+  insaneWarning.addEventListener('keydown', (event) => event.stopPropagation());
 
   // --- panel visibility ---
 

@@ -12,6 +12,17 @@
 // shown after the text.
 export const RELEASES = [
   {
+    version: '1.6.0',
+    date: '2026-10-15',
+    notes: [
+      {
+        emoji: '🚀',
+        title: 'Insane mode',
+        text: 'There’s a new switch under Countdown. We’d rather not say what it does when the countdown hits zero, only that it comes with a warning, and the warning is not a joke. Sound on. Coffee down.',
+      },
+    ],
+  },
+  {
     version: '1.5.1',
     date: '2026-10-15',
     notes: [

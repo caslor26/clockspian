@@ -119,6 +119,10 @@
         <input class="text-input" id="countdownTime" type="time" aria-label="Time (optional)">
       </div>
       <p class="field-note" id="countdownNote" aria-live="polite" hidden></p>
+      <span class="field-label">Insane mode
+        <button class="switch insane-switch" id="insaneSwitch" type="button" role="switch" aria-checked="false" aria-label="Insane mode"><i></i></button>
+      </span>
+      <p class="field-note" id="insaneNote" hidden>Armed. Volume up, dignity down.</p>
     </section>
 
     <h2 class="panel-title">Weather
@@ -190,6 +194,22 @@
     <div class="about-footer">
       <button class="about-close" id="whatsNewClose" type="button" autofocus>Lovely, thanks</button>
     </div>
+  </dialog>
+
+  <!-- Asked before Insane mode is switched on; js/settings.js reads which button closed it -->
+  <dialog class="about warning" id="insaneWarning" aria-labelledby="insaneWarningTitle">
+    <form method="dialog" class="warning-form">
+      <div class="about-body">
+        <h2 class="about-title" id="insaneWarningTitle"><span aria-hidden="true">⚠️</span> Are you sure?</h2>
+        <p class="about-lead">With Insane mode on, this clock stops being polite the moment your countdown hits zero.</p>
+        <p>Possible side effects include loud noises, a violently shaking screen, an unscheduled trip through outer space and, not least, public humiliation in front of everyone within earshot.</p>
+        <p class="about-small">Clockspian accepts no responsibility for spilled coffee.</p>
+      </div>
+      <div class="about-footer warning-actions">
+        <button class="about-close secondary" value="cancel" autofocus>Keep it polite</button>
+        <button class="about-close danger" id="insaneConfirm" value="go">I’m sure. Go insane</button>
+      </div>
+    </form>
   </dialog>
 
   <script type="module" src="js/main.js"></script>

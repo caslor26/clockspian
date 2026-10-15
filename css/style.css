@@ -807,7 +807,49 @@ body.panel-open .news{ opacity:0; pointer-events:none; }
   .about-title{ font-size:22px; }
 }
 
+/* ---- insane mode ---- */
+
+/* Its switch runs hot once it's on. */
+.insane-switch[aria-checked=true]{ background:linear-gradient(90deg, #e8264f, #ff8a1f); }
+
+/* The warning before it: the release-notes dialog, narrower, with two ways out. */
+.about.warning{ width:min(440px, calc(100vw - 32px)); }
+.warning-form{ display:flex; flex-direction:column; flex:1 1 auto; min-height:0; }
+.warning p + p{ margin-top:10px; }
+.warning .about-small{ font-size:12.5px; font-style:italic; }
+.warning-actions{ display:flex; flex-wrap:wrap; gap:0 10px; }
+.warning-actions::before{ flex-basis:100%; }
+.warning-actions .about-close{ flex:1 1 0; }
+.about-close.secondary{
+  color:var(--fg);
+  background:none;
+  box-shadow:inset 0 0 0 1px var(--line);
+}
+.about-close.danger{
+  color:#fff;
+  background:linear-gradient(90deg, #e8264f, #ff7a1a);
+}
+
+/* What js/insane.js puts over the page: a canvas of space and debris that shakes, the
+   countdown line flying in the middle of it, and a white sheet for the flashes. */
+.insane{ position:fixed; inset:0; z-index:50; }
+.insane-shaker{ position:fixed; inset:0; }
+.insane canvas{ position:absolute; display:block; }
+.insane-flash{ position:fixed; inset:0; background:#fff; opacity:0; pointer-events:none; }
+.countdown.insane-hero{
+  position:fixed;
+  margin:0;
+  white-space:nowrap;
+  color:#eef2ff;
+  transform-origin:center;
+}
+.insane-hero .dot{ background:var(--accent); }
+/* and the clock, back from the trip, settling into focus */
+.stage.insane-return{ animation:insane-return 1.1s cubic-bezier(0.2, 0.7, 0.2, 1); }
+@keyframes insane-return{ from{ transform:scale(1.12); filter:blur(14px); } }
+
 @media (prefers-reduced-motion: reduce){
+  .stage.insane-return{ animation:none; }
   .time .colon, .countdown-value{ animation:none; transition:none; }
   .panel{ transition:none; }
   .seconds-track{ transition:none; }

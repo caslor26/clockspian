@@ -51,6 +51,14 @@ panel. `Esc` or a click anywhere outside closes it. Choices persist in `localSto
   then steps aside. It stores the wall-clock date and time as typed, not the time
   remaining, so a closed tab is still right when it reopens. Stored separately, in
   `clockspian.countdown`.
+- **Insane mode** (under *Countdown*, only while it's on) — asks "Are you sure?" first.
+  On, the moment the countdown crosses zero the clock trembles, explodes into letters
+  and flies to warp: the countdown's name and "now" zoom in at the centre of a shaking
+  starfield while the letters stream past as debris, to a synthesised boom, rocket roar
+  and whooshes; ten seconds later a flash and the clock is back. All of it lives in
+  `js/insane.js`. It only goes off on the tick that crosses zero (not on a reload
+  after), and only makes sound if the page has been clicked since it last loaded —
+  browsers' rule, not ours.
 - **Weather** — the switch on the *Weather* heading. Off hides the weather block, stops
   the Open-Meteo requests, and holds off the location prompt until it is back on.
 - **Location** (under *Weather*) — *My location* or *Uppsala*. Stored separately, in
