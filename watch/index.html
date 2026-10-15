@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Clockspian - The films</title>
-<meta name="description" content="Two short films about a clock: the tour, and the countdown.">
+<meta name="description" content="Three short films about a clock: Insane mode, the tour, and the countdown.">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 
 <!-- Link previews: what iMessage, Slack, Discord and friends show when /watch is pasted.
@@ -12,7 +12,7 @@
 <meta property="og:type" content="video.other">
 <meta property="og:site_name" content="Clockspian">
 <meta property="og:title" content="Clockspian - It’s a clock. Here it is moving.">
-<meta property="og:description" content="Two short films about a clock: the tour, and the countdown.">
+<meta property="og:description" content="Three short films about a clock: Insane mode, the tour, and the countdown.">
 <meta property="og:url" content="https://clockspian.vercel.app/watch/">
 <meta property="og:image" content="https://clockspian.vercel.app/media/clockspian.jpg">
 <meta property="og:image:width" content="1280">
@@ -170,7 +170,15 @@ video{
   </a>
 
   <h1>It’s a clock.<br>Here it is moving.</h1>
-  <p class="lead">Two short films about a clock for your spare screen. Sound on if you like; the clock won’t mind either way.</p>
+  <p class="lead">Three short films about a clock for your spare screen. Sound on if you like; the clock won’t mind either way.</p>
+
+  <section class="film" id="insane">
+    <h2><span aria-hidden="true">🚀</span>Insane mode</h2>
+    <p>Twenty-two seconds on the newest trick: a calm little clock, a countdown to lunch, and one switch that asks “Are you sure?” first.</p>
+    <video controls playsinline preload="none" poster="/media/insane.jpg" width="1920" height="1080">
+      <source src="/media/insane.mp4" type="video/mp4">
+    </video>
+  </section>
 
   <section class="film" id="tour">
     <h2><span aria-hidden="true">🎬</span>The tour</h2>
@@ -182,7 +190,7 @@ video{
 
   <section class="film" id="countdown">
     <h2><span aria-hidden="true">⏳</span>Count down to something</h2>
-    <p>Twenty-six seconds on the newest trick: lunch, Friday or Christmas, counting down quietly under the date.</p>
+    <p>Twenty-six seconds on counting down: lunch, Friday or Christmas, quietly under the date.</p>
     <video class="landscape" controls playsinline preload="none" poster="/media/countdown.jpg" width="1920" height="1080">
       <source src="/media/countdown.mp4" type="video/mp4">
     </video>
