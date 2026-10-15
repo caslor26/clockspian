@@ -10,8 +10,10 @@ import { onTick } from './clock.js';
 
 const STORAGE_KEY = 'clockspian.countdown';
 
-// How long "now" stays up once the moment arrives, before the line steps aside.
+// When the moment arrives, "now" stays up for five minutes, then the line steps aside.
+// It's big for the first of them, then settles.
 const AFTERGLOW_MS = 5 * 60 * 1000;
+const ARRIVAL_MS = 60 * 1000;
 
 const DEFAULTS = { on: false, label: '', date: '', time: '' };
 
@@ -103,6 +105,7 @@ export function initCountdown() {
     labelEl.hidden = !label;
     dotEl.hidden = !label;
     el.classList.toggle('arrived', status === 'arrived');
+    el.classList.toggle('fresh', status === 'arrived' && now - countdownTarget() < ARRIVAL_MS);
     valueEl.textContent = status === 'arrived' ? 'now' : remaining(countdownTarget(), now);
   }
 

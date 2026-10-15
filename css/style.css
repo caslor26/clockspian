@@ -100,6 +100,8 @@ html,body{
   margin-top:calc(clamp(18px, 3vh, 34px) * var(--size) * -0.55);
   font-size:calc(clamp(11px,1.3vw,14px) * var(--size));
   letter-spacing:0.2em;
+  /* in em, so it inherits as a fixed length and a bigger "now" can't make the line taller */
+  line-height:1.4em;
   text-transform:uppercase;
   color:var(--fg-dim);
 }
@@ -118,7 +120,29 @@ html,body{
   letter-spacing:0.08em;
   color:var(--accent);
 }
-.countdown.arrived .countdown-value{ animation:blink 2s steps(1) infinite; }
+/* When the moment arrives, "now" becomes a filled pill that sends out a ripple, so it
+   catches the eye from the side of a desk. For the first minute it's a size up and
+   ripples faster, then it settles for the rest of the afterglow. It grows by font size,
+   not transform, so the line re-centres and the dot stays midway; the fixed line height
+   on .countdown and the margin that gives back the padding keep the clock above still. */
+.countdown.arrived .countdown-value{
+  padding:0.25em 0.72em 0.25em 0.8em;
+  margin-block:-0.25em;
+  border-radius:999px;
+  background:var(--accent);
+  color:var(--bg);
+  outline:0.12em solid transparent;
+  transition:font-size 0.8s cubic-bezier(0.33, 1, 0.68, 1);
+  animation:now-ripple 3.2s ease-out infinite;
+}
+.countdown.arrived.fresh .countdown-value{
+  font-size:1.3em;
+  animation-duration:1.4s;
+}
+@keyframes now-ripple{
+  0%{ outline-offset:0; outline-color:color-mix(in srgb, var(--accent) 70%, transparent); }
+  60%,100%{ outline-offset:0.8em; outline-color:color-mix(in srgb, var(--accent) 0%, transparent); }
+}
 
 .divider{
   width:1px;
@@ -224,7 +248,7 @@ html,body{
 .seconds-track.no-transition{ transition:none; }
 
 /* the two seconds settings, switched off */
-body.no-blink .time .colon, body.no-blink .countdown-value{ animation:none; }
+body.no-blink .time .colon{ animation:none; }
 body.no-bar .seconds-rail{ display:none; }
 /* Show weather off: the clock and date re-centre on their own */
 body.no-weather .divider,
@@ -784,7 +808,7 @@ body.panel-open .news{ opacity:0; pointer-events:none; }
 }
 
 @media (prefers-reduced-motion: reduce){
-  .time .colon, .countdown-value{ animation:none; }
+  .time .colon, .countdown-value{ animation:none; transition:none; }
   .panel{ transition:none; }
   .seconds-track{ transition:none; }
   html,body,.stage{ transition:none; }
