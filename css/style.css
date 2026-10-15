@@ -811,6 +811,15 @@ body.panel-open .news{ opacity:0; pointer-events:none; }
 
 /* Its switch runs hot once it's on. */
 .insane-switch[aria-checked=true]{ background:linear-gradient(90deg, #e8264f, #ff8a1f); }
+/* and its label says so */
+.insane-armed{
+  margin-left:8px;
+  font-size:11px;
+  letter-spacing:0.16em;
+  text-transform:uppercase;
+  white-space:nowrap;
+  color:#e8264f;
+}
 
 /* The warning before it: the release-notes dialog, narrower, with two ways out. */
 .about.warning{ width:min(440px, calc(100vw - 32px)); }
