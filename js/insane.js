@@ -1,4 +1,4 @@
-import { getCountdown, onCountdownArrive } from './countdown.js';
+import { getCountdown, setCountdown, onCountdownArrive } from './countdown.js';
 
 // Insane mode. A countdown with it switched on arrives the usual way, and then the clock
 // trembles, blows apart, and goes to warp: everything on screen but the countdown's name
@@ -30,8 +30,12 @@ export function primeAudio() {
 }
 
 export function initInsane() {
+  // One trip per arming: it disarms as it goes off, so the next countdown is polite
+  // unless someone switches it on again, warning and all.
   onCountdownArrive((countdown) => {
-    if (countdown.insane) goInsane();
+    if (!countdown.insane) return;
+    setCountdown({ insane: false });
+    goInsane();
   });
   const keepReady = () => {
     if (getCountdown().insane) primeAudio();
