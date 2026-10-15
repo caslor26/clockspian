@@ -605,7 +605,12 @@ export function initSettings() {
     insaneSwitch.setAttribute('aria-checked', String(countdown.insane));
     insaneNote.hidden = !countdown.insane;
   }
-  countdownSwitch.addEventListener('click', () => setCountdown({ on: !getCountdown().on }));
+  // Switching the countdown off disarms Insane mode too: it's a dangerous setting, so
+  // a countdown switched back on starts polite and has to be talked into it again.
+  countdownSwitch.addEventListener('click', () => {
+    const on = !getCountdown().on;
+    setCountdown(on ? { on } : { on, insane: false });
+  });
   countdownName.addEventListener('input', () => setCountdown({ label: countdownName.value }));
   countdownDate.addEventListener('input', () => setCountdown({ date: countdownDate.value }));
   countdownTime.addEventListener('input', () => setCountdown({ time: countdownTime.value }));
