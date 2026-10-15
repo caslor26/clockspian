@@ -12,6 +12,17 @@
 // shown after the text.
 export const RELEASES = [
   {
+    version: '1.5.1',
+    date: '2026-10-15',
+    notes: [
+      {
+        emoji: '🛎️',
+        title: 'A “now” you can’t miss',
+        text: 'When a countdown arrives, “now” turns into a little pill that sends out ripples, big and eager for the first minute, then calmer for the rest. Easy to catch from the corner of your eye, still too polite to ring a bell.',
+      },
+    ],
+  },
+  {
     version: '1.5.0',
     date: '2026-10-15',
     notes: [
