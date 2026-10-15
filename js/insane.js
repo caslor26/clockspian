@@ -495,9 +495,13 @@ function playSound(ac) {
     for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
   }
 
+  // Only a safety net: set high and quick, so it catches peaks without flattening the boom.
   const limiter = ac.createDynamicsCompressor();
-  limiter.threshold.value = -12;
-  limiter.ratio.value = 8;
+  limiter.threshold.value = -6;
+  limiter.knee.value = 4;
+  limiter.ratio.value = 12;
+  limiter.attack.value = 0.002;
+  limiter.release.value = 0.3;
   const master = ac.createGain();
   master.gain.value = 0.85;
   master.connect(limiter);
@@ -550,23 +554,45 @@ function playSound(ac) {
     return nodes[nodes.length - 1];
   };
 
-  // The tremble: a low swell and a rising whine. Uh-oh.
-  const swell = tone('sine', 40, t0, boom);
-  swell.frequency.exponentialRampToValueAtTime(75, boom);
-  chain(swell, envelope([[t0, 0], [boom, 0.6]]), master);
-  const whine = tone('sine', 500, t0, boom);
-  whine.frequency.exponentialRampToValueAtTime(2000, boom);
-  chain(whine, envelope([[t0, 0], [boom - 0.05, 0.05], [boom, 0]]), master);
+  // The tremble: a low swell and a rising whine. Uh-oh. Both cut out a beat before the
+  // boom, and the silence is what makes it land.
+  const hush = boom - 0.09;
+  const swell = tone('sine', 40, t0, hush);
+  swell.frequency.exponentialRampToValueAtTime(75, hush);
+  chain(swell, envelope([[t0, 0], [hush - 0.02, 0.6], [hush, 0]]), master);
+  const whine = tone('sine', 500, t0, hush);
+  whine.frequency.exponentialRampToValueAtTime(2000, hush);
+  chain(whine, envelope([[t0, 0], [hush - 0.05, 0.05], [hush, 0]]), master);
 
-  // The boom: a burst of noise closing down, a falling sub, a crackle on top.
-  const blastFilter = filter('lowpass', 5000);
-  blastFilter.frequency.setValueAtTime(5000, boom);
-  blastFilter.frequency.exponentialRampToValueAtTime(90, boom + 1.6);
-  chain(hiss(boom, boom + 2.5), blastFilter, envelope([[boom, 1.3], [boom + 2.4, 0]], true), master);
-  const sub = tone('sine', 170, boom, boom + 2);
-  sub.frequency.exponentialRampToValueAtTime(28, boom + 1.1);
-  chain(sub, envelope([[boom, 1.1], [boom + 1.9, 0]], true), master);
-  chain(hiss(boom, boom + 0.5), filter('highpass', 3000), envelope([[boom, 0.6], [boom + 0.4, 0]], true), master);
+  // The boom, in layers: a crack, a distorted blast closing down, two falling subs, a long
+  // rumbling tail, and bits of debris crackling off in every direction.
+  const grit = ac.createWaveShaper();
+  const curve = new Float32Array(1024);
+  for (let i = 0; i < curve.length; i++) curve[i] = Math.tanh(((i / (curve.length - 1)) * 2 - 1) * 5);
+  grit.curve = curve;
+  grit.oversample = '2x';
+
+  chain(hiss(boom, boom + 0.2), envelope([[boom, 1.8], [boom + 0.15, 0]], true), master);
+  const blastFilter = filter('lowpass', 6000);
+  blastFilter.frequency.setValueAtTime(6000, boom);
+  blastFilter.frequency.exponentialRampToValueAtTime(110, boom + 1.8);
+  chain(hiss(boom, boom + 3), blastFilter, grit, envelope([[boom, 1.1], [boom + 0.25, 0.8], [boom + 2.8, 0]], true), master);
+  const sub = tone('sine', 190, boom, boom + 2.6);
+  sub.frequency.exponentialRampToValueAtTime(26, boom + 1.3);
+  chain(sub, envelope([[boom, 1.4], [boom + 2.5, 0]], true), master);
+  const kick = tone('triangle', 110, boom, boom + 1.2);
+  kick.frequency.exponentialRampToValueAtTime(20, boom + 0.5);
+  chain(kick, envelope([[boom, 1.2], [boom + 1.1, 0]], true), master);
+  chain(hiss(boom + 0.05, boom + 4.2), filter('lowpass', 140), envelope([[boom + 0.05, 1.2], [boom + 4, 0]], true), master);
+  for (let i = 0; i < 40; i++) {
+    const at = boom + 0.03 + Math.random() ** 2 * 1.4;
+    const bit = chain(hiss(at, at + 0.08), filter('highpass', rand(1500, 5000)), envelope([[at, rand(0.25, 0.7)], [at + rand(0.02, 0.07), 0]], true));
+    if (ac.createStereoPanner) {
+      const pan = ac.createStereoPanner();
+      pan.pan.value = rand(-1, 1);
+      chain(bit, pan, master);
+    } else bit.connect(master);
+  }
 
   // The rocket: wide roaring noise that opens up as the speed climbs, over a rumble.
   for (const side of [-0.7, 0.7]) {
