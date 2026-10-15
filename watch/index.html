@@ -4,15 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Clockspian - The films</title>
-<meta name="description" content="Three short films about a clock: Insane mode, the tour, and the countdown.">
+<meta name="description" content="A calm, full-screen clock for your spare screen. Start with the tour, then see what it has learned since launch.">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 
 <!-- Link previews: what iMessage, Slack, Discord and friends show when /watch is pasted.
      Crawlers need absolute URLs. -->
 <meta property="og:type" content="video.other">
 <meta property="og:site_name" content="Clockspian">
-<meta property="og:title" content="Clockspian - It’s a clock. Here it is moving.">
-<meta property="og:description" content="Three short films about a clock: Insane mode, the tour, and the countdown.">
+<meta property="og:title" content="Clockspian - It’s a clock. What more is there to say?">
+<meta property="og:description" content="A calm, full-screen clock for your spare screen. Start with the tour, then see what it has learned since launch.">
 <meta property="og:url" content="https://clockspian.vercel.app/watch/">
 <meta property="og:image" content="https://clockspian.vercel.app/media/clockspian.jpg">
 <meta property="og:image:width" content="1280">
@@ -85,8 +85,24 @@ h1{
   color:var(--fg-dim);
 }
 
-.film{ margin-top:56px; }
-.film h2{
+.lead + .lead{ margin-top:12px; }
+.points{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:24px;
+  margin:32px 0 32px;
+  padding-top:24px;
+  border-top:1px solid var(--line);
+  list-style:none;
+}
+.points p{
+  font-size:14px;
+  line-height:1.6;
+  color:var(--fg-dim);
+}
+
+/* Section labels: small caps in the accent, like the film titles used to be */
+section > h2{
   display:flex;
   align-items:center;
   gap:8px;
@@ -97,12 +113,81 @@ h1{
   text-transform:uppercase;
   color:var(--accent);
 }
-.film h2 span{ font-size:16px; letter-spacing:0; }
-.film p{
+section > h2 span{ font-size:16px; letter-spacing:0; }
+.film{ margin-top:64px; }
+.film p, .since-lead{
   margin-bottom:16px;
   font-size:14px;
   line-height:1.6;
   color:var(--fg-dim);
+}
+
+.how, .since{ margin-top:72px; }
+.steps{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:16px;
+  margin-top:16px;
+  list-style:none;
+}
+.steps li{
+  padding:20px;
+  border:1px solid var(--line);
+  border-radius:12px;
+}
+h3{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-bottom:8px;
+  font-family:'Jost','Helvetica Neue',Arial,sans-serif;
+  font-size:19px;
+  font-weight:300;
+}
+h3 span{ font-size:17px; }
+.steps p{
+  font-size:14px;
+  line-height:1.6;
+  color:var(--fg-dim);
+}
+kbd{
+  padding:1px 6px;
+  font-family:inherit;
+  font-size:12px;
+  color:var(--fg);
+  border:1px solid var(--line);
+  border-radius:5px;
+}
+
+/* The updates, oldest first, hung on a rail with a dot for each release */
+.timeline{
+  list-style:none;
+  margin-top:8px;
+  padding-left:28px;
+  border-left:1px solid var(--line);
+}
+.timeline .film{
+  position:relative;
+  margin-top:40px;
+}
+.timeline .film::before{
+  content:'';
+  position:absolute;
+  left:-33px;
+  top:5px;
+  width:9px;
+  height:9px;
+  background:var(--bg);
+  border:1px solid var(--accent);
+  border-radius:50%;
+}
+.timeline .launch p:last-child{ margin-bottom:0; }
+.timeline .when{
+  margin-bottom:4px;
+  font-size:11px;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:var(--accent);
 }
 video{
   display:block;
@@ -130,6 +215,7 @@ video{
   border-top:1px solid var(--line);
 }
 .open{
+  display:inline-block;
   padding:12px 22px;
   font-size:13px;
   letter-spacing:0.06em;
@@ -153,9 +239,16 @@ video{
 .share:hover{ color:var(--fg); }
 .open:focus-visible,.share:focus-visible,.brand:focus-visible{ outline:1px solid var(--fg-dim); outline-offset:3px; }
 
+@media (max-width:720px){
+  .steps, .points{ grid-template-columns:1fr; }
+  .points{ gap:16px; }
+}
 @media (max-width:480px){
   main{ padding-top:36px; }
   .film{ margin-top:44px; }
+  .how, .since{ margin-top:56px; }
+  .timeline{ padding-left:18px; }
+  .timeline .film::before{ left:-23px; }
 }
 </style>
 </head>
@@ -169,34 +262,85 @@ video{
     Clockspian
   </a>
 
-  <h1>It’s a clock.<br>Here it is moving.</h1>
-  <p class="lead">Three short films about a clock for your spare screen. Sound on if you like; the clock won’t mind either way.</p>
+  <h1>It’s a clock.<br>What more is there to say?</h1>
+  <p class="lead">Clockspian is for your laptop screen: the one open beside your monitors all day, showing your wallpaper to nobody. Give it something to do.</p>
+  <p class="lead">Work on the big screens. Leave Clockspian on the small one, full-screen, with the time big enough to read from across the desk.</p>
 
-  <section class="film" id="insane">
-    <h2><span aria-hidden="true">🚀</span>Insane mode</h2>
-    <p>Twenty-two seconds on the newest trick: a calm little clock, a countdown to lunch, and one switch that asks “Are you sure?” first.</p>
-    <video controls playsinline preload="none" poster="/media/insane.jpg" width="1920" height="1080">
-      <source src="/media/insane.mp4" type="video/mp4">
-    </video>
-  </section>
+  <ul class="points">
+    <li>
+      <h3><span aria-hidden="true">🤍</span>Clean on purpose</h3>
+      <p>Big numbers, quiet colours, ten themes. No account, no ads, no pings.</p>
+    </li>
+    <li>
+      <h3><span aria-hidden="true">🌦️</span>Just enough</h3>
+      <p>The time, the date, the weather where you are, and a countdown if you want one.</p>
+    </li>
+    <li>
+      <h3><span aria-hidden="true">🌐</span>Nothing to install</h3>
+      <p>It runs in a browser tab, free, and keeps itself up to date.</p>
+    </li>
+  </ul>
+
+  <a class="open" href="/">Open Clockspian</a>
 
   <section class="film" id="tour">
-    <h2><span aria-hidden="true">🎬</span>The tour</h2>
+    <h2><span aria-hidden="true">🎬</span>Start here: the tour</h2>
     <p>Thirty-four seconds: the time, the weather, ten looks and the whole pitch.</p>
     <video controls playsinline preload="none" poster="/media/clockspian.jpg" width="1920" height="1080">
       <source src="/media/clockspian.mp4" type="video/mp4">
     </video>
   </section>
 
-  <section class="film" id="countdown">
-    <h2><span aria-hidden="true">⏳</span>Count down to something</h2>
-    <p>Twenty-six seconds on counting down: lunch, Friday or Christmas, quietly under the date.</p>
-    <video class="landscape" controls playsinline preload="none" poster="/media/countdown.jpg" width="1920" height="1080">
-      <source src="/media/countdown.mp4" type="video/mp4">
-    </video>
-    <video class="portrait" controls playsinline preload="none" poster="/media/countdown-vertical.jpg" width="1080" height="1920">
-      <source src="/media/countdown-vertical.mp4" type="video/mp4">
-    </video>
+  <section class="how">
+    <h2>How to use it</h2>
+    <ol class="steps">
+      <li>
+        <h3><span aria-hidden="true">💻</span>Open it on the laptop</h3>
+        <p>Open Clockspian in a browser tab on the small screen beside your monitors.</p>
+      </li>
+      <li>
+        <h3><span aria-hidden="true">⌨️</span>Press F11</h3>
+        <p>Click the clock and press <kbd>F11</kbd> (<kbd>⌃⌘F</kbd> on a Mac). The tabs and address bar slide away, leaving just the clock, edge to edge. Press it again to bring them back.</p>
+      </li>
+      <li>
+        <h3><span aria-hidden="true">⚙️</span>Make it yours</h3>
+        <p>Move the mouse and a gear appears top right, with themes, light and dark, size and a countdown. Your browser asks where you are so the weather is local.</p>
+      </li>
+    </ol>
+  </section>
+
+  <section class="since">
+    <h2>What’s new</h2>
+    <p class="since-lead">Clockspian launched on 8 October 2026 and keeps getting new tricks. The bigger ones got a film. Newest first.</p>
+
+    <ol class="timeline">
+      <li class="film" id="insane">
+        <p class="when"><time datetime="2026-10-15">15 Oct 2026</time> · Version 1.6</p>
+        <h3><span aria-hidden="true">🚀</span>Insane mode</h3>
+        <p>A new switch under the countdown, for when it reaches zero. It asks “Are you sure?” first, and means it. Twenty-two seconds, sound on.</p>
+        <video controls playsinline preload="none" poster="/media/insane.jpg" width="1920" height="1080">
+          <source src="/media/insane.mp4" type="video/mp4">
+        </video>
+      </li>
+
+      <li class="film" id="countdown">
+        <p class="when"><time datetime="2026-10-11">11 Oct 2026</time> · Version 1.3</p>
+        <h3><span aria-hidden="true">⏳</span>Count down to something</h3>
+        <p>Lunch, Friday, Christmas: give it a name and a date in settings and Clockspian quietly counts down under the date. Twenty-six seconds.</p>
+        <video class="landscape" controls playsinline preload="none" poster="/media/countdown.jpg" width="1920" height="1080">
+          <source src="/media/countdown.mp4" type="video/mp4">
+        </video>
+        <video class="portrait" controls playsinline preload="none" poster="/media/countdown-vertical.jpg" width="1080" height="1920">
+          <source src="/media/countdown-vertical.mp4" type="video/mp4">
+        </video>
+      </li>
+
+      <li class="film launch">
+        <p class="when"><time datetime="2026-10-08">8 Oct 2026</time> · Version 1.0</p>
+        <h3><span aria-hidden="true">🎉</span>Launch</h3>
+        <p>The time, the date and the weather where you are, in seven themes, light or dark. Everything above grew from here.</p>
+      </li>
+    </ol>
   </section>
 
   <div class="actions">
@@ -212,7 +356,7 @@ video{
   share.addEventListener('click', async () => {
     if (navigator.share) {
       try {
-        await navigator.share({ title: 'Clockspian', text: 'It’s a clock. Here it is moving.', url });
+        await navigator.share({ title: 'Clockspian', text: 'It’s a clock. What more is there to say?', url });
       } catch {
         // Dismissing the sheet counts as an error. It isn't one.
       }
