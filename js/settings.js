@@ -115,83 +115,109 @@ export const THEMES = [
     },
   },
   {
-    id: 'graphite',
-    label: 'Graphite',
+    // A Swiss poster: black and white and one red, with the digits set heavy — the only
+    // bold clock in the set. Archivo is a grotesque cut for posters; Arial Black stands
+    // in where the font can't load, so the weight carries the look either way.
+    id: 'signal',
+    label: 'Signal',
     font: {
-      stack: `'Inter','Helvetica Neue',Arial,sans-serif`,
-      url: 'https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400&display=swap',
-      family: 'Inter',
+      stack: `'Archivo','Arial Black','Helvetica Neue',Arial,sans-serif`,
+      url: 'https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;700&display=swap',
+      family: 'Archivo',
     },
+    timeWeight: '700',
     palettes: {
       dark: {
-        '--bg': '#111213', '--line': '#2a2c2e', '--fg': '#efeee9', '--fg-dim': '#8b8e8f',
-        '--accent': '#d6d3c8', '--accent-2': '#8a9490',
+        '--bg': '#0b0b0b', '--line': '#2a2a2a', '--fg': '#f6f6f3', '--fg-dim': '#8e8e8a',
+        '--accent': '#ff3b2f', '--accent-2': '#5e5e5b',
       },
       light: {
-        '--bg': '#f3f3f1', '--line': '#d3d3d0', '--fg': '#161718', '--fg-dim': '#686b6d',
-        '--accent': '#4b4e50', '--accent-2': '#9a9d9e',
+        '--bg': '#f6f6f3', '--line': '#d6d6d2', '--fg': '#0b0b0b', '--fg-dim': '#62625f',
+        '--accent': '#e3170a', '--accent-2': '#a5a5a1',
       },
     },
   },
   {
-    // The original Clockspian look: the system sans on warm paper with a tan accent.
-    id: 'sand',
-    label: 'Sand',
-    font: { stack: `'Helvetica Neue',Arial,sans-serif`, url: null },
+    // Seventies botany: deep forest and lichen, in Young Serif's soft, chunky old-style
+    // figures — the one heavy serif. Rockwell, then Georgia, if the font can't load.
+    id: 'moss',
+    label: 'Moss',
+    font: {
+      stack: `'Young Serif',Rockwell,Georgia,serif`,
+      url: 'https://fonts.googleapis.com/css2?family=Young+Serif&display=swap',
+      family: 'Young+Serif',
+    },
+    // Young Serif comes in one weight.
+    timeWeight: '400',
     palettes: {
       dark: {
-        '--bg': '#0f1416', '--line': '#26312f', '--fg': '#f4f2ea', '--fg-dim': '#8a9490',
-        '--accent': '#c9b28a', '--accent-2': '#5c7a70',
+        '--bg': '#0f1a12', '--line': '#24362a', '--fg': '#eef0dc', '--fg-dim': '#8f9c84',
+        '--accent': '#b3cc6b', '--accent-2': '#5f7a45',
       },
       light: {
-        '--bg': '#f4f2ea', '--line': '#d5d1c4', '--fg': '#1b2124', '--fg-dim': '#626b66',
-        '--accent': '#896b37', '--accent-2': '#6f8c82',
+        '--bg': '#f3f0e0', '--line': '#d8d6bd', '--fg': '#1f2a17', '--fg-dim': '#66705a',
+        '--accent': '#557a1f', '--accent-2': '#b3c08f',
       },
     },
   },
   {
+    // A CRT in the dark — phosphor green on black, everything glowing the one colour —
+    // and in the light, the grey-green of a digital watch's LCD with its dark segments.
+    // Martian Mono is wide and square, so it reads as a machine even from across a room.
+    // Like every monospace face its colon takes a whole digit's width, so the clock sets
+    // it at its narrowest (75%) and a little smaller, to span what the others do.
     id: 'terminal',
+    timeStretch: '75%',
+    timeScale: '0.85',
     label: 'Terminal',
+    // wide, so set down a little to fit its half of the row
+    labelStyle: { fontSize: '14px' },
     font: {
-      stack: `'IBM Plex Mono',ui-monospace,monospace`,
-      url: 'https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@200;300;400&display=swap',
-      family: 'IBM+Plex+Mono',
+      stack: `'Martian Mono',ui-monospace,Consolas,monospace`,
+      url: 'https://fonts.googleapis.com/css2?family=Martian+Mono:wdth,wght@75..112.5,200..400&display=swap',
+      family: 'Martian+Mono',
     },
     palettes: {
       dark: {
-        '--bg': '#0d1312', '--line': '#22302c', '--fg': '#e8eee9', '--fg-dim': '#81928b',
-        '--accent': '#7d9b8f', '--accent-2': '#4f6b61',
+        '--bg': '#050a06', '--line': '#15301c', '--fg': '#a6fbbd', '--fg-dim': '#4c9a63',
+        '--accent': '#3dff7f', '--accent-2': '#1e6b37',
       },
       light: {
-        '--bg': '#eef2ef', '--line': '#cdd8d2', '--fg': '#15201c', '--fg-dim': '#5d6f68',
-        '--accent': '#4a7062', '--accent-2': '#8aa59a',
+        '--bg': '#c7d1bd', '--line': '#a9b49d', '--fg': '#18200f', '--fg-dim': '#4c5640',
+        '--accent': '#2e3f1f', '--accent-2': '#7f8c70',
       },
     },
   },
   {
-    // Spectral is the serif because it ships genuine tabular figures — see above.
-    id: 'folio',
-    label: 'Folio',
+    // A fashion masthead: a Didone with hairline serifs, ink on white, and a raspberry
+    // pink. Bodoni Moda measures tabular; Bodoni MT or Didot stand in where it can't load,
+    // so it stays a world away from Clåde's book serif either way.
+    id: 'gala',
+    label: 'Gala',
     font: {
-      stack: `'Spectral',Georgia,serif`,
-      url: 'https://fonts.googleapis.com/css2?family=Spectral:wght@200;300;400&display=swap',
-      family: 'Spectral',
+      stack: `'Bodoni Moda','Bodoni MT',Didot,'Bodoni 72',serif`,
+      url: 'https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500&display=swap',
+      family: 'Bodoni+Moda',
     },
+    // Bodoni Moda's lightest cut is 400; its hairlines are thin enough already.
+    timeWeight: '400',
     palettes: {
       dark: {
-        '--bg': '#141110', '--line': '#322a26', '--fg': '#f3ede6', '--fg-dim': '#988c84',
-        '--accent': '#c08e7d', '--accent-2': '#8a6155',
+        '--bg': '#0b0a0c', '--line': '#2a2329', '--fg': '#f8f5f2', '--fg-dim': '#9b948f',
+        '--accent': '#ff5c93', '--accent-2': '#86304f',
       },
       light: {
-        '--bg': '#f7f2ea', '--line': '#ddd3c6', '--fg': '#2a211c', '--fg-dim': '#76685e',
-        '--accent': '#9c5d48', '--accent-2': '#c4a392',
+        '--bg': '#fcfbf9', '--line': '#e5e0db', '--fg': '#0c0b0b', '--fg-dim': '#6d6864',
+        '--accent': '#b3124f', '--accent-2': '#e6a8bf',
       },
     },
   },
   {
     // Amber on warm black, for a clock on the nightstand — no blue in the dark palette
-    // at all. Barlow Condensed is the one narrow face in the set.
+    // at all. Barlow Condensed is the one narrow face in the set, so its clock is set
+    // larger to fill the screen as wide as the others do.
     id: 'ember',
+    timeScale: '1.4',
     label: 'Ember',
     // Condensed, with a small x-height: at the panel's 16px its name reads a size
     // smaller than the rest, so it is set up a little and opened out.
@@ -213,44 +239,49 @@ export const THEMES = [
     },
   },
   {
-    // The one violet in the set, kept muted. Manrope's lightest cut is 200.
-    id: 'heather',
-    label: 'Heather',
+    // Deep space: indigo night and an electric violet, in Space Grotesk — a grotesque
+    // with a sci-fi kink in its figures. Trebuchet if it can't load. (Unbounded, tried
+    // first, was too wide.)
+    id: 'orbit',
+    label: 'Orbit',
     font: {
-      stack: `'Manrope','Helvetica Neue',Arial,sans-serif`,
-      url: 'https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400&display=swap',
-      family: 'Manrope',
+      stack: `'Space Grotesk','Trebuchet MS','Helvetica Neue',sans-serif`,
+      url: 'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400&display=swap',
+      family: 'Space+Grotesk',
     },
+    // Space Grotesk's lightest cut is 300.
+    timeWeight: '300',
     palettes: {
       dark: {
-        '--bg': '#15121c', '--line': '#2c2638', '--fg': '#efeaf5', '--fg-dim': '#948ca3',
-        '--accent': '#b4a0d8', '--accent-2': '#6e5f8c',
+        '--bg': '#0f0b24', '--line': '#2a2352', '--fg': '#eeeaff', '--fg-dim': '#8f87bd',
+        '--accent': '#b18cff', '--accent-2': '#5b4aa8',
       },
       light: {
-        '--bg': '#f3f0f7', '--line': '#d9d2e4', '--fg': '#1e1828', '--fg-dim': '#6b6380',
-        '--accent': '#6a54a0', '--accent-2': '#a99cc8',
+        '--bg': '#eeebff', '--line': '#d2cbf6', '--fg': '#18123f', '--fg-dim': '#615a92',
+        '--accent': '#6b3fe0', '--accent-2': '#aa9cf2',
       },
     },
   },
   {
-    // Sea glass: a clear cyan-teal, well clear of Terminal's sage, in the one
-    // rounded face in the set. Nunito measures tabular; Fraunces and Roboto Slab,
-    // tried for this slot, do not.
+    // Holiday water: bright turquoise, with Baloo 2's soft, round, chunky figures — the
+    // friendliest clock here. Arial Rounded where the font can't load.
     id: 'lagoon',
     label: 'Lagoon',
     font: {
-      stack: `'Nunito','Helvetica Neue',Arial,sans-serif`,
-      url: 'https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400&display=swap',
-      family: 'Nunito',
+      stack: `'Baloo 2','Arial Rounded MT Bold',ui-rounded,'Helvetica Neue',sans-serif`,
+      url: 'https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500&display=swap',
+      family: 'Baloo+2',
     },
+    // Baloo 2's lightest cut is 400.
+    timeWeight: '400',
     palettes: {
       dark: {
-        '--bg': '#0a1618', '--line': '#1b3236', '--fg': '#e4f3f4', '--fg-dim': '#7c9ca0',
-        '--accent': '#52c7c9', '--accent-2': '#2b6c70',
+        '--bg': '#031e1f', '--line': '#0e3a3b', '--fg': '#e2fbf8', '--fg-dim': '#6fa9a6',
+        '--accent': '#2ee8d6', '--accent-2': '#137a74',
       },
       light: {
-        '--bg': '#e8f3f4', '--line': '#c4dde0', '--fg': '#0d2629', '--fg-dim': '#557478',
-        '--accent': '#0e8790', '--accent-2': '#85bfc4',
+        '--bg': '#dcf7f3', '--line': '#b2e4de', '--fg': '#033b39', '--fg-dim': '#3f7672',
+        '--accent': '#00a396', '--accent-2': '#6fd0c6',
       },
     },
   },
@@ -282,7 +313,14 @@ function migrate(stored) {
 // name; the look that was Clockspian is now Sand. A stored 'clockspian' is left alone, so
 // it moves to the new default — almost always it was only ever the default, saved along
 // with some other setting, not a choice.
-const RENAMED_THEMES = { dusk: 'clockspian' };
+const RENAMED_THEMES = {
+  dusk: 'clockspian',
+  // Six themes got personalities of their own; each moves to its successor.
+  graphite: 'signal',
+  sand: 'moss',
+  folio: 'gala',
+  heather: 'orbit',
+};
 
 // Weather was on by default until 1.6.1, and light/dark was light until 'system' came
 // along. Someone who has been here before (the intro was closed) and never touched either
@@ -384,6 +422,10 @@ function apply() {
 
   if (theme.timeWeight) root.style.setProperty('--time-weight', theme.timeWeight);
   else root.style.removeProperty('--time-weight');
+  if (theme.timeScale) root.style.setProperty('--time-scale', theme.timeScale);
+  else root.style.removeProperty('--time-scale');
+  if (theme.timeStretch) root.style.setProperty('--time-stretch', theme.timeStretch);
+  else root.style.removeProperty('--time-stretch');
 
   applyFont(theme.font);
   setColorScheme(mode);

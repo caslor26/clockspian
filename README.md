@@ -30,20 +30,27 @@ panel. `Esc` or a click anywhere outside closes it. Choices persist in `localSto
   minute. On by default.
 - **Theme** — a typeface paired for good with a palette:
 
-  | Theme | Typeface | Accent |
+  | Theme | Typeface | Look |
   |---|---|---|
-  | Fjord *(default)* | Jost | Blue |
-  | Clåde | Anthropic Serif if installed, else Source Serif 4 | Claude clay |
-  | Graphite | Inter | Off-white |
-  | Sand | System sans | Tan |
-  | Terminal | IBM Plex Mono | Sage |
-  | Folio | Spectral | Clay |
+  | Fjord *(default)* | Jost | Calm Nordic blue |
   | Kal | Bricolage Grotesque over DM Sans | Linne/Näver/Dimma/Fjord/Djup |
-  | Ember | Barlow Condensed | Amber |
-  | Heather | Manrope | Violet |
-  | Lagoon | Nunito | Teal |
-- **Light / dark** — the sun/moon pill beside the Theme heading. Every theme has both
-  palettes; light is the default.
+  | Clåde | Anthropic Serif if installed, else Source Serif 4 | Warm paper, Claude clay |
+  | Signal | Archivo, bold | Swiss poster: black, white, one red |
+  | Moss | Young Serif | Seventies botany: forest and lichen |
+  | Terminal | Martian Mono, condensed and set smaller | Phosphor CRT in dark, watch LCD in light |
+  | Gala | Bodoni Moda | Fashion masthead: ink, white, raspberry |
+  | Ember | Barlow Condensed, set larger | Nightstand amber |
+  | Orbit | Space Grotesk | Deep space: indigo and electric violet |
+  | Lagoon | Baloo 2 | Holiday turquoise |
+
+  Each has its own kind of typeface — no two share one — and a fallback of the same
+  kind (Arial Black, Rockwell, Consolas, Bodoni MT, Trebuchet, Arial Rounded) for networks
+  that block Google Fonts, so they stay apart even there. Signal, Moss, Terminal, Gala,
+  Orbit and Lagoon replaced Graphite, Sand, IBM Plex Mono's Terminal, Folio, Heather
+  and Nunito's Lagoon; anyone stored on one of the old ones moves to its successor.
+- **Light / dark** — the sun, screen and moon beside *Light / dark*: light, whatever the
+  computer is set to, or dark. Every theme has both palettes; new visitors follow the
+  computer, and anyone here before keeps light unless they chose otherwise.
 - **Countdown** — the switch on the *Countdown* heading; off by default. On, it takes a
   name, a date and an optional time (none means midnight) and shows the time left as a
   quiet line under the date: whole calendar days beyond 48 hours, hours and minutes
@@ -74,15 +81,17 @@ panel. `Esc` or a click anywhere outside closes it. Choices persist in `localSto
 Settings saved before themes existed are carried over: Kal keeps its light or
 dark palette, and any other setup moves to the theme with its typeface, in dark.
 
-Clockspian used to be the system-sans tan theme, now called Sand; the blue Jost theme,
-once Dusk, took its name as the default. Anyone who had picked Dusk keeps it, and anyone
-stored on Clockspian moves to the new default — Sand is one click away. The default has
+Clockspian used to be the system-sans tan theme, later called Sand (and since replaced by
+Moss); the blue Jost theme, once Dusk, took its name as the default. Anyone who had picked
+Dusk keeps it, and anyone stored on Clockspian moves to the new default. The default has
 since been renamed Fjord, but keeps the `clockspian` id, so nothing moves.
 
 > Every typeface here was measured to confirm it has **tabular figures** — digits of
 > equal width. Without them the clock's width lurches every time a `1` appears. Most
 > editorial serifs (including Georgia and Newsreader) fail this. Re-measure before
-> adding another option. Jost passes; Lexend, Urbanist and Raleway were measured and do not.
+> adding another option. Jost, Archivo, Young Serif, Martian Mono, Bodoni Moda, Space Grotesk
+> and Baloo 2 pass; Lexend, Urbanist, Raleway, Playfair Display, DM Serif Display,
+> Fredoka, Quicksand, Comfortaa and Oswald were measured and do not.
 >
 > Bricolage Grotesque passes. **DM Sans does not** — at 190px, `00:00` sets 534px wide
 > against 247px for `11:11`. That is why the Kal theme routes every numeric readout through
