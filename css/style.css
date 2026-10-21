@@ -42,6 +42,7 @@ html,body{
 .stage{
   position:relative;
   width:100vw;height:100vh;
+  font-variant-numeric:lining-nums; /* the date's figures too, in old-style faces */
   display:flex;
   flex-direction:column;
   justify-content:center;
@@ -68,8 +69,10 @@ html,body{
   font-stretch:var(--time-stretch);
   letter-spacing:-0.02em;
   line-height:1;
-  font-variant-numeric:tabular-nums;
-  font-feature-settings:'tnum' 1;
+  /* lining as well as tabular: Moss's Young Serif defaults to old-style figures, which
+     rise and drop around the line, so 18:59 would sit on three different baselines */
+  font-variant-numeric:tabular-nums lining-nums;
+  font-feature-settings:'tnum' 1, 'lnum' 1;
   color:var(--fg);
 }
 .time .colon{
@@ -120,8 +123,8 @@ html,body{
 }
 .countdown-value{
   font-family:var(--font-display);
-  font-variant-numeric:tabular-nums;
-  font-feature-settings:'tnum' 1;
+  font-variant-numeric:tabular-nums lining-nums;
+  font-feature-settings:'tnum' 1, 'lnum' 1;
   letter-spacing:0.08em;
   color:var(--accent);
 }
@@ -182,8 +185,8 @@ html,body{
   font-size:calc(clamp(40px,6vw,64px) * var(--size));
   font-weight:300;
   letter-spacing:-0.01em;
-  font-variant-numeric:tabular-nums;
-  font-feature-settings:'tnum' 1;
+  font-variant-numeric:tabular-nums lining-nums;
+  font-feature-settings:'tnum' 1, 'lnum' 1;
 }
 .unit{
   font-size:calc(clamp(18px,2.2vw,26px) * var(--size));
@@ -215,7 +218,7 @@ html,body{
   font-size:calc(clamp(12px,1.4vw,15px) * var(--size));
   color:var(--fg-dim);
   letter-spacing:0.04em;
-  font-variant-numeric:tabular-nums;
+  font-variant-numeric:tabular-nums lining-nums;
 }
 .range .hi{ color:var(--accent); }
 

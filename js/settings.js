@@ -138,8 +138,9 @@ export const THEMES = [
     },
   },
   {
-    // Seventies botany: deep forest and lichen, in Young Serif's soft, chunky old-style
-    // figures — the one heavy serif. Rockwell, then Georgia, if the font can't load.
+    // Seventies botany: deep forest and lichen, in Young Serif's soft, chunky figures —
+    // the one heavy serif. Its default figures are old-style; the clock asks for lining
+    // ones, so the digits share a baseline. Rockwell, then Georgia, if the font can't load.
     id: 'moss',
     label: 'Moss',
     font: {
@@ -147,8 +148,10 @@ export const THEMES = [
       url: 'https://fonts.googleapis.com/css2?family=Young+Serif&display=swap',
       family: 'Young+Serif',
     },
-    // Young Serif comes in one weight.
+    // Young Serif comes in one weight. Its lining figures run wider than the old-style
+    // ones, so the clock is set a little smaller to span what the others do.
     timeWeight: '400',
+    timeScale: '0.96',
     palettes: {
       dark: {
         '--bg': '#0f1a12', '--line': '#24362a', '--fg': '#eef0dc', '--fg-dim': '#8f9c84',
