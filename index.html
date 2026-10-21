@@ -72,16 +72,26 @@
 
     <section class="field">
       <span class="field-label">Light / dark
-        <button class="mode-switch" id="modeSwitch" type="button" role="switch" aria-checked="false" aria-label="Dark mode">
+        <!-- Light, the system's choice, or dark; the knob sits behind whichever is picked -->
+        <div class="mode-switch" id="modeSwitch" role="radiogroup" aria-label="Light or dark">
           <i class="mode-knob"></i>
-          <!-- "sun" and "moon" from Lucide (lucide.dev), ISC licence -->
-          <svg class="mode-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>
-          </svg>
-          <svg class="mode-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
-          </svg>
-        </button>
+          <!-- "sun", "monitor" and "moon" from Lucide (lucide.dev), ISC licence -->
+          <button type="button" role="radio" data-mode="light" aria-label="Light" title="Light">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>
+            </svg>
+          </button>
+          <button type="button" role="radio" data-mode="system" aria-label="Same as your computer" title="Same as your computer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/>
+            </svg>
+          </button>
+          <button type="button" role="radio" data-mode="dark" aria-label="Dark" title="Dark">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+            </svg>
+          </button>
+        </div>
       </span>
     </section>
 

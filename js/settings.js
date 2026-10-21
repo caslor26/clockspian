@@ -256,6 +256,10 @@ export const THEMES = [
   },
 ];
 
+// 'system' follows the computer's own light or dark, and keeps following it as it changes.
+const MODES = ['light', 'system', 'dark'];
+const systemDark = window.matchMedia('(prefers-color-scheme: dark)');
+
 const DEFAULTS = { scale: 1, blink: true, bar: true, theme: 'clockspian', mode: 'light', weather: false };
 
 // Settings saved before themes existed held a typeface, an accent and a Kal Studio
@@ -302,7 +306,7 @@ function load() {
     const loaded = { ...DEFAULTS, ...migrate(stored) };
     loaded.theme = RENAMED_THEMES[loaded.theme] || loaded.theme;
     if (!THEMES.some((t) => t.id === loaded.theme)) loaded.theme = DEFAULTS.theme;
-    if (loaded.mode !== 'light' && loaded.mode !== 'dark') loaded.mode = DEFAULTS.mode;
+    if (!MODES.includes(loaded.mode)) loaded.mode = DEFAULTS.mode;
     return loaded;
   } catch {
     return { ...DEFAULTS };
@@ -333,6 +337,12 @@ export function onWeatherShownChange(listener) {
 
 const themeById = (id) => THEMES.find((t) => t.id === id) || THEMES[0];
 
+// The palette actually showing: 'system' settled into light or dark.
+function shownMode() {
+  if (state.mode !== 'system') return state.mode;
+  return systemDark.matches ? 'dark' : 'light';
+}
+
 // One reusable <link>; swapping href drops the previous font from the page.
 let fontLink = null;
 function applyFont(font) {
@@ -361,7 +371,8 @@ function setColorScheme(value) {
 function apply() {
   const root = document.documentElement;
   const theme = themeById(state.theme);
-  const palette = theme.palettes[state.mode];
+  const mode = shownMode();
+  const palette = theme.palettes[mode];
 
   root.style.setProperty('--ui-scale', String(state.scale));
 
@@ -373,7 +384,7 @@ function apply() {
   else root.style.removeProperty('--time-weight');
 
   applyFont(theme.font);
-  setColorScheme(state.mode);
+  setColorScheme(mode);
 
   document.body.classList.toggle('no-blink', !state.blink);
   document.body.classList.toggle('no-bar', !state.bar);
@@ -536,15 +547,27 @@ export function initSettings() {
   });
 
   function syncTheme() {
-    modeSwitch.setAttribute('aria-checked', String(state.mode === 'dark'));
+    modeSwitch.dataset.mode = state.mode;
+    modeButtons.forEach((button) => {
+      button.setAttribute('aria-checked', String(button.dataset.mode === state.mode));
+    });
     themeChoices.forEach(({ theme, button, dot }) => {
       button.setAttribute('aria-checked', String(theme.id === state.theme));
-      dot.style.background = theme.palettes[state.mode]['--accent'];
+      dot.style.background = theme.palettes[shownMode()]['--accent'];
     });
   }
-  modeSwitch.addEventListener('click', () => {
-    state.mode = state.mode === 'dark' ? 'light' : 'dark';
-    commit();
+  const modeButtons = [...modeSwitch.querySelectorAll('button')];
+  modeButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      state.mode = button.dataset.mode;
+      commit();
+      syncTheme();
+    });
+  });
+  // The computer switching between light and dark, say at sunset, while this is open.
+  systemDark.addEventListener('change', () => {
+    if (state.mode !== 'system') return;
+    apply();
     syncTheme();
   });
   syncTheme();

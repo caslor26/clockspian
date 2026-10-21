@@ -428,39 +428,45 @@ input[type=range]:focus-visible{ outline:1px solid var(--fg-dim); outline-offset
   transition:background-color 0.3s ease;
 }
 
-/* Light/dark, for every theme: a pill with a sun and a moon, the knob behind the active one. */
+/* Light/dark, for every theme: a pill with a sun, a screen (whatever the computer is set
+   to) and a moon, the knob behind the picked one. */
 .mode-switch{
   position:relative;
   flex-shrink:0;
   display:flex;
-  align-items:center;
-  justify-content:space-between;
-  width:56px; height:28px;
-  padding:0 7px;
+  padding:0 2px;
   background:var(--line);
-  border:none;
   border-radius:14px;
-  cursor:pointer;
 }
 .mode-knob{
   position:absolute;
-  top:3px; left:3px;
+  top:3px; left:4px;
   width:22px; height:22px;
   border-radius:50%;
   background:var(--bg);
   box-shadow:0 1px 3px rgba(0,0,0,0.2);
   transition:transform 0.2s ease;
 }
-.mode-switch[aria-checked=true] .mode-knob{ transform:translateX(28px); }
-.mode-switch svg{
+.mode-switch[data-mode=system] .mode-knob{ transform:translateX(26px); }
+.mode-switch[data-mode=dark] .mode-knob{ transform:translateX(52px); }
+.mode-switch button{
   position:relative;
-  width:14px; height:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:26px; height:28px;
+  padding:0;
   color:var(--fg-dim);
+  background:none;
+  border:none;
+  border-radius:14px;
+  cursor:pointer;
   transition:color 0.2s ease;
 }
-.mode-switch[aria-checked=false] .mode-sun,
-.mode-switch[aria-checked=true] .mode-moon{ color:var(--fg); }
-.mode-switch:focus-visible{ outline:1px solid var(--fg-dim); outline-offset:3px; }
+.mode-switch button:hover,
+.mode-switch button[aria-checked=true]{ color:var(--fg); }
+.mode-switch svg{ width:14px; height:14px; }
+.mode-switch button:focus-visible{ outline:1px solid var(--fg-dim); outline-offset:-1px; }
 
 .switch{
   position:relative;
@@ -886,6 +892,6 @@ body.panel-open .news{ opacity:0; pointer-events:none; }
   .panel{ transition:none; }
   .seconds-track{ transition:none; }
   html,body,.stage{ transition:none; }
-  .switch,.switch i,.mode-knob,.mode-switch svg,.choice,.theme-dot{ transition:none; }
+  .switch,.switch i,.mode-knob,.mode-switch button,.choice,.theme-dot{ transition:none; }
   .about[open],.about[open]::backdrop,.news.shown{ animation:none; }
 }
