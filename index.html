@@ -11,6 +11,16 @@
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="no-weather">
+  <!-- The opening: js/splash.js draws the mark, brings up the name, then fades it all away.
+       pathLength="1" lets each stroke draw from a dash offset of 1 down to 0. -->
+  <div class="splash" id="splash" aria-hidden="true">
+    <svg class="splash-mark" viewBox="0 0 64 64" fill="none" stroke-width="7">
+      <path class="brand-dial" pathLength="1" d="M47.56 16.44A22 22 0 1 0 47.56 47.56"/>
+      <path class="brand-hands" pathLength="1" d="M32 15V32H46"/>
+    </svg>
+    <span class="brand-name">Clockspian</span>
+  </div>
+
   <div class="stage">
     <div class="center">
       <div class="time" id="time">--<span class="colon">:</span>--</div>

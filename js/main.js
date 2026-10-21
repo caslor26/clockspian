@@ -7,6 +7,7 @@ import { startLocation } from './location.js';
 import { isFirstVisit, openAbout } from './about.js';
 import { initWhatsNew } from './whatsnew.js';
 import { watchForUpdates } from './updates.js';
+import { playSplash } from './splash.js';
 
 const firstVisit = isFirstVisit();
 
@@ -20,9 +21,12 @@ initWeather();
 initWhatsNew(firstVisit);
 watchForUpdates();
 
-// On a first visit the intro explains the location prompt, so the browser asks once it
-// is closed rather than on top of it.
-const introDone = firstVisit ? openAbout() : Promise.resolve();
+// The theme is painted, so the mark can draw in its colours.
+const splashDone = playSplash();
+
+// On a first visit the intro follows the splash, and explains the location prompt, so the
+// browser asks once it is closed rather than on top of it.
+const introDone = firstVisit ? splashDone.then(openAbout) : Promise.resolve();
 
 // Last: the weather block has already painted Stockholm (or the remembered place) by the
 // time the browser gets to ask, so the prompt never holds the screen hostage. With the

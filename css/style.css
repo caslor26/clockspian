@@ -254,6 +254,48 @@ body.no-bar .seconds-rail{ display:none; }
 body.no-weather .divider,
 body.no-weather .weather{ display:none; }
 
+/* ---- the opening ---- */
+
+/* Over everything from the first frame, on the stage's own background, so the clock only
+   appears as this fades. It waits, empty, until js/splash.js adds .play. */
+.splash{
+  position:fixed;
+  inset:0;
+  z-index:20;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:clamp(24px, 3.2vh, 40px);
+  background:
+    radial-gradient(circle at 15% 85%, color-mix(in srgb, var(--accent-2) 16%, transparent), transparent 55%),
+    radial-gradient(circle at 85% 15%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 50%),
+    var(--bg);
+}
+/* Sized to the screen, like the clock it opens onto: about 120px and 22px on a 1080p
+   screen, readable from across the desk, and smaller on a small laptop. */
+.splash-mark{ width:clamp(88px, 11vh, 150px); height:clamp(88px, 11vh, 150px); }
+.splash-mark path{ stroke-dasharray:1; stroke-dashoffset:1; }
+.splash .brand-name{ font-size:clamp(15px, 2vh, 26px); opacity:0; }
+
+/* The dial draws, the hands follow as it closes, the mark settles to full size as it
+   goes, the name rises in under it — then a pause, and the lot fades into the clock. */
+.splash.play{ animation:splash-out 0.5s ease 1.9s forwards; }
+.splash.play .splash-mark{ animation:splash-settle 1.2s cubic-bezier(0.33, 1, 0.68, 1) both; }
+.splash.play .brand-dial{ animation:splash-draw 0.85s cubic-bezier(0.65, 0, 0.35, 1) 0.1s forwards; }
+.splash.play .brand-hands{ animation:splash-draw 0.5s cubic-bezier(0.65, 0, 0.35, 1) 0.7s forwards; }
+.splash.play .brand-name{ animation:splash-rise 0.5s cubic-bezier(0.33, 1, 0.68, 1) 1.05s forwards; }
+/* a click or a key: straight to the clock */
+.splash.play.skip{ animation:splash-out 0.25s ease forwards; }
+
+@keyframes splash-draw{ to{ stroke-dashoffset:0; } }
+@keyframes splash-settle{ from{ transform:scale(0.94); } }
+@keyframes splash-rise{
+  from{ opacity:0; transform:translateY(10px); }
+  to{ opacity:1; transform:none; }
+}
+@keyframes splash-out{ to{ opacity:0; visibility:hidden; } }
+
 /* ---- settings ---- */
 
 .settings-toggle{
@@ -900,6 +942,7 @@ body.panel-open .news{ opacity:0; pointer-events:none; }
 @keyframes insane-return{ from{ transform:scale(1.12); filter:blur(14px); } }
 
 @media (prefers-reduced-motion: reduce){
+  .splash{ display:none; }
   .stage.insane-return{ animation:none; }
   .time .colon, .countdown-value{ animation:none; transition:none; }
   .panel{ transition:none; }
