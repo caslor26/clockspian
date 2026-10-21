@@ -705,6 +705,10 @@ export function initSettings() {
     openWhatsNew();
   });
 
+  // The release notes open from the "What's new" pill too, panel unopened, and their
+  // heading is set in Jost like the signature.
+  document.getElementById('news').addEventListener('click', loadThemePreviews);
+
   toggle.addEventListener('click', (event) => {
     event.stopPropagation();
     loadThemePreviews();

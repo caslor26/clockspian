@@ -105,7 +105,7 @@ export function openWhatsNew(since = null) {
   const body = document.getElementById('whatsNewBody');
   const title = element('h2', 'about-title', 'What’s new');
   title.id = 'whatsNewTitle';
-  body.replaceChildren(title, ...releases.map(renderRelease));
+  body.replaceChildren(body.querySelector('.dialog-brand'), title, ...releases.map(renderRelease));
   body.scrollTop = 0;
   if (!dialog.open) dialog.showModal();
 }

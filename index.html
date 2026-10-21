@@ -170,6 +170,13 @@
 
   <dialog class="about intro" id="about" aria-labelledby="aboutTitle">
     <div class="about-body">
+      <div class="dialog-brand" aria-hidden="true">
+        <svg viewBox="0 0 64 64" fill="none" stroke-width="7">
+          <path class="brand-dial" d="M47.56 16.44A22 22 0 1 0 47.56 47.56"/>
+          <path class="brand-hands" d="M32 15V32H46"/>
+        </svg>
+        <span class="brand-name">Clockspian</span>
+      </div>
       <h2 class="about-title" id="aboutTitle"><span aria-hidden="true">👋</span> Hello. This is a clock.</h2>
       <p class="about-lead">It’s for your laptop screen, open beside your monitors all day and showing your wallpaper to nobody. Give it something to do.</p>
 
@@ -207,8 +214,16 @@
   </dialog>
 
   <dialog class="about" id="whatsNew" aria-labelledby="whatsNewTitle">
-    <!-- filled from js/version.js -->
-    <div class="about-body" id="whatsNewBody"></div>
+    <!-- filled from js/version.js, under the mark -->
+    <div class="about-body" id="whatsNewBody">
+      <div class="dialog-brand small" aria-hidden="true">
+        <svg viewBox="0 0 64 64" fill="none" stroke-width="7">
+          <path class="brand-dial" d="M47.56 16.44A22 22 0 1 0 47.56 47.56"/>
+          <path class="brand-hands" d="M32 15V32H46"/>
+        </svg>
+        <span class="brand-name">Clockspian</span>
+      </div>
+    </div>
     <div class="about-footer">
       <button class="about-close" id="whatsNewClose" type="button" autofocus>Lovely, thanks</button>
     </div>
