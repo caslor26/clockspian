@@ -24,7 +24,7 @@ watchForUpdates();
 // is closed rather than on top of it.
 const introDone = firstVisit ? openAbout() : Promise.resolve();
 
-// Last: the weather block has already painted Uppsala (or the remembered place) by the
+// Last: the weather block has already painted Stockholm (or the remembered place) by the
 // time the browser gets to ask, so the prompt never holds the screen hostage. With the
 // weather hidden there is nothing to locate for, so the asking waits until it returns.
 introDone.then(() => {

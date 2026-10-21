@@ -12,6 +12,22 @@
 // shown after the text.
 export const RELEASES = [
   {
+    version: '1.6.1',
+    date: '2026-10-21',
+    notes: [
+      {
+        emoji: '🕰️',
+        title: 'Just a clock, to start',
+        text: 'New here? You now start with only the time and the date. The weather is a switch in settings, like the countdown. Already had it on? It stays on.',
+      },
+      {
+        emoji: '📍',
+        title: 'Stockholm, if you’d rather not say',
+        text: 'Keep your location to yourself and the weather is now for Stockholm instead of Uppsala.',
+      },
+    ],
+  },
+  {
     version: '1.6.0',
     date: '2026-10-15',
     notes: [

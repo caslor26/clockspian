@@ -256,7 +256,7 @@ export const THEMES = [
   },
 ];
 
-const DEFAULTS = { scale: 1, blink: true, bar: true, theme: 'clockspian', mode: 'light', weather: true };
+const DEFAULTS = { scale: 1, blink: true, bar: true, theme: 'clockspian', mode: 'light', weather: false };
 
 // Settings saved before themes existed held a typeface, an accent and a Kal Studio
 // switch. Each typeface now lives in exactly one theme, so it alone decides the match.
@@ -280,10 +280,26 @@ function migrate(stored) {
 // with some other setting, not a choice.
 const RENAMED_THEMES = { dusk: 'clockspian' };
 
+// Weather was on by default until 1.6.1. Someone who has been here before (the intro was
+// closed) and never touched the switch keeps it on; a new visitor starts with just the
+// clock. Whichever it is gets written down, so the intro closing doesn't flip it later.
+function seenBefore() {
+  try {
+    return Boolean(localStorage.getItem('clockspian.introSeen'));
+  } catch {
+    return false;
+  }
+}
+
 function load() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    const loaded = { ...DEFAULTS, ...migrate(raw ? JSON.parse(raw) : {}) };
+    const stored = raw ? JSON.parse(raw) : {};
+    if (!('weather' in stored)) {
+      stored.weather = seenBefore();
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
+    }
+    const loaded = { ...DEFAULTS, ...migrate(stored) };
     loaded.theme = RENAMED_THEMES[loaded.theme] || loaded.theme;
     if (!THEMES.some((t) => t.id === loaded.theme)) loaded.theme = DEFAULTS.theme;
     if (loaded.mode !== 'light' && loaded.mode !== 'dark') loaded.mode = DEFAULTS.mode;

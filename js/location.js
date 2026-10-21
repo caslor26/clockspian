@@ -1,17 +1,17 @@
-// Where the weather is for. Uppsala unless the browser hands over a position.
+// Where the weather is for. Stockholm unless the browser hands over a position.
 //
 // Two modes: 'auto' asks the browser for a position (the first visit prompts), 'default'
-// pins Uppsala without asking. Anything short of a granted position — denied, timed out,
-// no Geolocation API, not a secure context — leaves Uppsala on screen.
+// pins Stockholm without asking. Anything short of a granted position — denied, timed out,
+// no Geolocation API, not a secure context — leaves Stockholm on screen.
 
-export const DEFAULT_PLACE = { lat: 59.8586, lon: 17.6389, name: 'Uppsala, Sweden' };
+export const DEFAULT_PLACE = { lat: 59.3293, lon: 18.0686, name: 'Stockholm, Sweden' };
 
 // Shown when a position resolved but the reverse lookup for its name did not.
 const UNNAMED = 'Current location';
 
 export const LOCATION_MODES = [
   { id: 'auto', label: 'My location' },
-  { id: 'default', label: 'Uppsala' },
+  { id: 'default', label: 'Stockholm' },
 ];
 
 const STORAGE_KEY = 'clockspian.location';

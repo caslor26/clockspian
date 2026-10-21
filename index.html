@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body class="no-weather">
   <div class="stage">
     <div class="center">
       <div class="time" id="time">--<span class="colon">:</span>--</div>
@@ -37,7 +37,7 @@
         </div>
         <div class="condition-block">
           <div class="condition" id="condition">—</div>
-          <div class="place" id="place">Uppsala, Sweden</div>
+          <div class="place" id="place">Stockholm, Sweden</div>
           <div class="range">
             <span class="hi" id="hi">H --°</span>
             <span id="lo">L --°</span>
@@ -126,10 +126,10 @@
     </section>
 
     <h2 class="panel-title">Weather
-      <button class="switch" id="weatherSwitch" type="button" role="switch" aria-checked="true" aria-label="Show weather"><i></i></button>
+      <button class="switch" id="weatherSwitch" type="button" role="switch" aria-checked="false" aria-label="Show weather"><i></i></button>
     </h2>
 
-    <section class="field" id="locationField">
+    <section class="field" id="locationField" hidden>
       <div class="choices" id="locationChoices" role="radiogroup" aria-label="Weather location"></div>
       <p class="field-note" id="locationNote" aria-live="polite" hidden></p>
     </section>
@@ -166,7 +166,7 @@
         </div>
         <div>
           <h3><span class="about-emoji" aria-hidden="true">🌦️</span>Just enough</h3>
-          <p>The time, the date, the weather, and a countdown if you want one.</p>
+          <p>The time and the date. The weather and a countdown if you want them.</p>
         </div>
       </div>
 
@@ -178,8 +178,8 @@
       </div>
 
       <ul class="about-fine">
-        <li><span aria-hidden="true">📍</span><span>Your browser asks where you are so the weather is local, rounded to about a kilometre. Say no and you get Uppsala, Sweden.</span></li>
-        <li><span aria-hidden="true">⚙️</span><span>Move the mouse and a gear appears top right, with themes, light and dark, size and the countdown.</span></li>
+        <li><span aria-hidden="true">📍</span><span>Switch the weather on and your browser asks where you are, rounded to about a kilometre. Say no and you get Stockholm.</span></li>
+        <li><span aria-hidden="true">⚙️</span><span>Move the mouse and a gear appears top right, with themes, light and dark, size, the weather and the countdown.</span></li>
         <li><span aria-hidden="true">🎬</span><span>Rather watch? <a class="about-link" href="/watch/" target="_blank" rel="noopener">Here’s the half-minute film</a>.</span></li>
       </ul>
     </div>

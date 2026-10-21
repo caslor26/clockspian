@@ -1,8 +1,8 @@
 # Clockspian
 
 An ambient clock and weather dashboard for a spare screen. Dark, quiet, glanceable:
-big tabular-numeral time, today's date, and current conditions where you are — or
-Uppsala, Sweden, if the browser isn't told.
+big tabular-numeral time and today's date, and — switched on in settings — current
+conditions where you are, or Stockholm, Sweden, if the browser isn't told.
 
 Point a browser at it full-window and leave it there.
 
@@ -59,9 +59,11 @@ panel. `Esc` or a click anywhere outside closes it. Choices persist in `localSto
   `js/insane.js`. It only goes off on the tick that crosses zero (not on a reload
   after), and only makes sound if the page has been clicked since it last loaded —
   browsers' rule, not ours.
-- **Weather** — the switch on the *Weather* heading. Off hides the weather block, stops
-  the Open-Meteo requests, and holds off the location prompt until it is back on.
-- **Location** (under *Weather*) — *My location* or *Uppsala*. Stored separately, in
+- **Weather** — the switch on the *Weather* heading; off by default. Off hides the weather
+  block, stops the Open-Meteo requests, and holds off the location prompt until it is
+  on. Browsers that had already closed the intro before 1.6.1 and never touched the
+  switch keep the weather on, since it was the default then.
+- **Location** (under *Weather*) — *My location* or *Stockholm*. Stored separately, in
   `clockspian.location`.
 
 - **What is this?** — reopens the intro that greets a first visit. It shows once, on
@@ -99,7 +101,7 @@ screen, dimmed, with a small dot beside it — the display never blanks out or b
 
 ### Location
 
-On first load the browser asks for the user's location. Uppsala is drawn first and
+When the weather is first switched on the browser asks for the user's location. Stockholm is drawn first and
 stays if the answer is no, the request times out, or geolocation is unavailable
 (it needs HTTPS or `localhost`). A granted position replaces it, rounded to two
 decimals (~1 km), and is remembered so a reload starts in the right place. The place
@@ -108,7 +110,7 @@ label reads *Current location*.
 
 The position is looked up on load and whenever *My location* is chosen, not on every
 refresh. Once a site is blocked it cannot re-prompt: the panel says so and points to
-the browser's site settings. Choosing *Uppsala* pins it without asking.
+the browser's site settings. Choosing *Stockholm* pins it without asking.
 
 The weather cache is keyed to the coordinates it was fetched for, so a reading never
 appears under another place's name.
@@ -142,7 +144,7 @@ css/style.css     all styling; theme + scale are CSS custom properties on :root
 js/main.js        entry point
 js/clock.js       drift-corrected tick, date, seconds bar
 js/weather.js     Open-Meteo fetch, WMO mapping, caching, failure handling
-js/location.js    geolocation, Uppsala fallback, reverse geocoding
+js/location.js    geolocation, Stockholm fallback, reverse geocoding
 js/icons.js       weather glyphs as inline SVG primitives
 js/settings.js    state, persistence, panel UI
 js/about.js       the "What is this?" dialog and first-visit check

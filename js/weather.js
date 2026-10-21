@@ -62,7 +62,7 @@ function describe(code) {
 }
 
 // A reading only counts for the place it was fetched for — otherwise a move from
-// Uppsala would show Uppsala's weather under the new town's name until the fetch lands.
+// Stockholm would show Stockholm's weather under the new town's name until the fetch lands.
 function readCache(place) {
   try {
     const raw = localStorage.getItem(CACHE_KEY);
