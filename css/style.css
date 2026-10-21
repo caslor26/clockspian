@@ -509,6 +509,9 @@ input[type=range]:focus-visible{ outline:1px solid var(--fg-dim); outline-offset
 .panel-footer{
   display:flex;
   justify-content:center;
+  align-items:center;
+  gap:12px;
+  white-space:nowrap;
   margin-top:2px;
   padding-top:16px;
   border-top:1px solid color-mix(in srgb, var(--line) 70%, transparent);
@@ -527,6 +530,26 @@ input[type=range]:focus-visible{ outline:1px solid var(--fg-dim); outline-offset
 }
 .text-button:hover{ color:var(--fg); }
 .text-button:focus-visible{ outline:1px solid var(--fg-dim); outline-offset:3px; }
+.panel-footer .dot{
+  width:3px; height:3px;
+  border-radius:50%;
+  background:var(--fg-dim);
+  opacity:0.6;
+}
+
+/* The films, next to "What is this?": the same quiet capitals, with a small play mark in
+   the theme's accent so it reads as something to watch, not another setting. */
+.watch-link{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  text-decoration:none;
+}
+.watch-link svg{
+  width:9px; height:9px;
+  color:var(--accent);
+  flex-shrink:0;
+}
 
 /* The signature under the footer: the mark in the theme's own accent and text colour, the
    name in Jost's tracked capitals whatever the theme, then the version. */
