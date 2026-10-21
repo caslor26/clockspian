@@ -12,6 +12,33 @@
 // shown after the text.
 export const RELEASES = [
   {
+    version: '1.7.0',
+    date: '2026-10-21',
+    notes: [
+      {
+        emoji: '🎨',
+        title: 'Ten themes, ten personalities',
+        text: 'Some themes had started to look like siblings, so six got makeovers. Signal is a Swiss poster in bold black and red. Moss is seventies botany. Terminal glows phosphor green, or turns watch-LCD grey in the light. Gala is a fashion masthead. Orbit is deep space, and Lagoon is a holiday. Fjord, Kal, Clåde and Ember are just as you left them. Were you on one that retired? You’ve been moved to its successor.',
+      },
+      {
+        emoji: '🖥️',
+        title: 'Light or dark, your computer’s call',
+        text: 'Light / dark has a third setting, the little screen in the middle: Clockspian follows your computer and keeps following it, so it goes dark when your Mac does at sunset. New visitors start there. You keep whatever you picked.',
+      },
+      {
+        emoji: '✍️',
+        title: 'It signs its name',
+        text: 'Clockspian now opens by drawing its own logo, the dial and then the hands, before stepping aside for the time. A click skips it, and with reduced motion on it never shows. The logo turns up in a few more places, too, now that it’s found its confidence.',
+      },
+      {
+        emoji: '🎬',
+        title: 'The films, one click away',
+        text: 'There’s a new link at the bottom of settings, next to “What is this?”. Three short films about a clock, in case you’ve somehow not seen them yet.',
+        link: { href: '/watch/', text: 'Roll the films' },
+      },
+    ],
+  },
+  {
     version: '1.6.2',
     date: '2026-10-21',
     notes: [
