@@ -260,7 +260,7 @@ export const THEMES = [
 const MODES = ['light', 'system', 'dark'];
 const systemDark = window.matchMedia('(prefers-color-scheme: dark)');
 
-const DEFAULTS = { scale: 1, blink: true, bar: true, theme: 'clockspian', mode: 'light', weather: false };
+const DEFAULTS = { scale: 1, blink: true, bar: true, theme: 'clockspian', mode: 'system', weather: false };
 
 // Settings saved before themes existed held a typeface, an accent and a Kal Studio
 // switch. Each typeface now lives in exactly one theme, so it alone decides the match.
@@ -284,9 +284,10 @@ function migrate(stored) {
 // with some other setting, not a choice.
 const RENAMED_THEMES = { dusk: 'clockspian' };
 
-// Weather was on by default until 1.6.1. Someone who has been here before (the intro was
-// closed) and never touched the switch keeps it on; a new visitor starts with just the
-// clock. Whichever it is gets written down, so the intro closing doesn't flip it later.
+// Weather was on by default until 1.6.1, and light/dark was light until 'system' came
+// along. Someone who has been here before (the intro was closed) and never touched either
+// keeps what they had; a new visitor starts with just the clock, light or dark as their
+// computer is. Whichever it is gets written down, so the intro closing doesn't flip it later.
 function seenBefore() {
   try {
     return Boolean(localStorage.getItem('clockspian.introSeen'));
@@ -299,8 +300,9 @@ function load() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     const stored = raw ? JSON.parse(raw) : {};
-    if (!('weather' in stored)) {
-      stored.weather = seenBefore();
+    if (!('weather' in stored) || !('mode' in stored)) {
+      if (!('weather' in stored)) stored.weather = seenBefore();
+      if (!('mode' in stored)) stored.mode = seenBefore() ? 'light' : DEFAULTS.mode;
       localStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
     }
     const loaded = { ...DEFAULTS, ...migrate(stored) };
