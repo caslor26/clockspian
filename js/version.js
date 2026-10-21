@@ -12,6 +12,17 @@
 // shown after the text.
 export const RELEASES = [
   {
+    version: '1.6.2',
+    date: '2026-10-21',
+    notes: [
+      {
+        emoji: '🇸🇪',
+        title: 'Söderköping, not Soderkoping',
+        text: 'Place names keep their å, ä, ö and friends now. Norrtälje gets its dots back, Tromsø its slash. A clock can be off by a minute, but never by an umlaut.',
+      },
+    ],
+  },
+  {
     version: '1.6.1',
     date: '2026-10-21',
     notes: [

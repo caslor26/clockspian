@@ -22,8 +22,41 @@ const round = (n) => Math.round(n * 100) / 100;
 
 // Client-side reverse geocoding, no key. BigDataCloud's terms allow this endpoint only
 // for coordinates that came from the device itself — which is exactly the case here.
-const GEOCODE =
-  'https://api.bigdatacloud.net/data/reverse-geocode-client?localityLanguage=en';
+const GEOCODE = 'https://api.bigdatacloud.net/data/reverse-geocode-client';
+
+// Letters that don't decompose into a base letter plus accent.
+const FOLD = { ø: 'o', Ø: 'O', æ: 'ae', Æ: 'AE', ß: 'ss', ł: 'l', Ł: 'L', đ: 'd', Đ: 'D' };
+const fold = (c) => FOLD[c] || c.normalize('NFD').replace(/\p{M}/gu, '');
+
+// The English names come back as plain ASCII ("Soderkoping"); the local-language ones
+// keep their letters but add words ("Söderköpings kommun"). Find the English name inside
+// the local one, and take that stretch of the local spelling. A real English exonym
+// ("Gothenburg" for Göteborg) won't match, and stays as it is.
+function respell(english, local) {
+  if (!english || !local) return english;
+  let folded = '';
+  const from = []; // folded index → index in local
+  for (let i = 0; i < local.length; i++) {
+    for (const c of fold(local[i])) {
+      from.push(i);
+      folded += c;
+    }
+  }
+  from.push(local.length);
+  const at = folded.toLowerCase().indexOf(english.toLowerCase());
+  if (at < 0) return english;
+  const end = at + english.length;
+  // Only whole local letters: "ae" from "æ" can't be split.
+  if (from[at - 1] === from[at] || from[end - 1] === from[end]) return english;
+  return local.slice(from[at], from[end]);
+}
+
+async function lookup(lat, lon, language) {
+  const response = await fetch(
+    `${GEOCODE}?latitude=${lat}&longitude=${lon}&localityLanguage=${language}`
+  );
+  return response.ok ? response.json() : null;
+}
 
 function load() {
   try {
@@ -70,10 +103,15 @@ function emit() {
 
 async function nameFor(lat, lon) {
   try {
-    const response = await fetch(`${GEOCODE}&latitude=${lat}&longitude=${lon}`);
-    if (!response.ok) return null;
-    const data = await response.json();
-    const town = data.city || data.locality || data.principalSubdivision;
+    const [data, local] = await Promise.all([
+      lookup(lat, lon, 'en'),
+      lookup(lat, lon, 'default').catch(() => null),
+    ]);
+    if (!data) return null;
+    const town = respell(
+      data.city || data.locality || data.principalSubdivision,
+      local && (local.city || local.locality || local.principalSubdivision)
+    );
     if (!town) return data.countryName || null;
     return data.countryName ? `${town}, ${data.countryName}` : town;
   } catch {
@@ -128,7 +166,8 @@ async function locate() {
   const lon = round(position.coords.longitude);
   const known = state.found && state.found.lat === lat && state.found.lon === lon;
 
-  if (!known || !state.found.name) {
+  // Names saved before 1.6.2 lost their accents ("Soderkoping"), so look those up again.
+  if (!known || !state.found.name || !state.found.spelled) {
     // Switch the weather over now; the name follows when the lookup returns.
     state.found = { lat, lon, name: known ? state.found.name : null };
     status = 'located';
@@ -137,7 +176,7 @@ async function locate() {
 
     const name = await nameFor(lat, lon);
     if (superseded() || !name) return;
-    state.found = { lat, lon, name };
+    state.found = { lat, lon, name, spelled: true };
     save();
   }
 
