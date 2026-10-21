@@ -108,6 +108,15 @@
       <div class="choices" id="themeChoices" role="radiogroup" aria-label="Theme"></div>
     </section>
 
+    <h2 class="panel-title">Weather
+      <button class="switch" id="weatherSwitch" type="button" role="switch" aria-checked="false" aria-label="Show weather"><i></i></button>
+    </h2>
+
+    <section class="field" id="locationField" hidden>
+      <div class="choices" id="locationChoices" role="radiogroup" aria-label="Weather location"></div>
+      <p class="field-note" id="locationNote" aria-live="polite" hidden></p>
+    </section>
+
     <h2 class="panel-title">Countdown
       <button class="switch" id="countdownSwitch" type="button" role="switch" aria-checked="false" aria-label="Show countdown"><i></i></button>
     </h2>
@@ -123,15 +132,6 @@
         <span>Insane mode <span class="insane-armed" id="insaneNote" hidden>⚠️ Armed</span></span>
         <button class="switch insane-switch" id="insaneSwitch" type="button" role="switch" aria-checked="false" aria-label="Insane mode"><i></i></button>
       </span>
-    </section>
-
-    <h2 class="panel-title">Weather
-      <button class="switch" id="weatherSwitch" type="button" role="switch" aria-checked="false" aria-label="Show weather"><i></i></button>
-    </h2>
-
-    <section class="field" id="locationField" hidden>
-      <div class="choices" id="locationChoices" role="radiogroup" aria-label="Weather location"></div>
-      <p class="field-note" id="locationNote" aria-live="polite" hidden></p>
     </section>
 
     <div class="panel-footer">
