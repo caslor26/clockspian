@@ -10,10 +10,15 @@
 // Each note is an emoji, a short heading and a sentence or two — in the same voice as
 // the "What is this?" dialog — and, if there's somewhere to go, a `link: { href, text }`
 // shown after the text.
+//
+// A release can also bring a `film: { src, poster }`, which plays above its notes. When it
+// is the newest release someone missed, "What's new" shows that release alone, so the
+// film has the stage; the older notes are still under the version number in settings.
 export const RELEASES = [
   {
     version: '1.7.0',
     date: '2026-10-21',
+    film: { src: '/media/clockspian-1.7.mp4', poster: '/media/clockspian-1.7.jpg' },
     notes: [
       {
         emoji: '🎨',
@@ -33,7 +38,7 @@ export const RELEASES = [
       {
         emoji: '🎬',
         title: 'The films, one click away',
-        text: 'There’s a new link at the bottom of settings, next to “What is this?”. Three short films about a clock, in case you’ve somehow not seen them yet.',
+        text: 'There’s a new link at the bottom of settings, next to “What is this?”. Four short films about a clock now, the newest one just up there.',
         link: { href: '/watch/', text: 'Roll the films' },
       },
     ],

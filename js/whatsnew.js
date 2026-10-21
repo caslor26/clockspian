@@ -60,6 +60,14 @@ function element(tag, className, text) {
 function renderRelease(release) {
   const section = element('section', 'release');
   section.append(element('p', 'release-version', `Version ${release.version} · ${formatDate(release.date)}`));
+  if (release.film) {
+    // Not loaded until it's played: most people open this, read it and close it.
+    const film = element('video', 'release-film');
+    Object.assign(film, { src: release.film.src, poster: release.film.poster, controls: true, playsInline: true, preload: 'none' });
+    film.width = 1920;
+    film.height = 1080;
+    section.append(film);
+  }
   for (const note of release.notes) {
     const heading = element('h3');
     const emoji = element('span', 'about-emoji', note.emoji);
@@ -94,6 +102,7 @@ function setUp() {
   // Every way out — the button, the backdrop, Esc — puts the note away for good.
   dialog.addEventListener('close', () => {
     markSeen();
+    for (const film of dialog.querySelectorAll('video')) film.pause();
     news.classList.remove('shown');
   });
 }
@@ -101,7 +110,10 @@ function setUp() {
 // Every release, or only those newer than `since`.
 export function openWhatsNew(since = null) {
   if (!dialog) setUp();
-  const releases = RELEASES.filter((r) => r.notes.length && (!since || isNewer(r.version, since)));
+  let releases = RELEASES.filter((r) => r.notes.length && (!since || isNewer(r.version, since)));
+  // A release with a film has the news to itself (see js/version.js).
+  if (since && releases[0]?.film) releases = [releases[0]];
+  dialog.classList.toggle('with-film', releases.some((r) => r.film));
   const body = document.getElementById('whatsNewBody');
   const title = element('h2', 'about-title', 'What’s new');
   title.id = 'whatsNewTitle';

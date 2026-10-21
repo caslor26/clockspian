@@ -690,6 +690,17 @@ body.panel-open .news{ opacity:0; pointer-events:none; }
   margin-bottom:-6px;
   font-variant-numeric:tabular-nums;
 }
+/* a release's film, above its notes; the dialog widens to give it room */
+.about.with-film{ width:min(600px, calc(100vw - 32px)); }
+.release-film{
+  display:block;
+  width:100%;
+  height:auto;
+  margin:16px 0 4px;
+  border-radius:10px;
+  border:1px solid var(--line);
+  background:#000;
+}
 .release + .release{
   margin-top:30px;
   padding-top:24px;
