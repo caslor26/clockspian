@@ -754,6 +754,14 @@ body.panel-open .news{ opacity:0; pointer-events:none; }
   border:1px solid var(--line);
   background:#000;
 }
+/* "New", "Improved": a small label over the notes it sorts */
+.release-group{
+  margin:14px 0 -8px;
+  font-size:11px;
+  letter-spacing:0.2em;
+  text-transform:uppercase;
+  color:var(--accent);
+}
 .release + .release{
   margin-top:30px;
   padding-top:24px;

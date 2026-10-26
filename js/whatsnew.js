@@ -68,7 +68,11 @@ function renderRelease(release) {
     film.height = 1080;
     section.append(film);
   }
+  let group = null;
   for (const note of release.notes) {
+    // Notes can be sorted under a small label, "New" and "Improved" say, shown where it changes.
+    if (note.group && note.group !== group) section.append(element('p', 'release-group', note.group));
+    group = note.group;
     const heading = element('h3');
     const emoji = element('span', 'about-emoji', note.emoji);
     emoji.setAttribute('aria-hidden', 'true');

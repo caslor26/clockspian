@@ -9,12 +9,49 @@
 //
 // Each note is an emoji, a short heading and a sentence or two — in the same voice as
 // the "What is this?" dialog — and, if there's somewhere to go, a `link: { href, text }`
-// shown after the text.
+// shown after the text. A bigger release can sort its notes with a `group` ("New",
+// "Improved"), labelled where it changes; keep each group's notes together.
 //
 // A release can also bring a `film: { src, poster }`, which plays above its notes. When it
 // is the newest release someone missed, "What's new" shows that release alone, so the
 // film has the stage; the older notes are still under the version number in settings.
 export const RELEASES = [
+  {
+    version: '1.8.0',
+    date: '2026-10-26',
+    notes: [
+      {
+        group: 'New',
+        emoji: '💻',
+        title: 'Clockspian, the app',
+        text: 'Install it from settings and it gets a window and an icon of its own. No tabs, no address bar, and in Chrome and Edge no title bar either. Just the clock. It opens without Wi-Fi, and your screen stays awake for as long as it’s showing.',
+      },
+      {
+        group: 'New',
+        emoji: '🌍',
+        title: 'Weather for anywhere',
+        text: 'Choose a city, start typing, pick one. Or stick with My location. Stockholm has retired as the stand-in, but if it was yours, it still is.',
+      },
+      {
+        group: 'New',
+        emoji: '🏋️',
+        title: 'Weight',
+        text: 'A new slider under Scale makes the clock thinner or bolder, as far as each theme’s typeface will go. Every theme remembers its own, and a double-click puts it back. Moss only comes in one weight, and it’s at peace with that.',
+      },
+      {
+        group: 'Improved',
+        emoji: '🚀',
+        title: 'Insane mode dresses for the occasion',
+        text: 'It now goes off in your theme’s colours, in light or dark, at your size and weight. And if it’s raining outside, it rains in there too.',
+      },
+      {
+        group: 'Improved',
+        emoji: '✨',
+        title: 'And a few more things',
+        text: 'Switch the date off for nothing but the time. Press F for full screen, anywhere. Gala holds its hairlines together on ordinary screens. And the films page now wears your theme.',
+      },
+    ],
+  },
   {
     version: '1.7.0',
     date: '2026-10-21',
