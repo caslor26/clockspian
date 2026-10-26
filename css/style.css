@@ -74,6 +74,15 @@ html,body{
   font-variant-numeric:tabular-nums lining-nums;
   font-feature-settings:'tnum' 1, 'lnum' 1;
   color:var(--fg);
+  /* Its own layer, which turns Windows' ClearType colour fringes into plain grey edges.
+     Sub-pixel smoothing sharpens small text; at this size it only shows as cyan and
+     orange halos along every hairline. */
+  will-change:transform;
+}
+/* A theme with hairlines too fine for a standard-resolution screen names a sturdier
+   optical size for it; see lowResOpsz in js/settings.js. */
+@media (max-resolution:1.5dppx){
+  .time{ font-variation-settings:var(--time-lowres-variation, normal); }
 }
 .time .colon{
   display:inline-block;

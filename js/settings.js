@@ -204,6 +204,10 @@ export const THEMES = [
     },
     // Bodoni Moda's lightest cut is 400; its hairlines are thin enough already.
     timeWeight: '400',
+    // At clock size the browser picks the display cut (opsz 96), whose hairlines are about
+    // a pixel wide: crisp on a Retina screen, broken up on a 1080p one. Standard-resolution
+    // screens get a sturdier optical size instead. Every opsz measures the same tabular width.
+    lowResOpsz: 28,
     palettes: {
       dark: {
         '--bg': '#0b0a0c', '--line': '#2a2329', '--fg': '#f8f5f2', '--fg-dim': '#9b948f',
@@ -436,6 +440,8 @@ function apply() {
   else root.style.removeProperty('--time-scale');
   if (theme.timeStretch) root.style.setProperty('--time-stretch', theme.timeStretch);
   else root.style.removeProperty('--time-stretch');
+  if (theme.lowResOpsz) root.style.setProperty('--time-lowres-variation', `'opsz' ${theme.lowResOpsz}`);
+  else root.style.removeProperty('--time-lowres-variation');
 
   applyFont(theme.font);
   setColorScheme(mode);
