@@ -593,6 +593,16 @@ input[type=range]:focus-visible{ outline:1px solid var(--fg-dim); outline-offset
   opacity:0.6;
 }
 
+/* "Install as an app": a quiet line of its own above the footer, its mark in the accent
+   like the films' play mark. */
+.install-field{ align-items:center; text-align:center; }
+.install-button{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+}
+.install-button svg{ width:14px; height:14px; color:var(--accent); }
+
 /* The films, next to "What is this?": the same quiet capitals, with a small play mark in
    the theme's accent so it reads as something to watch, not another setting. */
 .watch-link{
@@ -709,6 +719,47 @@ body.panel-open .news{ opacity:0; pointer-events:none; }
 
 @media (max-width:480px){
   .news{ top:22px; right:58px; }
+}
+
+/* ---- installed, title bar hidden ---- */
+
+/* Installed from Chrome or Edge, the window's title bar gives way to the clock and only
+   its buttons float over the page: top right on Windows, top left on a Mac. That top row
+   is still where the window is dragged from, so .titlebar covers it, and the gear and the
+   pill move up into it, clear of the buttons on whichever side they are. Everywhere else
+   (a browser tab, Safari's Dock app, full screen) none of this applies. */
+.titlebar{ display:none; }
+
+@media (display-mode: window-controls-overlay){
+  :root{
+    --titlebar-height:env(titlebar-area-height, 0px);
+    /* what the window buttons take up on the right; about nothing on a Mac */
+    --controls-right:calc(100vw - env(titlebar-area-x, 0px) - env(titlebar-area-width, 100vw));
+  }
+  .titlebar{
+    display:block;
+    position:fixed;
+    left:env(titlebar-area-x, 0);
+    top:env(titlebar-area-y, 0);
+    width:env(titlebar-area-width, 100%);
+    height:var(--titlebar-height);
+    z-index:4;
+    app-region:drag;
+    -webkit-app-region:drag;
+  }
+  .settings-toggle{
+    top:calc((var(--titlebar-height) - 20px) / 2);
+    right:max(30px, calc(var(--controls-right) + 16px));
+  }
+  .news{
+    top:calc((var(--titlebar-height) - 28px) / 2);
+    right:max(62px, calc(var(--controls-right) + 48px));
+  }
+  .panel{ top:calc(var(--titlebar-height) + 10px); }
+  .settings-toggle, .news, .panel{
+    app-region:no-drag;
+    -webkit-app-region:no-drag;
+  }
 }
 
 /* ---- what is this? ---- */

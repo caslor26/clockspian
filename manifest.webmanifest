@@ -1,0 +1,18 @@
+{
+  "id": "/",
+  "name": "Clockspian",
+  "short_name": "Clockspian",
+  "description": "A quiet clock for a spare screen: the time, the date, and the weather if you want it.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone"],
+  "background_color": "#0e1218",
+  "theme_color": "#0e1218",
+  "launch_handler": { "client_mode": "focus-existing" },
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

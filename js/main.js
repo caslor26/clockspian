@@ -8,6 +8,7 @@ import { isFirstVisit, openAbout } from './about.js';
 import { initWhatsNew } from './whatsnew.js';
 import { watchForUpdates } from './updates.js';
 import { playSplash } from './splash.js';
+import { initApp } from './app.js';
 
 const firstVisit = isFirstVisit();
 
@@ -20,6 +21,7 @@ initInsane();
 initWeather();
 initWhatsNew(firstVisit);
 watchForUpdates();
+initApp();
 
 // The theme is painted, so the mark can draw in its colours.
 const splashDone = playSplash();

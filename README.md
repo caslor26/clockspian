@@ -4,7 +4,8 @@ An ambient clock and weather dashboard for a spare screen. Dark, quiet, glanceab
 big tabular-numeral time and today's date, and — switched on in settings — current
 conditions where you are, or Stockholm, Sweden, if the browser isn't told.
 
-Point a browser at it full-window and leave it there.
+Point a browser at it full-window and leave it there, or install it as an app of its own
+(below). Press `F` for full screen.
 
 ## Running it
 
@@ -18,6 +19,33 @@ Then open <http://localhost:8080>.
 
 A server is required — the app uses ES modules, which browsers refuse to load over
 `file://`.
+
+## As an app
+
+Clockspian installs as a desktop app on Windows and macOS, with its own window and
+Dock or taskbar icon:
+
+- **Chrome or Edge** — *Install as an app* in the settings panel, or the install icon at
+  the end of the address bar. The title bar gives way to the clock; only the window
+  buttons float over it, and the top strip is where the window is dragged from. Edge's
+  and Chrome's app settings can also start it when you sign in.
+- **Safari on a Mac** — File → Add to Dock. The settings panel says so too.
+- **Firefox** doesn't install web apps.
+
+What makes it an app, rather than a bookmark:
+
+- `manifest.webmanifest` and `icons/` — the name, the window, and the icons, made from
+  the C + L mark. The window's colours follow the theme through the `theme-color` meta,
+  which `js/settings.js` keeps on the current background.
+- `sw.js` — the service worker. Clockspian's own files load network-first, so online
+  every launch is the live deploy and `js/updates.js` works as it always has; each one
+  is kept on the way through, so offline the last copy opens instead. Theme fonts are
+  kept once fetched; the weather keeps its own last reading. The films aren't kept.
+- `js/app.js` — registers the worker, holds a screen wake lock so the display never
+  sleeps under the clock (in a browser tab too), puts full screen on `F`, and runs the
+  install button.
+
+Offline needs a secure origin, which `localhost` and the Vercel deploy both are.
 
 ## Settings
 
@@ -149,6 +177,9 @@ or a dialog is open.
 ```
 index.html        markup
 favicon.svg       tab icon
+manifest.webmanifest  the installed app: name, window, icons
+icons/            app icons, rendered from the mark
+sw.js             service worker: offline copies of the app and its fonts
 css/style.css     all styling; theme + scale are CSS custom properties on :root
 js/main.js        entry point
 js/clock.js       drift-corrected tick, date, seconds bar
@@ -160,6 +191,7 @@ js/about.js       the "What is this?" dialog and first-visit check
 js/version.js     every release and its notes, newest first
 js/whatsnew.js    the What's new pill and release-notes dialog
 js/updates.js     hourly check for a newer deploy; reloads to pick it up
+js/app.js         service worker, screen wake lock, F for full screen, install button
 watch/index.html  /watch — the promo films, with link previews for sharing
 media/            the films and their posters, exported from promo/ (which stays out of git)
 prototype/        the original single-file mockup, kept for reference

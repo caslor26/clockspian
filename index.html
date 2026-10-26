@@ -6,11 +6,20 @@
 <title>Clockspian - A clock by Caspian</title>
 <meta name="color-scheme" content="light">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<!-- Installable as an app: js/settings.js keeps theme-color on the current theme's background,
+     which is what the window's title bar (or its floating controls) is painted in -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#0e1218">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="no-weather">
+  <!-- Installed with the title bar hidden, this strip is where the window is dragged from.
+       It only takes up room in that mode; see .titlebar in css/style.css. -->
+  <div class="titlebar" aria-hidden="true"></div>
+
   <!-- The opening: js/splash.js draws the mark, brings up the name, then fades it all away.
        pathLength="1" lets each stroke draw from a dash offset of 1 down to 0. -->
   <div class="splash" id="splash" aria-hidden="true">
@@ -154,6 +163,18 @@
       </span>
     </section>
 
+    <!-- js/app.js shows this where the browser can install Clockspian as an app of its own -->
+    <section class="field install-field" id="installField" hidden>
+      <button class="text-button install-button" id="installButton" type="button">
+        <!-- "monitor-down" from Lucide (lucide.dev), ISC licence -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 13V7"/><path d="m15 10-3 3-3-3"/><rect width="20" height="14" x="2" y="3" rx="2"/><path d="M12 17v4"/><path d="M8 21h8"/>
+        </svg>
+        Install as an app
+      </button>
+      <p class="field-note" id="installNote" aria-live="polite" hidden></p>
+    </section>
+
     <div class="panel-footer">
       <button class="text-button" id="aboutButton" type="button">What is this?</button>
       <span class="dot" aria-hidden="true"></span>
@@ -205,11 +226,11 @@
         </div>
       </div>
 
-      <!-- js/about.js swaps the key for ⌃⌘F on a Mac and drops the Fn hint -->
+      <!-- F is js/app.js's full-screen key, the same in every browser and the installed app -->
       <div class="about-tip">
         <h3><span class="about-emoji" aria-hidden="true">⌨️</span>The important bit</h3>
-        <p>Click the clock on your laptop screen and press <kbd class="fullscreen-key">F11</kbd>. The tabs and address bar slide away and it’s just the clock, edge to edge.</p>
-        <p class="about-small"><kbd class="fullscreen-key">F11</kbd> again brings them back.<span class="fn-hint"> Nothing happening? Try <kbd>Fn</kbd> + <kbd>F11</kbd>.</span></p>
+        <p>Click the clock on your laptop screen and press <kbd>F</kbd>. Everything around it slides away and it’s just the clock, edge to edge.</p>
+        <p class="about-small"><kbd>F</kbd> again brings it all back.</p>
       </div>
 
       <ul class="about-fine">

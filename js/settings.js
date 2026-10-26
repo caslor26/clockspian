@@ -411,6 +411,13 @@ function setColorScheme(value) {
   if (meta) meta.content = value;
 }
 
+// Installed as an app, this colours the window's title bar, or the strip behind its
+// buttons when the title bar is hidden, so it melts into the page.
+function setThemeColor(value) {
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.content = value;
+}
+
 function apply() {
   const root = document.documentElement;
   const theme = themeById(state.theme);
@@ -432,6 +439,7 @@ function apply() {
 
   applyFont(theme.font);
   setColorScheme(mode);
+  setThemeColor(palette['--bg']);
 
   document.body.classList.toggle('no-blink', !state.blink);
   document.body.classList.toggle('no-bar', !state.bar);
