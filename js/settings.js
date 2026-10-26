@@ -28,6 +28,12 @@ const STORAGE_KEY = 'clockspian.settings';
 // on a Helvetica fallback, so a display that boots before the Wi-Fi connects still shows
 // the time, just in the fallback until the font arrives.
 // `font.family` is the Google Fonts family the panel loads to preview each name.
+// `weights` is how far the Weight slider can take the clock: the range the font has, loaded
+// whole. `timeWeight` (200 if unset) is where it starts. Moss's Young Serif has one weight,
+// so it has no `weights` and the slider sits out. Barlow Condensed comes in fixed cuts,
+// a hundred apart, so Ember's slider steps between them.
+// Bolder figures are wider, though all stay tabular at every weight (measured at both
+// ends for each theme). A `max` keeps the clock on screen at the 150% scale.
 export const THEMES = [
   {
     // The default. Jost: geometric, Futura-like — the rounder counterpart to Inter's
@@ -37,9 +43,10 @@ export const THEMES = [
     label: 'Fjord',
     font: {
       stack: `'Jost','Helvetica Neue',Arial,sans-serif`,
-      url: 'https://fonts.googleapis.com/css2?family=Jost:wght@200;300;400&display=swap',
+      url: 'https://fonts.googleapis.com/css2?family=Jost:wght@100..900&display=swap',
       family: 'Jost',
     },
+    weights: { min: 100, max: 900 },
     palettes: {
       dark: {
         '--bg': '#0e1218', '--line': '#232b37', '--fg': '#eef1f5', '--fg-dim': '#8791a0',
@@ -62,9 +69,10 @@ export const THEMES = [
     font: {
       stack: `'DM Sans','Helvetica Neue',Arial,sans-serif`,
       display: `'Bricolage Grotesque','Helvetica Neue',Arial,sans-serif`,
-      url: 'https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..700&family=DM+Sans:wght@300;400;500&display=swap',
+      url: 'https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=DM+Sans:wght@300;400;500&display=swap',
       family: 'Bricolage+Grotesque',
     },
+    weights: { min: 200, max: 800 },
     // Bricolage's lightest cut is 300 — the 200 the clock normally runs at does not exist.
     timeWeight: '300',
     palettes: {
@@ -98,9 +106,10 @@ export const THEMES = [
     label: 'Clåde',
     font: {
       stack: `'Anthropic Serif','Source Serif 4',Georgia,serif`,
-      url: 'https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,300;8..60,400&display=swap',
+      url: 'https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,200..900&display=swap',
       family: 'Source+Serif+4',
     },
+    weights: { min: 200, max: 900 },
     // Anthropic Serif's lightest cut is 300.
     timeWeight: '300',
     palettes: {
@@ -122,9 +131,10 @@ export const THEMES = [
     label: 'Signal',
     font: {
       stack: `'Archivo','Arial Black','Helvetica Neue',Arial,sans-serif`,
-      url: 'https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;700&display=swap',
+      url: 'https://fonts.googleapis.com/css2?family=Archivo:wght@100..900&display=swap',
       family: 'Archivo',
     },
+    weights: { min: 100, max: 900 },
     timeWeight: '700',
     palettes: {
       dark: {
@@ -177,9 +187,10 @@ export const THEMES = [
     labelStyle: { fontSize: '14px' },
     font: {
       stack: `'Martian Mono',ui-monospace,Consolas,monospace`,
-      url: 'https://fonts.googleapis.com/css2?family=Martian+Mono:wdth,wght@75..112.5,200..400&display=swap',
+      url: 'https://fonts.googleapis.com/css2?family=Martian+Mono:wdth,wght@75..112.5,100..800&display=swap',
       family: 'Martian+Mono',
     },
+    weights: { min: 100, max: 800 },
     palettes: {
       dark: {
         '--bg': '#050a06', '--line': '#15301c', '--fg': '#a6fbbd', '--fg-dim': '#4c9a63',
@@ -199,9 +210,10 @@ export const THEMES = [
     label: 'Gala',
     font: {
       stack: `'Bodoni Moda','Bodoni MT',Didot,'Bodoni 72',serif`,
-      url: 'https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500&display=swap',
+      url: 'https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400..900&display=swap',
       family: 'Bodoni+Moda',
     },
+    weights: { min: 400, max: 900 },
     // Bodoni Moda's lightest cut is 400; its hairlines are thin enough already.
     timeWeight: '400',
     // At clock size the browser picks the display cut (opsz 96), whose hairlines are about
@@ -231,9 +243,12 @@ export const THEMES = [
     labelStyle: { fontSize: '19px', letterSpacing: '0.04em' },
     font: {
       stack: `'Barlow Condensed','Helvetica Neue',Arial,sans-serif`,
-      url: 'https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@200;300;400&display=swap',
+      url: 'https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@100;200;300;400;500;600&display=swap',
       family: 'Barlow+Condensed',
     },
+    // Its fixed cuts go to 900, but the clock is set 1.4× large and widens as it
+    // thickens: past 600 it runs off the screen at the 150% scale.
+    weights: { min: 100, max: 600, step: 100 },
     palettes: {
       dark: {
         '--bg': '#14100b', '--line': '#2e261b', '--fg': '#f2e6d3', '--fg-dim': '#9a8a72',
@@ -253,9 +268,10 @@ export const THEMES = [
     label: 'Orbit',
     font: {
       stack: `'Space Grotesk','Trebuchet MS','Helvetica Neue',sans-serif`,
-      url: 'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400&display=swap',
+      url: 'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap',
       family: 'Space+Grotesk',
     },
+    weights: { min: 300, max: 700 },
     // Space Grotesk's lightest cut is 300.
     timeWeight: '300',
     palettes: {
@@ -276,9 +292,10 @@ export const THEMES = [
     label: 'Lagoon',
     font: {
       stack: `'Baloo 2','Arial Rounded MT Bold',ui-rounded,'Helvetica Neue',sans-serif`,
-      url: 'https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500&display=swap',
+      url: 'https://fonts.googleapis.com/css2?family=Baloo+2:wght@400..800&display=swap',
       family: 'Baloo+2',
     },
+    weights: { min: 400, max: 800 },
     // Baloo 2's lightest cut is 400.
     timeWeight: '400',
     palettes: {
@@ -298,7 +315,7 @@ export const THEMES = [
 const MODES = ['light', 'system', 'dark'];
 const systemDark = window.matchMedia('(prefers-color-scheme: dark)');
 
-const DEFAULTS = { scale: 1, blink: true, bar: true, date: true, theme: 'clockspian', mode: 'system', weather: false };
+const DEFAULTS = { scale: 1, blink: true, bar: true, date: true, weights: {}, theme: 'clockspian', mode: 'system', weather: false };
 
 // Settings saved before themes existed held a typeface, an accent and a Kal Studio
 // switch. Each typeface now lives in exactly one theme, so it alone decides the match.
@@ -351,12 +368,13 @@ function load() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
     }
     const loaded = { ...DEFAULTS, ...migrate(stored) };
+    loaded.weights = { ...loaded.weights };
     loaded.theme = RENAMED_THEMES[loaded.theme] || loaded.theme;
     if (!THEMES.some((t) => t.id === loaded.theme)) loaded.theme = DEFAULTS.theme;
     if (!MODES.includes(loaded.mode)) loaded.mode = DEFAULTS.mode;
     return loaded;
   } catch {
-    return { ...DEFAULTS };
+    return { ...DEFAULTS, weights: {} };
   }
 }
 
@@ -383,6 +401,15 @@ export function onWeatherShownChange(listener) {
 }
 
 const themeById = (id) => THEMES.find((t) => t.id === id) || THEMES[0];
+
+// The clock's weight as the theme was designed, and as it's set now. Each theme remembers
+// its own, since Signal starts bold and Fjord starts thin; only a change is stored.
+const designedWeight = (theme) => Number(theme.timeWeight || 200);
+function timeWeight(theme) {
+  const chosen = state.weights[theme.id];
+  if (!theme.weights || chosen == null) return designedWeight(theme);
+  return Math.min(theme.weights.max, Math.max(theme.weights.min, chosen));
+}
 
 // The palette actually showing: 'system' settled into light or dark.
 function shownMode() {
@@ -434,8 +461,7 @@ function apply() {
   // The panel sits on the page colour unless a palette names a surface of its own.
   if (!palette['--panel-bg']) root.style.setProperty('--panel-bg', palette['--bg']);
 
-  if (theme.timeWeight) root.style.setProperty('--time-weight', theme.timeWeight);
-  else root.style.removeProperty('--time-weight');
+  root.style.setProperty('--time-weight', String(timeWeight(theme)));
   if (theme.timeScale) root.style.setProperty('--time-scale', theme.timeScale);
   else root.style.removeProperty('--time-scale');
   if (theme.timeStretch) root.style.setProperty('--time-stretch', theme.timeStretch);
@@ -481,6 +507,9 @@ export function initSettings() {
   const dateSwitch = document.getElementById('dateSwitch');
   const modeSwitch = document.getElementById('modeSwitch');
   const themeRow = document.getElementById('themeChoices');
+  const weightInput = document.getElementById('weightInput');
+  const weightValue = document.getElementById('weightValue');
+  const weightNote = document.getElementById('weightNote');
   const weatherSwitch = document.getElementById('weatherSwitch');
   const locationField = document.getElementById('locationField');
   const aboutButton = document.getElementById('aboutButton');
@@ -627,7 +656,56 @@ export function initSettings() {
       button.setAttribute('aria-checked', String(theme.id === state.theme));
       dot.style.background = theme.palettes[shownMode()]['--accent'];
     });
+    syncWeight();
   }
+
+  // --- weight ---
+  // Runs from as thin to as bold as the theme's typeface goes, starting where the theme
+  // was designed. Fonts that only go one way from there put the thumb at that end.
+
+  function placeWeightThumb(weight) {
+    weightInput.value = String(weight);
+    const min = Number(weightInput.min);
+    const max = Number(weightInput.max);
+    weightInput.style.setProperty('--fill', `${max > min ? ((weight - min) / (max - min)) * 100 : 0}%`);
+    weightValue.textContent = String(weight);
+  }
+
+  function syncWeight() {
+    const theme = themeById(state.theme);
+    const range = theme.weights;
+    weightInput.disabled = !range;
+    weightNote.hidden = Boolean(range);
+    if (!range) {
+      weightNote.textContent = `${theme.label} comes in one weight.`;
+      weightInput.min = weightInput.max = String(designedWeight(theme));
+      placeWeightThumb(designedWeight(theme));
+      return;
+    }
+    weightInput.min = String(range.min);
+    weightInput.max = String(range.max);
+    weightInput.step = String(range.step || 10);
+    placeWeightThumb(timeWeight(theme));
+  }
+
+  function setWeight(weight) {
+    const theme = themeById(state.theme);
+    if (weight === designedWeight(theme)) delete state.weights[theme.id];
+    else state.weights[theme.id] = weight;
+    placeWeightThumb(timeWeight(theme));
+  }
+
+  // The clock follows the drag; the choice is saved once it's let go.
+  weightInput.addEventListener('input', () => {
+    setWeight(Number(weightInput.value));
+    apply();
+  });
+  weightInput.addEventListener('change', commit);
+  weightInput.addEventListener('dblclick', () => {
+    if (weightInput.disabled) return;
+    setWeight(designedWeight(themeById(state.theme)));
+    commit();
+  });
   const modeButtons = [...modeSwitch.querySelectorAll('button')];
   modeButtons.forEach((button) => {
     button.addEventListener('click', () => {

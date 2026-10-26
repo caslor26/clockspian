@@ -143,6 +143,13 @@
       <div class="choices" id="themeChoices" role="radiogroup" aria-label="Theme"></div>
     </section>
 
+    <!-- The clock's weight, within what the theme's typeface has; double-click resets it -->
+    <section class="field">
+      <label class="field-label" for="weightInput">Weight <span class="field-value" id="weightValue"></span></label>
+      <input type="range" id="weightInput" min="100" max="900" step="10" value="200" title="Double-click for the theme’s own weight">
+      <p class="field-note" id="weightNote" hidden></p>
+    </section>
+
     <h2 class="panel-title">Weather
       <button class="switch" id="weatherSwitch" type="button" role="switch" aria-checked="false" aria-label="Show weather"><i></i></button>
     </h2>

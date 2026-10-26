@@ -457,6 +457,8 @@ input[type=range]::-moz-range-thumb{
 input[type=range]:active::-webkit-slider-thumb{ transform:scale(1.15); }
 input[type=range]:active::-moz-range-thumb{ transform:scale(1.15); }
 input[type=range]:focus-visible{ outline:1px solid var(--fg-dim); outline-offset:8px; }
+/* Weight, under a theme whose typeface has only the one */
+input[type=range]:disabled{ opacity:0.35; cursor:default; }
 
 /* Rows that light up under the pointer and stay lit when chosen. They reach a little past
    the text column on both sides so the highlight frames the text rather than hugging it. */
