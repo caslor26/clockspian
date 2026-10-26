@@ -9,6 +9,12 @@ import { getCountdown, setCountdown, onCountdownArrive } from './countdown.js';
 // It all runs on one full-screen canvas over the page, plus a copy of the countdown line
 // on top of it; the page itself is only hidden, never touched, so it comes back exactly
 // as it was. The sound is synthesised on the spot, so there are no files to fetch.
+//
+// The same show for everyone, dressed in their own setup: the theme's colours tint space,
+// the fireball, the shockwaves and the sparks; light mode turns space into the page's own
+// paper with the stars in ink; the scale sizes the debris and the blast; the clock's
+// weight sets how fine or bold every streak is drawn; and shown weather sends a little
+// rain, snow or lightning through the warp.
 
 // The script, in seconds from the moment it starts.
 const BOOM = 0.8;       // the trembling before it, then everything goes
@@ -58,6 +64,49 @@ const easeOut = (x) => 1 - (1 - x) ** 3;
 const easeInOut = (x) => (x < 0.5 ? 4 * x ** 3 : 1 - (-2 * x + 2) ** 3 / 2);
 const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
+// The palettes are hex, and a canvas can't color-mix(), so colours are mixed here.
+function channels(colour) {
+  const hex = colour.replace('#', '');
+  const full = hex.length === 3 ? [...hex].map((c) => c + c).join('') : hex.slice(0, 6);
+  const n = parseInt(full, 16);
+  return /^[0-9a-f]{6}$/i.test(full) ? [(n >> 16) & 255, (n >> 8) & 255, n & 255] : null;
+}
+function mix(a, b, amount) {
+  const from = channels(a);
+  const to = channels(b);
+  if (!from || !to) return a;
+  return `#${from.map((v, i) => Math.round(v + (to[i] - v) * amount).toString(16).padStart(2, '0')).join('')}`;
+}
+function fade(colour, alpha) {
+  const c = channels(colour);
+  return c ? `rgba(${c.join(',')},${alpha})` : colour;
+}
+
+// What's on screen when it goes off. The weather only counts while it's shown.
+function readSetup() {
+  const light = document.querySelector('meta[name="color-scheme"]')?.content === 'light';
+  const fg = css('--fg') || '#eef1f5';
+  const weight = parseFloat(getComputedStyle(document.getElementById('time')).fontWeight) || 300;
+  const body = document.body.classList;
+  const condition = body.contains('no-weather') || body.contains('no-place')
+    ? '' : document.getElementById('condition').textContent.toLowerCase();
+  return {
+    light,
+    bg: css('--bg') || '#0e1218',
+    fg,
+    accent: css('--accent') || '#8aa4c9',
+    accent2: css('--accent-2') || '#5a6f8a',
+    // white light in the dark, the theme's ink on paper
+    glow: light ? fg : '#ffffff',
+    scale: parseFloat(css('--ui-scale')) || 1,
+    // 0.7 for a hairline clock, 1 at about 250, 2.3 at 900
+    stroke: 0.5 + weight / 500,
+    weather: /thunder/.test(condition) ? 'thunder'
+      : /snow/.test(condition) ? 'snow'
+      : /rain|drizzle|shower/.test(condition) ? 'rain' : null,
+  };
+}
+
 function start(firstFrame) {
   const stage = document.querySelector('.stage');
   const countdownEl = document.getElementById('countdown');
@@ -66,8 +115,9 @@ function start(firstFrame) {
 
   const W = window.innerWidth;
   const H = window.innerHeight;
-  const accent = css('--accent') || '#8aa4c9';
-  const pageBg = css('--bg') || '#0e1218';
+  const look = readSetup();
+  const { accent, accent2, glow, stroke } = look;
+  const pageBg = look.bg;
 
   if (audio && audio.state === 'suspended') audio.resume().catch(() => {});
   if (audio) playSound(audio);
@@ -111,18 +161,43 @@ function start(firstFrame) {
   // Stars live in a box in front of the viewer and are projected as x / z. Moving them
   // toward z = 0 is flying forward; drawn from where each was a moment ago, they streak.
   const FAR = 8;
+  // With rain or snow shown, about a third of the stars come as drops or flakes instead.
   const stars = Array.from({ length: Math.round(Math.min(900, (W * H) / 1800)) }, () => newStar(rand(0.2, FAR)));
   function newStar(z = rand(FAR * 0.7, FAR)) {
-    return { x: rand(-1, 1) * Math.max(W, H), y: rand(-1, 1) * Math.max(W, H), z };
+    const weather = look.weather !== 'thunder' && Math.random() < 0.3 ? look.weather : null;
+    return { x: rand(-1, 1) * Math.max(W, H), y: rand(-1, 1) * Math.max(W, H), z, weather, drift: rand(0, 6) };
   }
 
+  // Deep space tinted by the theme in the dark; in light mode, the page's own paper,
+  // darkening a shade toward the edges.
   const space = ctx.createRadialGradient(cx, cy, 0, cx, cy, reach);
-  space.addColorStop(0, '#141a33');
-  space.addColorStop(0.45, '#070914');
-  space.addColorStop(1, '#010103');
+  if (look.light) {
+    space.addColorStop(0, pageBg);
+    space.addColorStop(0.45, mix(pageBg, look.fg, 0.06));
+    space.addColorStop(1, mix(pageBg, look.fg, 0.18));
+  } else {
+    space.addColorStop(0, mix(mix(pageBg, '#000000', 0.2), accent, 0.16));
+    space.addColorStop(0.45, mix(pageBg, '#000000', 0.55));
+    space.addColorStop(1, mix(pageBg, '#000000', 0.9));
+  }
   const nebula = ctx.createRadialGradient(cx, cy, 0, cx, cy, reach * 0.6);
   nebula.addColorStop(0, accent);
   nebula.addColorStop(1, 'transparent');
+
+  // A thunderstorm outside brings two strikes during the warp. None with reduced motion:
+  // they flash.
+  const STRIKE = 0.22;
+  const strikes = look.weather === 'thunder' && !reduceMotion
+    ? [rand(BOOM + 2, BOOM + 4), rand(BOOM + 4.6, PUNCH - 0.8)].map((at) => ({ at, path: bolt() }))
+    : [];
+  function bolt() {
+    const path = [[rand(0.15, 0.85) * W, -BLEED]];
+    while (path[path.length - 1][1] < H + BLEED) {
+      const [x, y] = path[path.length - 1];
+      path.push([x + rand(-60, 60), y + rand(30, 90)]);
+    }
+    return path;
+  }
 
   // How fast we're flying, in z per second.
   function speed(t) {
@@ -164,19 +239,20 @@ function start(firstFrame) {
         rot: 0,
         spin: rand(-14, 14),
         grow: 1,
-        tint: Math.random() < 0.35 ? accent : '#eef2ff',
+        tint: Math.random() < 0.35 ? accent : look.fg,
       };
     });
     // Four times the letters on the way back past, so the debris is a stream, not a trickle.
     const extra = [1, 2, 3].flatMap(() => debris.map((piece) => ({ ...piece, mode: 'wait', wakeAt: BOOM + rand(0.8, 6) })));
     debris = debris.concat(extra);
 
+    const sparkColours = [glow, mix(accent, glow, 0.5), accent, accent2];
     sparks = Array.from({ length: 220 }, () => {
       const a = rand(0, Math.PI * 2);
-      const v = rand(400, 3000);
+      const v = rand(400, 3000) * look.scale;
       return {
         x: blastX, y: blastY, vx: Math.cos(a) * v, vy: Math.sin(a) * v,
-        life: rand(0.4, 1.2), color: ['#ffffff', '#ffd27a', '#ff7a45', accent][Math.floor(rand(0, 4))],
+        life: rand(0.4, 1.2), color: sparkColours[Math.floor(rand(0, 4))],
       };
     });
 
@@ -242,12 +318,13 @@ function start(firstFrame) {
     }
 
     drawStars(v, dt, spaceIn);
+    const lit = drawStrikes(t);
     drawDebris(t, v, dt);
     drawBlast(tb, dt);
     moveHero(t, tb, amount);
 
-    // White out at the boom, and again at the end.
-    let white = Math.max(0, 1 - tb / 0.45) ** 2;
+    // White out at the boom, and again at the end; a lightning strike lights it up too.
+    let white = Math.max(Math.max(0, 1 - tb / 0.45) ** 2, lit * 0.35);
     if (t > END - 0.5) white = Math.max(white, easeInOut(clamp01((t - (END - 0.5)) / 0.5)));
     flash.style.opacity = String(reduceMotion ? white * 0.6 : white);
 
@@ -256,7 +333,8 @@ function start(firstFrame) {
 
   function drawStars(v, dt, spaceIn) {
     ctx.lineCap = 'round';
-    ctx.strokeStyle = '#ffffff';
+    ctx.strokeStyle = glow;
+    ctx.fillStyle = glow;
     const trail = Math.min(1.2, 0.03 + v * 0.018);
     for (const star of stars) {
       star.z -= v * dt;
@@ -267,14 +345,52 @@ function start(firstFrame) {
         Object.assign(star, newStar());
         continue;
       }
-      const z0 = star.z + v * trail * 0.1 + 0.02;
-      ctx.globalAlpha = clamp01((FAR - star.z) / 3) * spaceIn;
-      ctx.lineWidth = Math.min(3.2, 1.4 / star.z + 0.3);
+      const near = clamp01((FAR - star.z) / 3) * spaceIn;
+      const width = Math.min(3.2, 1.4 / star.z + 0.3) * stroke;
+      if (star.weather === 'snow') {
+        // a flake, drifting a little sideways as it comes
+        ctx.globalAlpha = near * 0.9;
+        ctx.beginPath();
+        ctx.arc(x + Math.sin(star.drift + star.z * 2) * 6, y, width * 1.3, 0, Math.PI * 2);
+        ctx.fill();
+        continue;
+      }
+      ctx.lineWidth = width;
       ctx.beginPath();
-      ctx.moveTo(cx + star.x / z0, cy + star.y / z0);
+      if (star.weather === 'rain') {
+        // a drop, slanting down the same way whichever way it's flying
+        const length = (6 + v * 2.2) / star.z + 4;
+        ctx.globalAlpha = near * 0.6;
+        ctx.moveTo(x + length * 0.3, y - length);
+      } else {
+        const z0 = star.z + v * trail * 0.1 + 0.02;
+        ctx.globalAlpha = near;
+        ctx.moveTo(cx + star.x / z0, cy + star.y / z0);
+      }
       ctx.lineTo(x, y);
       ctx.stroke();
     }
+  }
+
+  // Each strike flickers twice and is gone. Returns how bright it is right now.
+  function drawStrikes(t) {
+    let lit = 0;
+    for (const strike of strikes) {
+      const age = (t - strike.at) / STRIKE;
+      if (age < 0 || age > 1) continue;
+      const bright = age < 0.35 ? 1 : age < 0.5 ? 0.25 : 1 - (age - 0.5) * 2;
+      lit = Math.max(lit, bright);
+      ctx.lineJoin = 'round';
+      ctx.strokeStyle = glow;
+      for (const [width, alpha] of [[14, 0.15], [3, 1]]) {
+        ctx.globalAlpha = bright * alpha;
+        ctx.lineWidth = width * stroke;
+        ctx.beginPath();
+        strike.path.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)));
+        ctx.stroke();
+      }
+    }
+    return lit;
   }
 
   // A piece flies out on the blast, waits off screen, then comes back from far ahead as
@@ -318,8 +434,9 @@ function start(firstFrame) {
           else piece.mode = 'done';
           continue;
         }
-        // Debris sizes are evened out, so a clock digit doesn't arrive as a wall.
-        const size = Math.min(Math.max(piece.size, 24), 64) / piece.size;
+        // Debris sizes are evened out, so a clock digit doesn't arrive as a wall, but
+        // within bounds that grow and shrink with the clock's scale.
+        const size = Math.min(Math.max(piece.size, 24 * look.scale), 64 * look.scale) / piece.size;
         const alpha = clamp01((FAR - piece.z) / 2.5);
         drawPiece(piece, x, y, (size * piece.scale) / piece.z, piece.tint, alpha);
       }
@@ -352,24 +469,25 @@ function start(firstFrame) {
     if (tb > 1.4) return;
     const ball = clamp01(tb / 0.5);
     if (ball < 1) {
-      const r = 40 + 420 * easeOut(ball);
+      // White-hot through the theme's accent in the dark; on paper, a burst of ink.
+      const r = (40 + 420 * easeOut(ball)) * look.scale;
       const fire = ctx.createRadialGradient(blastX, blastY, 0, blastX, blastY, r);
-      fire.addColorStop(0, 'rgba(255,255,255,1)');
-      fire.addColorStop(0.25, 'rgba(255,214,140,0.9)');
-      fire.addColorStop(0.6, 'rgba(255,110,60,0.45)');
-      fire.addColorStop(1, 'rgba(255,60,40,0)');
+      fire.addColorStop(0, fade(look.light ? mix(accent, look.fg, 0.35) : '#ffffff', 1));
+      fire.addColorStop(0.25, fade(mix(accent, glow, 0.45), 0.9));
+      fire.addColorStop(0.6, fade(accent, 0.45));
+      fire.addColorStop(1, fade(accent2, 0));
       ctx.globalAlpha = 1 - ball;
       ctx.fillStyle = fire;
       ctx.beginPath();
       ctx.arc(blastX, blastY, r, 0, Math.PI * 2);
       ctx.fill();
     }
-    for (const [delay, colour] of [[0, '#ffffff'], [0.12, accent]]) {
+    for (const [delay, colour] of [[0, accent], [0.12, accent2]]) {
       const ring = clamp01((tb - delay) / 0.9);
       if (ring <= 0 || ring >= 1) continue;
       ctx.globalAlpha = (1 - ring) ** 1.5;
       ctx.strokeStyle = colour;
-      ctx.lineWidth = 34 * (1 - ring) + 2;
+      ctx.lineWidth = (34 * (1 - ring) + 2) * stroke;
       ctx.beginPath();
       ctx.arc(blastX, blastY, reach * 1.4 * easeOut(ring), 0, Math.PI * 2);
       ctx.stroke();
@@ -383,7 +501,7 @@ function start(firstFrame) {
       spark.y += spark.vy * dt;
       ctx.globalAlpha = 1 - tb / spark.life;
       ctx.strokeStyle = spark.color;
-      ctx.lineWidth = 2.5;
+      ctx.lineWidth = 2.5 * stroke;
       ctx.beginPath();
       ctx.moveTo(spark.x - spark.vx * 0.03, spark.y - spark.vy * 0.03);
       ctx.lineTo(spark.x, spark.y);

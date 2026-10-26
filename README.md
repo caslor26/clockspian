@@ -97,8 +97,12 @@ panel. `Esc` or a click anywhere outside closes it. Choices persist in `localSto
   On, the moment the countdown crosses zero the clock trembles, explodes into letters
   and flies to warp: the countdown's name and "now" zoom in at the centre of a shaking
   starfield while the letters stream past as debris, to a synthesised boom, rocket roar
-  and whooshes; ten seconds later a flash and the clock is back. All of it lives in
-  `js/insane.js`. It only goes off on the tick that crosses zero (not on a reload
+  and whooshes; ten seconds later a flash and the clock is back. It wears the setup it
+  goes off in: space, the fireball, the shockwaves and the sparks take the theme's
+  colours; light mode makes space the page's paper with the stars in ink; the scale
+  sizes the debris and the blast; the clock's weight sets how fine every streak is; and
+  shown rain, snow or a thunderstorm comes along into the warp (no lightning with
+  reduced motion). All of it lives in `js/insane.js`. It only goes off on the tick that crosses zero (not on a reload
   after), and only makes sound if the page has been clicked since it last loaded —
   browsers' rule, not ours.
 - **Weather** — the switch on the *Weather* heading; off by default. Off hides the weather
