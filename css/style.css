@@ -646,8 +646,8 @@ input[type=range]:disabled{ opacity:0.35; cursor:default; }
 }
 .install-button svg{ width:14px; height:14px; color:var(--accent); }
 
-/* The films, next to "What is this?": the same quiet capitals, with a small play mark in
-   the theme's accent so it reads as something to watch, not another setting. */
+/* "What is this?", answered with the films: the same quiet capitals, with a small play
+   mark in the theme's accent so it reads as something to watch, not another setting. */
 .watch-link{
   display:inline-flex;
   align-items:center;
@@ -661,27 +661,36 @@ input[type=range]:disabled{ opacity:0.35; cursor:default; }
 }
 
 /* The signature under the footer: the mark in the theme's own accent and text colour, the
-   name in Jost's tracked capitals whatever the theme, then the version. */
+   name in Jost's tracked capitals whatever the theme, then the version. Its two halves
+   are buttons of their own, so each lights up on its own hover. */
 .panel-version{
   align-self:center;
   display:flex;
   align-items:center;
   gap:9px;
   margin-top:-10px;
-  padding:0;
-  font-family:inherit;
   font-size:11px;
   letter-spacing:0.12em;
   font-variant-numeric:tabular-nums;
   white-space:nowrap;
   color:var(--fg-dim);
+}
+.signature-button{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  padding:0;
+  font:inherit;
+  letter-spacing:inherit;
+  color:inherit;
   opacity:0.7;
   background:none;
   border:none;
   cursor:pointer;
   transition:opacity 0.15s ease;
 }
-.panel-version:hover{ opacity:1; }
+.signature-button:hover{ opacity:1; }
+.signature-button:focus-visible{ opacity:1; outline:1px solid var(--fg-dim); outline-offset:3px; }
 .brand-mark{ width:22px; height:22px; flex-shrink:0; }
 .brand-dial{ stroke:var(--accent); }
 .brand-hands{ stroke:var(--fg); }
@@ -697,8 +706,8 @@ input[type=range]:disabled{ opacity:0.35; cursor:default; }
   width:3px; height:3px;
   border-radius:50%;
   background:var(--accent-2);
+  opacity:0.7;
 }
-.panel-version:focus-visible{ opacity:1; outline:1px solid var(--fg-dim); outline-offset:3px; }
 
 @media (max-width:480px){
   .panel{ right:16px; }

@@ -1,4 +1,5 @@
-// "What is this?" — shown by itself on a first visit, and from the settings panel after.
+// "What is this?" — shown by itself on a first visit, and from the name in the settings
+// panel's signature after.
 //
 // A <dialog> opened with showModal(): the page behind goes inert, focus moves in and
 // comes back out on close, and Esc closes it — all without a line of focus-trapping here.
