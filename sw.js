@@ -32,8 +32,17 @@ async function keep(request, response) {
   return response;
 }
 
+// Always checked with the server, never answered from the browser's own HTTP cache, so
+// online really is the live deploy. A navigation can't be copied with new options, so
+// it's asked for again by its address.
+function revalidating(request) {
+  return request.mode === 'navigate'
+    ? new Request(request.url, { cache: 'no-cache' })
+    : new Request(request, { cache: 'no-cache' });
+}
+
 async function networkFirst(request) {
-  const fresh = fetch(request).then((response) => keep(request, response));
+  const fresh = fetch(revalidating(request)).then((response) => keep(request, response));
   const timeout = new Promise((resolve) => setTimeout(resolve, NETWORK_TIMEOUT));
   try {
     const response = await Promise.race([fresh, timeout]);

@@ -260,7 +260,9 @@ body.no-blink .time .colon{ animation:none; }
 body.no-bar .seconds-rail{ display:none; }
 /* Show weather off: the clock and date re-centre on their own */
 body.no-weather .divider,
-body.no-weather .weather{ display:none; }
+body.no-weather .weather,
+body.no-place .divider,
+body.no-place .weather{ display:none; }
 
 /* ---- the opening ---- */
 
@@ -467,6 +469,32 @@ input[type=range]:focus-visible{ outline:1px solid var(--fg-dim); outline-offset
 .choice:hover{ color:var(--fg); background:color-mix(in srgb, var(--accent) 8%, transparent); }
 .choice[aria-checked=true]{ color:var(--fg); background:color-mix(in srgb, var(--accent) 18%, transparent); }
 .choice:focus-visible{ outline:1px solid var(--fg-dim); outline-offset:-1px; }
+
+/* The city search: the chosen city sits in the box, and typing over it lists matches
+   right underneath, each with its region and country to tell the Portlands apart. */
+.city-search{ display:flex; flex-direction:column; gap:4px; }
+.city-search[hidden]{ display:none; }
+.city-results{ display:flex; flex-direction:column; margin:0 -12px; }
+.city-results[hidden]{ display:none; }
+.city-result{
+  display:flex;
+  flex-direction:column;
+  gap:1px;
+  padding:7px 12px;
+  font-family:inherit;
+  font-size:15px;
+  line-height:20px;
+  text-align:left;
+  color:var(--fg);
+  background:none;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+}
+.city-result:hover,
+.city-result:focus-visible{ outline:none; background:color-mix(in srgb, var(--accent) 12%, transparent); }
+.city-region{ font-size:12px; line-height:16px; color:var(--fg-dim); }
+.city-empty{ padding:7px 12px; font-size:12px; color:var(--fg-dim); }
 
 .theme-choice{ font-size:16px; }
 /* the theme's accent in the current mode; the edge keeps a pale one from vanishing */

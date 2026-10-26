@@ -1,4 +1,4 @@
-import { LOCATION_MODES, getLocationState, onLocationChange, setLocationMode } from './location.js';
+import { LOCATION_MODES, getLocation, getLocationState, onLocationChange, setLocationMode, setCity, searchCities } from './location.js';
 import { openAbout } from './about.js';
 import { openWhatsNew } from './whatsnew.js';
 import { VERSION } from './version.js';
@@ -479,6 +479,9 @@ export function initSettings() {
   const versionButton = document.getElementById('versionButton');
   const locationRow = document.getElementById('locationChoices');
   const locationNote = document.getElementById('locationNote');
+  const citySearch = document.getElementById('citySearch');
+  const cityInput = document.getElementById('cityInput');
+  const cityResults = document.getElementById('cityResults');
   const countdownSwitch = document.getElementById('countdownSwitch');
   const countdownField = document.getElementById('countdownField');
   const countdownName = document.getElementById('countdownName');
@@ -654,16 +657,27 @@ export function initSettings() {
     button.role = 'radio';
     button.textContent = option.label;
     // Picking "My location" again is the retry — after a denial or a timeout it asks anew.
-    button.addEventListener('click', () => setLocationMode(option.id));
+    // "Choose a city" with none chosen yet goes straight to the search.
+    button.addEventListener('click', () => {
+      setLocationMode(option.id);
+      if (option.id === 'city' && !getLocationState().city) cityInput.focus();
+    });
     locationRow.appendChild(button);
     return { option, button };
   });
 
   const LOCATION_NOTES = {
     locating: 'Finding your location…',
-    denied: 'Location is blocked for this site. Allow it in the browser’s site settings, then choose My location again.',
-    unavailable: 'Couldn’t get a position right now. Choose My location to try again.',
+    denied: 'Location is blocked for this site, so pick a city instead. Or allow it in the browser’s site settings, then choose My location again.',
+    unavailable: 'Couldn’t get a position right now. Choose My location to try again, or pick a city.',
   };
+
+  // The box shows the chosen city whenever it isn't being typed in.
+  function showChosenCity() {
+    if (document.activeElement === cityInput) return;
+    const { mode, city } = getLocationState();
+    cityInput.value = mode === 'city' && city ? city.name : '';
+  }
 
   function syncLocation() {
     const { mode, status } = getLocationState();
@@ -673,7 +687,115 @@ export function initSettings() {
     const note = mode === 'auto' ? LOCATION_NOTES[status] : null;
     locationNote.textContent = note || '';
     locationNote.hidden = !note;
+    // My location that came to nothing offers the search too, rather than leaving no weather.
+    citySearch.hidden = !(mode === 'city' || (!getLocation() && (status === 'denied' || status === 'unavailable')));
+    showChosenCity();
   }
+
+  // --- city search ---
+
+  let searchTimer = null;
+  let searching = null;
+  let matches = [];
+
+  function closeResults() {
+    clearTimeout(searchTimer);
+    searching?.abort();
+    matches = [];
+    cityResults.replaceChildren();
+    cityResults.hidden = true;
+  }
+
+  function showResultsNote(text) {
+    const line = document.createElement('p');
+    line.className = 'city-empty';
+    line.textContent = text;
+    cityResults.replaceChildren(line);
+    cityResults.hidden = false;
+  }
+
+  function pick(city) {
+    closeResults();
+    cityInput.blur();
+    setCity(city);
+  }
+
+  function showMatches(found) {
+    matches = found;
+    if (!found.length) {
+      showResultsNote('No town or city by that name. Try another spelling, or the English one.');
+      return;
+    }
+    cityResults.replaceChildren(...found.map((city) => {
+      const button = document.createElement('button');
+      button.className = 'city-result';
+      button.type = 'button';
+      button.role = 'option';
+      const name = document.createElement('span');
+      name.textContent = city.city;
+      const region = document.createElement('span');
+      region.className = 'city-region';
+      region.textContent = city.region;
+      button.append(name, region);
+      // Keep focus in the box, so the click lands before the list closes behind it.
+      button.addEventListener('mousedown', (event) => event.preventDefault());
+      // The list is gone by the time the click reaches the document, which would
+      // otherwise read it as a click outside the panel.
+      button.addEventListener('click', (event) => {
+        event.stopPropagation();
+        pick(city);
+      });
+      return button;
+    }));
+    cityResults.hidden = false;
+  }
+
+  cityInput.addEventListener('focus', () => cityInput.select());
+  cityInput.addEventListener('input', () => {
+    closeResults();
+    const query = cityInput.value.trim();
+    if (query.length < 2) return;
+    // A beat after the last keystroke, so a word typed fast is one search, not seven.
+    searchTimer = setTimeout(async () => {
+      searching = new AbortController();
+      try {
+        showMatches(await searchCities(query, searching.signal));
+      } catch (error) {
+        if (error.name !== 'AbortError') showResultsNote('Couldn’t search right now. Check the connection and try again.');
+      }
+    }, 250);
+  });
+
+  // Enter takes the top match; the arrows walk the list; Esc puts the chosen city back
+  // without closing the panel.
+  citySearch.addEventListener('keydown', (event) => {
+    const options = [...cityResults.querySelectorAll('.city-result')];
+    const at = options.indexOf(document.activeElement);
+    if (event.key === 'Enter' && event.target === cityInput && matches.length) {
+      event.preventDefault();
+      pick(matches[0]);
+    } else if (event.key === 'ArrowDown' && options.length) {
+      event.preventDefault();
+      options[Math.min(at + 1, options.length - 1)].focus();
+    } else if (event.key === 'ArrowUp' && at >= 0) {
+      event.preventDefault();
+      (at === 0 ? cityInput : options[at - 1]).focus();
+    } else if (event.key === 'Escape' && (cityResults.hidden === false || event.target === cityInput)) {
+      event.stopPropagation();
+      closeResults();
+      cityInput.blur();
+    }
+  });
+
+  // Leaving the search without picking anything leaves the city as it was.
+  citySearch.addEventListener('focusout', () => {
+    setTimeout(() => {
+      if (citySearch.contains(document.activeElement)) return;
+      closeResults();
+      showChosenCity();
+    });
+  });
+
   onLocationChange(syncLocation);
   syncLocation();
 

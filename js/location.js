@@ -1,18 +1,26 @@
-// Where the weather is for. Stockholm unless the browser hands over a position.
+// Where the weather is for: wherever the browser says you are, or a city you picked.
 //
-// Two modes: 'auto' asks the browser for a position (the first visit prompts), 'default'
-// pins Stockholm without asking. Anything short of a granted position — denied, timed out,
-// no Geolocation API, not a secure context — leaves Stockholm on screen.
+// Two modes: 'auto' asks the browser for a position (the first visit prompts), 'city'
+// uses one chosen from the search in settings, without asking. There is no stand-in:
+// until there is a place, there is no weather on screen, rather than some other city's.
 
-export const DEFAULT_PLACE = { lat: 59.3293, lon: 18.0686, name: 'Stockholm, Sweden' };
+// Before 1.8 the only alternative to your own location was Stockholm, so anyone who had
+// picked it keeps it, now as their chosen city.
+const STOCKHOLM = { lat: 59.33, lon: 18.07, name: 'Stockholm, Sweden' };
 
 // Shown when a position resolved but the reverse lookup for its name did not.
 const UNNAMED = 'Current location';
 
 export const LOCATION_MODES = [
   { id: 'auto', label: 'My location' },
-  { id: 'default', label: 'Stockholm' },
+  { id: 'city', label: 'Choose a city' },
 ];
+
+// Open-Meteo's place search, from the same people as the weather: free, no key. Names
+// come back in English ("Gothenburg", "Munich") with local letters kept where English has
+// no name of its own ("Söderköping").
+const SEARCH = 'https://geocoding-api.open-meteo.com/v1/search';
+const SHOWN_RESULTS = 5;
 
 const STORAGE_KEY = 'clockspian.location';
 
@@ -62,15 +70,17 @@ function load() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     const stored = raw ? JSON.parse(raw) : {};
-    return { mode: stored.mode === 'default' ? 'default' : 'auto', found: stored.found || null };
+    if (stored.mode === 'default') return { mode: 'city', found: stored.found || null, city: STOCKHOLM };
+    if (stored.mode === 'city') return { mode: 'city', found: stored.found || null, city: stored.city || null };
+    return { mode: 'auto', found: stored.found || null, city: stored.city || null };
   } catch {
-    return { mode: 'auto', found: null };
+    return { mode: 'auto', found: null, city: null };
   }
 }
 
 function save() {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ mode: state.mode, found: state.found }));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ mode: state.mode, found: state.found, city: state.city }));
   } catch {
     // The choice still holds for this session.
   }
@@ -83,13 +93,16 @@ let status = 'idle';
 let request = 0;
 const listeners = new Set();
 
+// The place the weather is for, or null while there isn't one yet: a chosen city not yet
+// chosen, or a position not yet given.
 export function getLocation() {
-  if (state.mode === 'default' || !state.found) return DEFAULT_PLACE;
+  if (state.mode === 'city') return state.city;
+  if (!state.found) return null;
   return { ...state.found, name: state.found.name || UNNAMED };
 }
 
 export function getLocationState() {
-  return { mode: state.mode, status };
+  return { mode: state.mode, status, city: state.city };
 }
 
 export function onLocationChange(listener) {
@@ -185,7 +198,7 @@ async function locate() {
 }
 
 export function setLocationMode(mode) {
-  state.mode = mode === 'default' ? 'default' : 'auto';
+  state.mode = mode === 'city' ? 'city' : 'auto';
   save();
   if (state.mode === 'auto') {
     locate();
@@ -198,4 +211,41 @@ export function setLocationMode(mode) {
 
 export function startLocation() {
   if (state.mode === 'auto') locate();
+}
+
+// Picking a city from the search is also choosing to use one.
+export function setCity(city) {
+  state.city = { lat: city.lat, lon: city.lon, name: city.name };
+  state.mode = 'city';
+  request++;
+  status = 'idle';
+  save();
+  emit();
+}
+
+// Towns and cities matching what was typed, biggest first as Open-Meteo ranks them.
+// Airports, parks and mountains named the same are left out. `region` is there to tell
+// the Portlands apart; `name` is what the weather block shows.
+export async function searchCities(query, signal) {
+  const url = `${SEARCH}?name=${encodeURIComponent(query)}&count=20&language=en&format=json`;
+  const response = await fetch(url, { signal });
+  if (!response.ok) throw new Error(`Place search responded ${response.status}`);
+  const { results = [] } = await response.json();
+  const seen = new Set();
+  return results
+    .filter((result) => result.feature_code?.startsWith('PPL'))
+    .map((result) => ({
+      lat: round(result.latitude),
+      lon: round(result.longitude),
+      city: result.name,
+      region: [result.admin1, result.country].filter((part, i, all) => part && all.indexOf(part) === i).join(', '),
+      name: result.country ? `${result.name}, ${result.country}` : result.name,
+    }))
+    .filter((result) => {
+      const key = `${result.city}|${result.region}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    })
+    .slice(0, SHOWN_RESULTS);
 }

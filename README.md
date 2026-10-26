@@ -2,7 +2,7 @@
 
 An ambient clock and weather dashboard for a spare screen. Dark, quiet, glanceable:
 big tabular-numeral time and today's date, and — switched on in settings — current
-conditions where you are, or Stockholm, Sweden, if the browser isn't told.
+conditions where you are, or in a city you choose.
 
 Point a browser at it full-window and leave it there, or install it as an app of its own
 (below). Press `F` for full screen.
@@ -98,8 +98,8 @@ panel. `Esc` or a click anywhere outside closes it. Choices persist in `localSto
   block, stops the Open-Meteo requests, and holds off the location prompt until it is
   on. Browsers that had already closed the intro before 1.6.1 and never touched the
   switch keep the weather on, since it was the default then.
-- **Location** (under *Weather*) — *My location* or *Stockholm*. Stored separately, in
-  `clockspian.location`.
+- **Location** (under *Weather*) — *My location*, or *Choose a city* and search for one.
+  Stored separately, in `clockspian.location`.
 
 - **What is this?** — reopens the intro that greets a first visit. It shows once, on
   its own — to everyone, including browsers that used Clockspian before it existed — and
@@ -138,16 +138,24 @@ screen, dimmed, with a small dot beside it — the display never blanks out or b
 
 ### Location
 
-When the weather is first switched on the browser asks for the user's location. Stockholm is drawn first and
-stays if the answer is no, the request times out, or geolocation is unavailable
-(it needs HTTPS or `localhost`). A granted position replaces it, rounded to two
-decimals (~1 km), and is remembered so a reload starts in the right place. The place
-name comes from BigDataCloud's free client-side reverse geocoder; if that fails the
-label reads *Current location*.
+When the weather is first switched on the browser asks for the user's location. A
+granted position is rounded to two decimals (~1 km) and remembered, so a reload starts
+in the right place. The place name comes from BigDataCloud's free client-side reverse
+geocoder; if that fails the label reads *Current location*.
+
+There is no stand-in city. Until there is a place, the weather block stays hidden. If
+the answer is no, the request times out, or geolocation is unavailable (it needs HTTPS
+or `localhost`), the panel says so and offers the city search in its place.
+
+*Choose a city* searches Open-Meteo's geocoder (same provider as the weather, no key) as
+you type, in English: "Gothenburg", not "Göteborg". Only towns and cities are listed, each
+with its region and country so the Portlands can be told apart. The chosen city is kept,
+and used without asking for a position. Anyone who had picked *Stockholm* before 1.8
+has it as their chosen city.
 
 The position is looked up on load and whenever *My location* is chosen, not on every
 refresh. Once a site is blocked it cannot re-prompt: the panel says so and points to
-the browser's site settings. Choosing *Stockholm* pins it without asking.
+the browser's site settings.
 
 The weather cache is keyed to the coordinates it was fetched for, so a reading never
 appears under another place's name.
@@ -184,7 +192,7 @@ css/style.css     all styling; theme + scale are CSS custom properties on :root
 js/main.js        entry point
 js/clock.js       drift-corrected tick, date, seconds bar
 js/weather.js     Open-Meteo fetch, WMO mapping, caching, failure handling
-js/location.js    geolocation, Stockholm fallback, reverse geocoding
+js/location.js    geolocation, chosen city and its search, reverse geocoding
 js/icons.js       weather glyphs as inline SVG primitives
 js/settings.js    state, persistence, panel UI
 js/about.js       the "What is this?" dialog and first-visit check

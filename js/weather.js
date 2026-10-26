@@ -16,7 +16,7 @@ function endpoint({ lat, lon }) {
   );
 }
 
-const samePlace = (a, b) => a.lat === b.lat && a.lon === b.lon;
+const samePlace = (a, b) => a === b || (Boolean(a && b) && a.lat === b.lat && a.lon === b.lon);
 
 const REFRESH_MS = 10 * 60 * 1000;
 const CACHE_KEY = 'clockspian.weather';
@@ -64,6 +64,7 @@ function describe(code) {
 // A reading only counts for the place it was fetched for — otherwise a move from
 // Stockholm would show Stockholm's weather under the new town's name until the fetch lands.
 function readCache(place) {
+  if (!place) return null;
   try {
     const raw = localStorage.getItem(CACHE_KEY);
     const reading = raw ? JSON.parse(raw) : null;
@@ -108,8 +109,15 @@ export function initWeather() {
   const loEl = document.getElementById('lo');
   const placeEl = document.getElementById('place');
 
-  let place = getLocation();
-  placeEl.textContent = place.name;
+  // No place yet (a city still to pick, a position still to come) means no weather block
+  // at all, rather than dashes under no name.
+  let place = null;
+  function setPlace(next) {
+    place = next;
+    placeEl.textContent = next ? next.name : '';
+    document.body.classList.toggle('no-place', !next);
+  }
+  setPlace(getLocation());
 
   let lastGlyphKey = null;
 
@@ -147,7 +155,7 @@ export function initWeather() {
 
   async function refresh() {
     // Hidden by "Show weather": no requests at all until it comes back.
-    if (!isWeatherShown()) return;
+    if (!isWeatherShown() || !place) return;
     const target = place;
     try {
       const reading = await fetchReading(target);
@@ -164,9 +172,9 @@ export function initWeather() {
   }
 
   onLocationChange((next) => {
-    placeEl.textContent = next.name;
-    if (samePlace(next, place)) return; // a name arriving, or a status change
-    place = next;
+    const moved = !samePlace(next, place);
+    setPlace(next);
+    if (!moved) return; // a name arriving, or a status change
     paintCached();
     refresh();
   });

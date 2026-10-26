@@ -56,7 +56,7 @@
         </div>
         <div class="condition-block">
           <div class="condition" id="condition">—</div>
-          <div class="place" id="place">Stockholm, Sweden</div>
+          <div class="place" id="place"></div>
           <div class="range">
             <span class="hi" id="hi">H --°</span>
             <span id="lo">L --°</span>
@@ -144,6 +144,11 @@
     <section class="field" id="locationField" hidden>
       <div class="choices" id="locationChoices" role="radiogroup" aria-label="Weather location"></div>
       <p class="field-note" id="locationNote" aria-live="polite" hidden></p>
+      <!-- Shows the chosen city; type over it to find another. js/settings.js fills the list. -->
+      <div class="city-search" id="citySearch" hidden>
+        <input class="text-input" id="cityInput" type="text" placeholder="Search for a city" aria-label="City" autocomplete="off" spellcheck="false" aria-controls="cityResults" aria-autocomplete="list">
+        <div class="city-results" id="cityResults" role="listbox" aria-label="Matching cities" hidden></div>
+      </div>
     </section>
 
     <h2 class="panel-title">Countdown
@@ -234,7 +239,7 @@
       </div>
 
       <ul class="about-fine">
-        <li><span aria-hidden="true">📍</span><span>Switch the weather on and your browser asks where you are, rounded to about a kilometre. Say no and you get Stockholm.</span></li>
+        <li><span aria-hidden="true">📍</span><span>Switch the weather on and your browser asks where you are, rounded to about a kilometre. Say no and pick a city instead.</span></li>
         <li><span aria-hidden="true">⚙️</span><span>Move the mouse and a gear appears top right, with themes, light and dark, size, the weather and the countdown.</span></li>
         <li><span aria-hidden="true">🎬</span><span>Rather watch? <a class="about-link" href="/watch/" target="_blank" rel="noopener">Here’s the half-minute film</a>.</span></li>
       </ul>
