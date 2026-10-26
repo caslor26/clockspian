@@ -212,7 +212,8 @@ js/version.js     every release and its notes, newest first
 js/whatsnew.js    the What's new pill and release-notes dialog
 js/updates.js     hourly check for a newer deploy; reloads to pick it up
 js/app.js         service worker, screen wake lock, F for full screen, install button
-watch/index.html  /watch — the promo films, with link previews for sharing
+watch/index.html  /watch — the promo films, with link previews; dressed in your saved theme if you have one
+js/themes.js      every theme's typeface, palettes and clock settings; read by the clock and /watch
 media/            the films and their posters, exported from promo/ (which stays out of git)
 prototype/        the original single-file mockup, kept for reference
 ```
