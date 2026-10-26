@@ -119,6 +119,13 @@
       <input type="range" id="scaleInput" min="0.5" max="1.5" step="any" value="1">
     </section>
 
+    <!-- The clock's weight, within what the theme's typeface has; double-click resets it -->
+    <section class="field">
+      <label class="field-label" for="weightInput">Weight <span class="field-value" id="weightValue"></span></label>
+      <input type="range" id="weightInput" min="100" max="900" step="10" value="200" title="Double-click for the theme’s own weight">
+      <p class="field-note" id="weightNote" hidden></p>
+    </section>
+
     <section class="field">
       <span class="field-label">Date
         <button class="switch" id="dateSwitch" type="button" role="switch" aria-checked="true" aria-label="Date"><i></i></button>
@@ -141,13 +148,6 @@
 
     <section class="field">
       <div class="choices" id="themeChoices" role="radiogroup" aria-label="Theme"></div>
-    </section>
-
-    <!-- The clock's weight, within what the theme's typeface has; double-click resets it -->
-    <section class="field">
-      <label class="field-label" for="weightInput">Weight <span class="field-value" id="weightValue"></span></label>
-      <input type="range" id="weightInput" min="100" max="900" step="10" value="200" title="Double-click for the theme’s own weight">
-      <p class="field-note" id="weightNote" hidden></p>
     </section>
 
     <h2 class="panel-title">Weather

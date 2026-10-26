@@ -77,7 +77,7 @@ panel. `Esc` or a click anywhere outside closes it. Choices persist in `localSto
   that block Google Fonts, so they stay apart even there. Signal, Moss, Terminal, Gala,
   Orbit and Lagoon replaced Graphite, Sand, IBM Plex Mono's Terminal, Folio, Heather
   and Nunito's Lagoon; anyone stored on one of the old ones moves to its successor.
-- **Weight** — under the themes: how thin or bold the clock's digits are, as far as
+- **Weight** — under *Scale*: how thin or bold the clock's digits are, as far as
   the theme's typeface goes. It starts at the theme's own weight, is remembered per
   theme, and a double-click puts it back. Gala, Orbit and Lagoon start at their font's
   lightest, so they only go bolder; Moss's Young Serif has one weight, so the slider
