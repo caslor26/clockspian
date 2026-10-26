@@ -202,6 +202,7 @@ js/weather.js     Open-Meteo fetch, WMO mapping, caching, failure handling
 js/location.js    geolocation, chosen city and its search, reverse geocoding
 js/icons.js       weather glyphs as inline SVG primitives
 js/settings.js    state, persistence, panel UI
+js/fonts.js       the few-letter fonts for theme names and the wordmark, under names of their own
 js/about.js       the "What is this?" dialog and first-visit check
 js/version.js     every release and its notes, newest first
 js/whatsnew.js    the What's new pill and release-notes dialog

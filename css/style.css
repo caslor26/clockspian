@@ -687,7 +687,7 @@ input[type=range]:disabled{ opacity:0.35; cursor:default; }
 .brand-hands{ stroke:var(--fg); }
 .brand-name{
   margin-right:-0.24em; /* the tracking's trailing space, so the gap to the dot stays even */
-  font-family:'Jost','Helvetica Neue',Arial,sans-serif;
+  font-family:'Jost Label','Jost','Helvetica Neue',Arial,sans-serif;
   font-weight:400;
   letter-spacing:0.24em;
   text-transform:uppercase;

@@ -4,6 +4,7 @@ import { openWhatsNew } from './whatsnew.js';
 import { VERSION } from './version.js';
 import { getCountdown, setCountdown, onCountdownChange, countdownStatus } from './countdown.js';
 import { primeAudio } from './insane.js';
+import { labelFamily, loadLabelFont } from './fonts.js';
 
 // Persisted display settings. Everything is applied by writing CSS custom
 // properties onto :root — no component knows what the current theme is.
@@ -489,10 +490,16 @@ function loadThemePreviews() {
   const families = THEMES.filter((t) => t.font.family).map((t) => `family=${t.font.family}:wght@400`);
   // plus the wordmark at the foot of the panel, which is always set in Jost
   const glyphs = [...new Set(THEMES.map((t) => t.label).join('') + 'CLOCKSPIAN')].join('');
-  const link = document.createElement('link');
-  link.rel = 'stylesheet';
-  link.href = `https://fonts.googleapis.com/css2?${families.join('&')}&text=${encodeURIComponent(glyphs)}&display=swap`;
-  document.head.appendChild(link);
+  loadLabelFont(`https://fonts.googleapis.com/css2?${families.join('&')}&text=${encodeURIComponent(glyphs)}&display=swap`);
+}
+
+// A theme's name in its label subset, slotted in after the stack's first face: the
+// active theme's full font still wins, and so does Clåde's Anthropic Serif where it's
+// installed, but neither steps aside for the stack's fallbacks.
+function labelStack(theme) {
+  const [first, ...rest] = (theme.font.display || theme.font.stack).split(',');
+  if (!theme.font.family) return [first, ...rest].join(',');
+  return [first, `'${labelFamily(theme.font.family.replace(/\+/g, ' '))}'`, ...rest].join(',');
 }
 
 export function initSettings() {
@@ -631,7 +638,7 @@ export function initSettings() {
     const name = document.createElement('span');
     name.textContent = theme.label;
     // Preview each theme in its own face — the display face, since that sets the clock.
-    name.style.fontFamily = theme.font.display || theme.font.stack;
+    name.style.fontFamily = labelStack(theme);
     Object.assign(name.style, theme.labelStyle);
     // A dot of the theme's accent in the current mode, ahead of the name.
     const dot = document.createElement('span');

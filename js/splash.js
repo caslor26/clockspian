@@ -6,14 +6,14 @@
 // only starts drawing once settings.js has painted the theme, so it draws in the right
 // colours. A click or a key skips it, and with reduced motion it never shows at all.
 
+import { loadLabelFont } from './fonts.js';
+
 const JOST = 'https://fonts.googleapis.com/css2?family=Jost:wght@400&text=CLOCKSPIAN&display=swap';
 
-// The name is always set in Jost, which only the default theme loads by itself.
+// The name is always set in Jost, whichever theme is on, so just its letters are loaded,
+// as 'Jost Label' (see js/fonts.js).
 function loadWordmarkFont() {
-  const link = document.createElement('link');
-  link.rel = 'stylesheet';
-  link.href = JOST;
-  document.head.appendChild(link);
+  loadLabelFont(JOST);
 }
 
 // Resolves once the splash is gone and the clock is showing.

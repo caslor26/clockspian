@@ -73,7 +73,9 @@ async function keepFontFiles(response) {
 async function cacheFirst(event) {
   const { request } = event;
   const kept = await caches.match(request);
-  if (kept) return kept;
+  // A copy kept from a <link> is opaque, and a script's fetch can't be handed one: it
+  // fails outright. So that one is fetched afresh, readably, and kept for both.
+  if (kept && !(kept.type === 'opaque' && request.mode === 'cors')) return kept;
   const response = await keep(request, await fetch(request));
   if (new URL(request.url).hostname === 'fonts.googleapis.com') event.waitUntil(keepFontFiles(response));
   return response;
