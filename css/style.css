@@ -258,6 +258,10 @@ html,body{
 /* the two seconds settings, switched off */
 body.no-blink .time .colon{ animation:none; }
 body.no-bar .seconds-rail{ display:none; }
+/* Off for the barest look: just the time. A countdown keeps its own line, no longer
+   tucked up under a date that isn't there. */
+body.no-date .date-row{ display:none; }
+body.no-date .countdown{ margin-top:0; }
 /* Show weather off: the clock and date re-centre on their own */
 body.no-weather .divider,
 body.no-weather .weather,

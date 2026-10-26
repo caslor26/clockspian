@@ -53,6 +53,7 @@ Move the mouse and a faint gear appears in the top-right corner; click it for th
 panel. `Esc` or a click anywhere outside closes it. Choices persist in `localStorage`.
 
 - **Scale** — 50%–150%, for tuning to the screen it ends up on.
+- **Date** — on by default. Off leaves just the time, for the barest look.
 - **Blinking colon** — on by default. Off holds the colon steady.
 - **Bottom progress bar** — the thin line along the bottom edge that fills once a
   minute. On by default.

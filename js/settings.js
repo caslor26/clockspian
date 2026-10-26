@@ -294,7 +294,7 @@ export const THEMES = [
 const MODES = ['light', 'system', 'dark'];
 const systemDark = window.matchMedia('(prefers-color-scheme: dark)');
 
-const DEFAULTS = { scale: 1, blink: true, bar: true, theme: 'clockspian', mode: 'system', weather: false };
+const DEFAULTS = { scale: 1, blink: true, bar: true, date: true, theme: 'clockspian', mode: 'system', weather: false };
 
 // Settings saved before themes existed held a typeface, an accent and a Kal Studio
 // switch. Each typeface now lives in exactly one theme, so it alone decides the match.
@@ -443,6 +443,7 @@ function apply() {
 
   document.body.classList.toggle('no-blink', !state.blink);
   document.body.classList.toggle('no-bar', !state.bar);
+  document.body.classList.toggle('no-date', !state.date);
   document.body.classList.toggle('no-weather', !state.weather);
 }
 
@@ -471,6 +472,7 @@ export function initSettings() {
   const scaleValue = document.getElementById('scaleValue');
   const blinkSwitch = document.getElementById('blinkSwitch');
   const barSwitch = document.getElementById('barSwitch');
+  const dateSwitch = document.getElementById('dateSwitch');
   const modeSwitch = document.getElementById('modeSwitch');
   const themeRow = document.getElementById('themeChoices');
   const weatherSwitch = document.getElementById('weatherSwitch');
@@ -560,11 +562,12 @@ export function initSettings() {
   });
   showScale();
 
-  // --- blinking colon, bottom progress bar ---
+  // --- blinking colon, bottom progress bar, date ---
 
   function syncSeconds() {
     blinkSwitch.setAttribute('aria-checked', String(state.blink));
     barSwitch.setAttribute('aria-checked', String(state.bar));
+    dateSwitch.setAttribute('aria-checked', String(state.date));
   }
   blinkSwitch.addEventListener('click', () => {
     state.blink = !state.blink;
@@ -573,6 +576,11 @@ export function initSettings() {
   });
   barSwitch.addEventListener('click', () => {
     state.bar = !state.bar;
+    commit();
+    syncSeconds();
+  });
+  dateSwitch.addEventListener('click', () => {
+    state.date = !state.date;
     commit();
     syncSeconds();
   });
