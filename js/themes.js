@@ -300,4 +300,73 @@ export const THEMES = [
       },
     },
   },
+  {
+    // Aimo, the parking company's mother brand: pastel pink with ink-dark type, the colour
+    // in the ground rather than the text. Named a little off-brand, like Clåde. The brand
+    // has no dark mode; its dark slides — navy, white, pale yellow — stand in for one.
+    // Aimo Sans is licensed and not ours to serve, so it is only used where it's installed;
+    // Figtree, its usual stand-in, measures tabular with 'tnum' on. Aimo Sans has not been
+    // measured. The brand sets its numbers bold, so the clock starts there.
+    id: 'aimo',
+    label: 'Åimo',
+    font: {
+      stack: `'Aimo Sans','Figtree',Arial,sans-serif`,
+      url: 'https://fonts.googleapis.com/css2?family=Figtree:wght@300..900&display=swap',
+      family: 'Figtree',
+    },
+    weights: { min: 300, max: 900 },
+    timeWeight: '700',
+    palettes: {
+      dark: {
+        '--bg': '#06324e',       // Navy
+        '--line': '#004976',     // Petrol Blue
+        '--fg': '#ffffff',
+        '--fg-dim': '#fcf5ae',   // Pale Yellow
+        '--accent': '#7eb9e5',   // Sky Blue
+        '--accent-2': '#c9aad1', // Lilac
+      },
+      light: {
+        '--bg': '#e5c8cf',       // Pale Pink
+        '--line': '#d9b3bd',     // Pink deep
+        '--fg': '#111111',       // Ink
+        '--fg-dim': '#44546a',   // Slate
+        '--accent': '#a65c72',   // Berry
+        '--accent-2': '#634a5e', // Aubergine
+        '--panel-bg': '#efdce1', // Tint
+      },
+    },
+  },
+  {
+    // Aimo Park, the parking sub-brand: dark petroleum and one Energy Green, and none of
+    // the mother brand's pink. Same face as Åimo. On the light ground Energy Green is too
+    // pale for small text, so the accent there is the brand's darker green.
+    id: 'aimo-park',
+    label: 'Åimo Park',
+    font: {
+      stack: `'Aimo Sans','Figtree',Arial,sans-serif`,
+      url: 'https://fonts.googleapis.com/css2?family=Figtree:wght@300..900&display=swap',
+      family: 'Figtree',
+    },
+    weights: { min: 300, max: 900 },
+    timeWeight: '700',
+    palettes: {
+      dark: {
+        '--bg': '#002636',       // Petroleum
+        '--line': '#0a3a4d',     // Petroleum 2
+        '--fg': '#ffffff',
+        '--fg-dim': '#a8b5bb',   // On-dark
+        '--accent': '#00ba4d',   // Energy Green
+        '--accent-2': '#49595e', // Ink
+      },
+      light: {
+        '--bg': '#f3f5f7',       // Mist
+        '--line': '#a8b5bb',     // Concrete is too close to Mist to read as a rule
+        '--fg': '#002636',       // Petroleum
+        '--fg-dim': '#617275',   // Muted
+        '--accent': '#00a846',   // Green dark
+        '--accent-2': '#a8b5bb',
+        '--panel-bg': '#ffffff',
+      },
+    },
+  },
 ];
