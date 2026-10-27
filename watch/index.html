@@ -244,6 +244,56 @@ video{
 .share:hover{ color:var(--fg); }
 .open:focus-visible,.share:focus-visible,.brand:focus-visible{ outline:1px solid var(--fg-dim); outline-offset:3px; }
 
+/* The way back to the clock, pinned top right as the page scrolls; see the script below
+   for where it goes. */
+.close{
+  position:fixed;
+  top:16px; right:16px;
+  z-index:2;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:36px; height:36px;
+  padding:0;
+  color:var(--fg-dim);
+  background:color-mix(in srgb, var(--bg) 85%, transparent);
+  border:1px solid var(--line);
+  border-radius:50%;
+  cursor:pointer;
+  -webkit-backdrop-filter:blur(8px);
+  backdrop-filter:blur(8px);
+  transition:color 0.2s ease;
+}
+.close svg{ width:14px; height:14px; }
+.close:hover{ color:var(--fg); }
+.close:focus-visible{ outline:1px solid var(--fg-dim); outline-offset:3px; }
+
+/* Installed with the title bar hidden, as in the clock: the top row drags the window, and
+   the close button moves up into it, clear of the window's own buttons. */
+.titlebar{ display:none; }
+@media (display-mode: window-controls-overlay){
+  .titlebar{
+    display:block;
+    position:fixed;
+    left:env(titlebar-area-x, 0);
+    top:env(titlebar-area-y, 0);
+    width:env(titlebar-area-width, 100%);
+    height:env(titlebar-area-height, 0px);
+    z-index:1;
+    background:var(--bg);
+    app-region:drag;
+    -webkit-app-region:drag;
+  }
+  .close{
+    top:calc((env(titlebar-area-height, 0px) - 28px) / 2);
+    right:calc(100vw - env(titlebar-area-x, 0px) - env(titlebar-area-width, 100vw) + 12px);
+    width:28px; height:28px;
+    app-region:no-drag;
+    -webkit-app-region:no-drag;
+  }
+  main{ padding-top:calc(56px + env(titlebar-area-height, 0px)); }
+}
+
 @media (max-width:720px){
   .steps, .points{ grid-template-columns:1fr; }
   .points{ gap:16px; }
@@ -258,6 +308,12 @@ video{
 </style>
 </head>
 <body>
+<div class="titlebar" aria-hidden="true"></div>
+<button class="close" id="close" type="button" aria-label="Back to the clock" title="Back to the clock">
+  <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+    <path d="M2 2l10 10M12 2L2 12"/>
+  </svg>
+</button>
 <main>
   <a class="brand" href="/">
     <svg viewBox="0 0 64 64" fill="none" stroke-width="7" aria-hidden="true">
@@ -410,6 +466,26 @@ video{
 </script>
 
 <script>
+  // Back to the clock. The clock opens this page in a tab or window of its own, with no
+  // history to step back through, so that one is closed and the clock is right behind it.
+  // Reached from the clock in the same tab, it steps back, so the clock keeps its state.
+  // Anywhere else — a shared link — it opens the clock here. Esc does the same.
+  const fromClock = document.referrer && new URL(document.referrer).origin === location.origin;
+  function backToClock() {
+    if (fromClock && history.length > 1) {
+      history.back();
+      return;
+    }
+    if (fromClock) window.close();
+    // Still here: the window wasn't ours to close.
+    setTimeout(() => { location.href = '/'; }, 100);
+  }
+  document.getElementById('close').addEventListener('click', backToClock);
+  addEventListener('keydown', (event) => {
+    // not the Esc that takes a film out of full screen
+    if (event.key === 'Escape' && !event.defaultPrevented && !document.fullscreenElement) backToClock();
+  });
+
   // The phone's own share sheet where there is one; otherwise the link goes on the clipboard.
   const share = document.getElementById('share');
   const url = 'https://clockspian.vercel.app/watch/';
