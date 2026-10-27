@@ -303,7 +303,8 @@ export const THEMES = [
   {
     // Aimo, the parking company's mother brand: pastel pink with ink-dark type, the colour
     // in the ground rather than the text. Named a little off-brand, like Clåde. The brand
-    // has no dark mode; its dark slides — navy, white, pale yellow — stand in for one.
+    // has no dark mode, so the dark one stays pink: a deep berry ground, the brand's pinks
+    // for the type and Coral for the highlights.
     // Aimo Sans is licensed and not ours to serve, so it is only used where it's installed;
     // Figtree, its usual stand-in, measures tabular with 'tnum' on. Aimo Sans has not been
     // measured. The brand sets its numbers bold, so the clock starts there.
@@ -318,12 +319,12 @@ export const THEMES = [
     timeWeight: '700',
     palettes: {
       dark: {
-        '--bg': '#06324e',       // Navy
-        '--line': '#004976',     // Petrol Blue
-        '--fg': '#ffffff',
-        '--fg-dim': '#fcf5ae',   // Pale Yellow
-        '--accent': '#7eb9e5',   // Sky Blue
-        '--accent-2': '#c9aad1', // Lilac
+        '--bg': '#3d1f2b',       // Berry, taken down to a night ground
+        '--line': '#5c3243',
+        '--fg': '#fbeef1',
+        '--fg-dim': '#d9b3bd',   // Pink deep
+        '--accent': '#f1947b',   // Coral
+        '--accent-2': '#a65c72', // Berry
       },
       light: {
         '--bg': '#e5c8cf',       // Pale Pink
@@ -338,10 +339,12 @@ export const THEMES = [
   },
   {
     // Aimo Park, the parking sub-brand: dark petroleum and one Energy Green, and none of
-    // the mother brand's pink. Same face as Åimo. On the light ground Energy Green is too
-    // pale for small text, so the accent there is the brand's darker green.
-    id: 'aimo-park',
-    label: 'Åimo Park',
+    // the mother brand's pink. Same face as Åimo. The light one sits on the brand's warm
+    // off-white rather than a cool grey, with Energy Green glowing in from the corner as
+    // it does on the brand's dark slides. Energy Green is too pale there for small text,
+    // so the accent (the hi temperature, the countdown) is the brand's darker green.
+    id: 'aimo-perk',
+    label: 'Åimo Perk',
     font: {
       stack: `'Aimo Sans','Figtree',Arial,sans-serif`,
       url: 'https://fonts.googleapis.com/css2?family=Figtree:wght@300..900&display=swap',
@@ -359,12 +362,12 @@ export const THEMES = [
         '--accent-2': '#49595e', // Ink
       },
       light: {
-        '--bg': '#f3f5f7',       // Mist
-        '--line': '#a8b5bb',     // Concrete is too close to Mist to read as a rule
+        '--bg': '#f2f2f0',       // Off-white
+        '--line': '#c8ecd5',     // Pale green
         '--fg': '#002636',       // Petroleum
-        '--fg-dim': '#617275',   // Muted
+        '--fg-dim': '#49595e',   // Ink
         '--accent': '#00a846',   // Green dark
-        '--accent-2': '#a8b5bb',
+        '--accent-2': '#00ba4d', // Energy Green: the corner glow and the date's dot
         '--panel-bg': '#ffffff',
       },
     },
