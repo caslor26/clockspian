@@ -8,8 +8,10 @@
   --accent:#4a6890;
   --accent-2:#8fa3c0;
   --ui-scale:1;
+  /* js/fit.js takes this below 1 on a window too short (or narrow) for the clock */
+  --fit:1;
   /* everything sized below runs through this; the slider's 100% is 1.4× the original design */
-  --size:calc(var(--ui-scale) * 1.4);
+  --size:calc(var(--ui-scale) * 1.4 * var(--fit));
   --font-stack:'Jost','Helvetica Neue',Arial,sans-serif;
   /* only the Kal theme splits these off from the body face / base weight */
   --font-display:'Jost','Helvetica Neue',Arial,sans-serif;

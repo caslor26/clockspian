@@ -9,12 +9,14 @@ import { initWhatsNew } from './whatsnew.js';
 import { watchForUpdates } from './updates.js';
 import { playSplash } from './splash.js';
 import { initApp } from './app.js';
+import { initFit } from './fit.js';
 
 const firstVisit = isFirstVisit();
 
 // Settings first — it writes the theme custom properties, so everything that
 // follows renders in the right accent and scale on the first frame.
 initSettings();
+initFit();
 initClock();
 initCountdown();
 initInsane();
