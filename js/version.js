@@ -17,6 +17,30 @@
 // film has the stage; the older notes are still under the version number in settings.
 export const RELEASES = [
   {
+    version: '1.8.1',
+    date: '2026-10-27',
+    notes: [
+      {
+        group: 'New',
+        emoji: '🌸',
+        title: 'Åimo and Åimo Perk',
+        text: 'Two new themes, cousins from the same family. Åimo is pastel pink, and stays pink after dark. Åimo Perk is deep petroleum with a single bright green. That makes twelve.',
+      },
+      {
+        group: 'Improved',
+        emoji: '🪟',
+        title: 'Fits any window',
+        text: 'Snap Clockspian into a corner of your screen and the whole clock now shrinks to fit, instead of spilling off the top and bottom. Thanks, Rasmus!',
+      },
+      {
+        group: 'Improved',
+        emoji: '🎬',
+        title: 'A way back from the films',
+        text: 'The films page now has an × in the corner, and Esc works too. Either one takes you straight back to the clock.',
+      },
+    ],
+  },
+  {
     version: '1.8.0',
     date: '2026-10-26',
     film: { src: '/media/clockspian-1.8.mp4', poster: '/media/clockspian-1.8.jpg' },
