@@ -17,6 +17,17 @@
 // film has the stage; the older notes are still under the version number in settings.
 export const RELEASES = [
   {
+    version: '1.8.2',
+    date: '2026-11-04',
+    notes: [
+      {
+        emoji: '🤏',
+        title: 'Closer together',
+        text: 'With the weather on, the clock and the weather now sit closer together, nearer the middle of the screen.',
+      },
+    ],
+  },
+  {
     version: '1.8.1',
     date: '2026-10-27',
     notes: [

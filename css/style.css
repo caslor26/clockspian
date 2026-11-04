@@ -163,9 +163,12 @@ html,body{
   60%,100%{ outline-offset:0.8em; outline-color:color-mix(in srgb, var(--accent) 0%, transparent); }
 }
 
+/* A short hairline, pulled in to half the column's gap on either side, so the weather
+   reads as part of the clock's group rather than a second one further down the screen. */
 .divider{
   width:1px;
-  height:calc(clamp(28px,5vh,56px) * var(--size));
+  height:calc(clamp(18px,3vh,36px) * var(--size));
+  margin-block:calc(clamp(18px, 3vh, 34px) * var(--size) * -0.5);
   background:linear-gradient(var(--line), transparent);
 }
 
