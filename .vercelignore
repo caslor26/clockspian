@@ -1,0 +1,5 @@
+# Kept in the repo, left out of the deploy.
+
+# The theme studio is a tool for making themes, run locally (python3 -m http.server,
+# then /studio/). It needs nothing from the live site, and the live site needs nothing from it.
+studio/

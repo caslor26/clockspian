@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Clockspian Studio</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300..600&display=swap">
+<link rel="stylesheet" href="studio.css">
+</head>
+<body>
+<!-- The theme studio: design a theme against the real clock, check it, and copy it out as
+     an entry for js/themes.js. A tool for making themes, not part of the clock; nothing
+     links here. Drafts and the shortlist live in this browser's localStorage. -->
+<header class="bar">
+  <div class="brand">
+    <svg viewBox="0 0 64 64" fill="none" stroke-width="7" aria-hidden="true">
+      <path d="M47.56 16.44A22 22 0 1 0 47.56 47.56"/><path d="M32 15V32H46"/>
+    </svg>
+    Clockspian <span>Studio</span>
+  </div>
+  <nav class="tabs" role="tablist">
+    <button role="tab" data-tab="editor" aria-selected="true">Editor</button>
+    <button role="tab" data-tab="gallery" aria-selected="false">Gallery <span class="count" id="shortCount"></span></button>
+  </nav>
+</header>
+
+<main id="editorView" class="editor">
+  <aside class="form" aria-label="Theme">
+    <section>
+      <h2>Start</h2>
+      <label class="row">From
+        <select id="startFrom"></select>
+      </label>
+      <div class="buttons">
+        <button id="saveDraft" type="button">Save draft</button>
+        <button id="deleteDraft" type="button" class="quiet">Delete draft</button>
+      </div>
+    </section>
+
+    <section>
+      <h2>Name</h2>
+      <label class="row">Label <input id="label" type="text" spellcheck="false"></label>
+      <label class="row">Id <input id="id" type="text" spellcheck="false"></label>
+      <label class="stack">Note <textarea id="comment" rows="3" placeholder="What it is and why: becomes the comment above it in themes.js"></textarea></label>
+    </section>
+
+    <section>
+      <h2>Typeface</h2>
+      <div class="row">
+        <input id="family" type="text" spellcheck="false" placeholder="Google Fonts family, e.g. Space Grotesk" aria-label="Google Fonts family">
+        <button id="loadFont" type="button">Load</button>
+      </div>
+      <p class="hint" id="fontNote">Load finds the family’s weights and builds its URL.</p>
+      <label class="stack">Stack <input id="stack" type="text" spellcheck="false"></label>
+      <label class="stack">URL <input id="url" type="text" spellcheck="false"></label>
+      <p class="hint" id="displayNote" hidden></p>
+    </section>
+
+    <section>
+      <h2>Setting</h2>
+      <div class="row three">
+        <label>Min <input id="wMin" type="number" step="50" min="1" max="1000"></label>
+        <label>Max <input id="wMax" type="number" step="50" min="1" max="1000"></label>
+        <label>Step <input id="wStep" type="number" step="50" min="0" max="500" placeholder="any"></label>
+      </div>
+      <label class="slider">Weight <output id="weightOut"></output>
+        <input id="weight" type="range" min="100" max="900" step="10">
+      </label>
+      <label class="slider">Size <output id="scaleOut"></output>
+        <input id="timeScale" type="range" min="0.6" max="1.6" step="0.01">
+      </label>
+      <label class="slider">Width <output id="stretchOut"></output>
+        <input id="timeStretch" type="range" min="50" max="150" step="1">
+      </label>
+      <label class="row">Low-res opsz <input id="lowResOpsz" type="number" min="6" max="144" placeholder="none"></label>
+    </section>
+
+    <section>
+      <h2>Palettes</h2>
+      <div class="buttons">
+        <button id="lightFromDark" type="button">Light from dark</button>
+        <button id="darkFromLight" type="button">Dark from light</button>
+      </div>
+      <p class="hint">Drafts the other mode from this one: same hues, lightness turned over. A starting point to tune, not a finish.</p>
+      <div class="palettes">
+        <div class="palette" data-mode="dark"><h3>Dark</h3></div>
+        <div class="palette" data-mode="light"><h3>Light</h3></div>
+      </div>
+    </section>
+  </aside>
+
+  <section class="work">
+    <div class="preview-bar">
+      <div class="seg" role="group" aria-label="Preview weight">
+        <button data-pw="min" type="button">Min</button>
+        <button data-pw="designed" type="button" aria-pressed="true">Set</button>
+        <button data-pw="max" type="button">Max</button>
+      </div>
+      <label class="check"><input id="pvWeather" type="checkbox" checked> Weather</label>
+      <label class="check"><input id="pvDate" type="checkbox" checked> Date</label>
+      <label class="check"><input id="pvBlink" type="checkbox"> Blink</label>
+      <label class="mini">Scale <select id="pvScale">
+        <option value="0.5">50%</option><option value="1" selected>100%</option><option value="1.5">150%</option>
+      </select></label>
+      <label class="mini">Screen <select id="pvSize">
+        <option value="1440x900" selected>Laptop 1440×900</option>
+        <option value="1920x1080">1080p</option>
+        <option value="960x540">Quarter 1080p</option>
+      </select></label>
+    </div>
+    <div class="previews">
+      <figure class="preview"><div class="screen" data-mode="dark"><iframe src="frame.html" title="Dark preview"></iframe></div><figcaption>Dark</figcaption></figure>
+      <figure class="preview"><div class="screen" data-mode="light"><iframe src="frame.html" title="Light preview"></iframe></div><figcaption>Light</figcaption></figure>
+    </div>
+
+    <div class="lower">
+      <section class="checks">
+        <h2>Checks <span class="summary" id="checkSummary"></span></h2>
+        <ul id="checks"></ul>
+      </section>
+      <section class="export">
+        <h2>For js/themes.js
+          <button id="copyClaude" type="button" title="The theme, its checks and the preview settings, to paste into a chat">Copy for Claude</button>
+          <button id="copyExport" type="button">Copy</button>
+        </h2>
+        <pre id="exportCode"></pre>
+      </section>
+    </div>
+  </section>
+</main>
+
+<main id="galleryView" class="gallery" hidden>
+  <p class="gallery-lead">Every theme in both modes, set at its own weight and size, with the draft first. Star the keepers: the shortlist is the set to narrow down to.</p>
+  <div class="cards" id="cards"></div>
+</main>
+
+<!-- where the checks measure figures, out of sight -->
+<div class="measure" id="measure" aria-hidden="true"></div>
+
+<script type="module" src="studio.js"></script>
+</body>
+</html>
