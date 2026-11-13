@@ -3,6 +3,16 @@ const MONTHS = ['January','February','March','April','May','June','July','August
 
 const pad = (n) => String(n).padStart(2, '0');
 
+// ISO 8601: weeks start on Monday, and week 1 is the one holding the year's first Thursday.
+export function isoWeek(date) {
+  const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  const weekday = (d.getDay() + 6) % 7; // Monday 0 … Sunday 6
+  d.setDate(d.getDate() - weekday + 3); // the Thursday of this week
+  // that Thursday's year is the week's year; rounded, so a DST hour can't tip the count
+  const dayOfYear = Math.round((d - new Date(d.getFullYear(), 0, 1)) / 86400000);
+  return Math.floor(dayOfYear / 7) + 1;
+}
+
 // Anything else that changes with the seconds (the countdown) rides this clock's tick
 // rather than running a timer of its own, so the two can never drift out of step.
 const tickListeners = new Set();
@@ -15,6 +25,7 @@ export function initClock() {
   const timeEl = document.getElementById('time');
   const weekdayEl = document.getElementById('weekday');
   const dateEl = document.getElementById('date');
+  const weekEl = document.getElementById('week');
   const track = document.getElementById('secondsTrack');
 
   // The colon element is animated by CSS, so it has to survive between ticks —
@@ -36,6 +47,7 @@ export function initClock() {
     if (dayStamp !== lastDayStamp) {
       weekdayEl.textContent = WEEKDAYS[now.getDay()];
       dateEl.textContent = `${MONTHS[now.getMonth()]} ${now.getDate()}`;
+      weekEl.textContent = `Week ${isoWeek(now)}`;
       lastDayStamp = dayStamp;
     }
 
