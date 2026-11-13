@@ -356,6 +356,10 @@ body.show-calendar .calendar.cramped{ visibility:hidden; opacity:0; }
   color:var(--bg);
 }
 
+/* the settings note that says why a switched-on calendar isn't showing */
+.calendar-note{ display:none; }
+body.show-calendar.calendar-cramped .calendar-note{ display:block; }
+
 /* ---- the opening ---- */
 
 /* Over everything from the first frame, on the stage's own background, so the clock only
