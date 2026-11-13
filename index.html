@@ -53,9 +53,12 @@
       <div class="calendar-slot fold">
         <button class="calendar" id="calendar" type="button" aria-expanded="false" aria-label="This week. Show the weeks around it">
           <span class="fold cal-heads-fold"><span class="fold-inner" id="calHeads"></span></span>
-          <span class="fold cal-before"><span class="fold-inner" id="calBefore"></span></span>
-          <span class="cal-row cal-current" id="calCurrent"></span>
-          <span class="fold cal-after"><span class="fold-inner" id="calAfter"></span></span>
+          <!-- the weeks scroll inside this, which clips them at its top and bottom edges -->
+          <span class="cal-weeks">
+            <span class="fold cal-before"><span class="fold-inner" id="calBefore"></span></span>
+            <span class="cal-row cal-current" id="calCurrent"></span>
+            <span class="fold cal-after"><span class="fold-inner" id="calAfter"></span></span>
+          </span>
           <!-- "chevron-down" from Lucide (lucide.dev), ISC licence -->
           <svg class="cal-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
         </button>

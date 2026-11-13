@@ -336,6 +336,17 @@ body.show-calendar .calendar{
 .calendar.expanded .cal-before,
 .calendar.expanded .cal-heads-fold{ grid-template-rows:1fr; }
 /* the earlier weeks open upwards: their fold's content sits at its bottom edge */
+/* The weeks: open and at rest, the folds stop clipping and this clips them all as one, at
+   its top and bottom, so the spare week either side can scroll in. */
+.cal-weeks{ display:flex; flex-direction:column; align-items:center; }
+.calendar.settled .cal-weeks{ overflow:clip; }
+.calendar.settled .cal-before > .fold-inner,
+.calendar.settled .cal-after > .fold-inner{ overflow:visible; }
+#calBefore, #calAfter{ position:relative; }
+.cal-buffer{ position:absolute; left:0; visibility:hidden; }
+.cal-buffer-top{ bottom:100%; }
+.cal-buffer-bottom{ top:100%; }
+.calendar.settled .cal-buffer{ visibility:visible; }
 .cal-before > .fold-inner{ display:flex; flex-direction:column; justify-content:flex-end; }
 .fold-inner{ display:flex; flex-direction:column; }
 

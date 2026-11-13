@@ -19,6 +19,11 @@ export function initFit() {
   const weekFolds = [...calendar.querySelectorAll('.fold')];
   let target = 1;
 
+  // An open fold's height: its rows', leaving out the spare weeks parked outside it.
+  const rowsHeight = (inner) => [...inner.children]
+    .filter((row) => !row.classList.contains('cal-buffer'))
+    .reduce((sum, row) => sum + row.offsetHeight, 0);
+
   // No squeeze on the first frame: the clock opens at the size it belongs at.
   root.classList.add('fit-instant');
 
@@ -36,7 +41,7 @@ export function initFit() {
     // The weeks' folds sit inside the slot, whose scrollHeight above has them as they are now.
     if (shown) {
       const open = calendar.classList.contains('expanded');
-      for (const fold of weekFolds) ahead += (open ? fold.firstElementChild.scrollHeight : 0) - fold.offsetHeight;
+      for (const fold of weekFolds) ahead += (open ? rowsHeight(fold.firstElementChild) : 0) - fold.offsetHeight;
     }
     // the column's size as if --fit were 1
     const height = (box.height + ahead) / current;

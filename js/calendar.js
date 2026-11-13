@@ -4,8 +4,9 @@ import { onTick, isoWeek } from './clock.js';
 // days gone by faded back and today in the accent. A click unfolds the weeks around it,
 // two before and seven after, enough for "what day is the 25th?" or
 // "Thursday, week 52?" in the middle of a call. Earlier weeks open upwards, later ones
-// downwards, so this week stays put while the rest arrive around it. Open, the wheel, a
-// trackpad or the arrow keys scroll it a week at a time (Home comes back to this week).
+// downwards, so this week stays put while the rest arrive around it. Open, it scrolls:
+// smoothly under a trackpad, a week a notch on a wheel, and by the arrow keys (Home comes
+// back to this week), always coming to rest on a whole week.
 // Another click, Esc, a click anywhere else, or a minute left alone folds it back to the
 // strip, and to this week.
 
@@ -65,12 +66,20 @@ function render(now, shift) {
   DAY_HEADS.forEach((d) => heads.append(cell('cal-head', d)));
   heads.append(cell('cal-month', ''));
 
-  const before = [];
+  // A spare week either side, just outside the clipped edges, ready to scroll into view.
+  const spare = (offset) => {
+    const row = weekRow(weekFrom(offset), today, { label: offset < 0 });
+    row.classList.add('cal-buffer', offset < 0 ? 'cal-buffer-top' : 'cal-buffer-bottom');
+    return row;
+  };
+
+  const before = [spare(-WEEKS_BEFORE - 1)];
   for (let w = -WEEKS_BEFORE; w < 0; w++) {
     before.push(weekRow(weekFrom(w), today, { label: w === -WEEKS_BEFORE, distance: -w }));
   }
   const after = [];
   for (let w = 1; w <= WEEKS_AFTER; w++) after.push(weekRow(weekFrom(w), today, { distance: w }));
+  after.push(spare(WEEKS_AFTER + 1));
 
   const current = document.getElementById('calCurrent');
   document.getElementById('calHeads').replaceChildren(heads);
@@ -80,44 +89,73 @@ function render(now, shift) {
   document.getElementById('calAfter').replaceChildren(...after);
 }
 
+// how long the folds take to open (--squeeze in style.css), after which it can scroll
+const UNFOLD_MS = 720;
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
 export function initCalendar() {
   const calendar = document.getElementById('calendar');
   const current = document.getElementById('calCurrent');
+  const moving = ['calBefore', 'calCurrent', 'calAfter'].map((id) => document.getElementById(id));
 
-  let shift = 0;
   let now = new Date();
 
-  // One week further on (1) or back (-1). Every row stays where it is and rolls its new
-  // week in from the way it's going, like an odometer, so nothing slides across the edges
-  // of the folds (which would clip it there) and no row is left empty mid-step.
-  function step(by) {
-    const next = Math.max(MIN_SHIFT, Math.min(MAX_SHIFT, shift + by));
-    if (next === shift) return;
-    const dir = Math.sign(next - shift);
-    shift = next;
-    render(now, shift);
-    const nudge = current.offsetHeight * 0.35;
-    for (const row of calendar.querySelectorAll('#calBefore .cal-row, #calCurrent, #calAfter .cal-row')) {
-      row.animate([{ transform: `translateY(${dir * nudge}px)`, opacity: 0.3 }, { transform: 'none', opacity: 1 }], {
-        duration: 170,
-        easing: 'cubic-bezier(0.33, 1, 0.68, 1)',
-      });
+  // The scroll: `pos` is where the weeks are drawn, in weeks from this one and fractions
+  // of one; `target` is where they're heading. Each frame closes part of the gap, so it
+  // glides and eases out. The rows are rebuilt only when the nearest whole week changes;
+  // in between, they're shifted by the fraction left over.
+  let shift = 0;
+  let pos = 0;
+  let target = 0;
+  let raf = 0;
+
+  function draw() {
+    const nearest = Math.round(pos);
+    if (nearest !== shift) {
+      shift = nearest;
+      render(now, shift);
     }
+    const y = -(pos - shift) * current.offsetHeight;
+    for (const el of moving) el.style.transform = Math.abs(y) < 0.01 ? '' : `translateY(${y}px)`;
+  }
+  function frame() {
+    const gap = target - pos;
+    pos = reducedMotion.matches || Math.abs(gap) < 0.002 ? target : pos + gap * 0.22;
+    draw();
+    raf = pos === target ? 0 : requestAnimationFrame(frame);
+  }
+  function scrollTo(to) {
+    target = Math.max(MIN_SHIFT, Math.min(MAX_SHIFT, to));
+    if (!raf) raf = requestAnimationFrame(frame);
+  }
+  function reset() {
+    cancelAnimationFrame(raf);
+    raf = 0;
+    pos = target = 0;
+    draw();
   }
 
   let idle = 0;
+  let settle = 0;
   function setExpanded(open) {
+    const was = expanded();
     calendar.classList.toggle('expanded', open);
     calendar.setAttribute('aria-expanded', String(open));
     clearTimeout(idle);
-    if (open) idle = setTimeout(() => setExpanded(false), IDLE_MS);
-    else if (shift !== 0) {
-      // folded, it's this week again
-      shift = 0;
-      render(now, shift);
+    if (open) {
+      idle = setTimeout(() => setExpanded(false), IDLE_MS);
+      // Once unfolded, the folds stop clipping and the weeks clip as one, so they can scroll.
+      if (!was) settle = setTimeout(() => calendar.classList.add('settled'), UNFOLD_MS);
+    } else {
+      clearTimeout(settle);
+      calendar.classList.remove('settled');
+      reset(); // folded, it's this week again
     }
   }
-  const expanded = () => calendar.classList.contains('expanded');
+  function expanded() {
+    return calendar.classList.contains('expanded');
+  }
+  const scrollable = () => calendar.classList.contains('settled');
   const keepOpen = () => {
     if (expanded()) setExpanded(true);
   };
@@ -131,34 +169,27 @@ export function initCalendar() {
     if (!expanded()) return;
     const by = { ArrowDown: 1, ArrowUp: -1, PageDown: 4, PageUp: -4 }[event.key];
     if (event.key === 'Escape') setExpanded(false);
-    else if (event.key === 'Home') step(-shift);
-    else if (by) step(by);
+    else if (!scrollable() && (by || event.key === 'Home')) return;
+    else if (event.key === 'Home') scrollTo(0);
+    else if (by) scrollTo(Math.round(target) + by);
     else return;
     event.preventDefault();
     keepOpen();
   });
 
-  // A wheel notch is a week; a trackpad's stream of small deltas adds up to one a row's
-  // height at a time, so the weeks follow the fingers.
-  let wheel = 0;
+  // The weeks follow a trackpad by the pixel, and a wheel a week a notch: any one event
+  // moves them a week at most. When the scrolling stops, they settle on the nearest week.
+  let rest = 0;
   calendar.addEventListener('wheel', (event) => {
     if (!expanded()) return;
     event.preventDefault();
+    if (!scrollable()) return;
     keepOpen();
     const row = current.offsetHeight || 30;
     const delta = event.deltaY * (event.deltaMode === 1 ? row : event.deltaMode === 2 ? row * 5 : 1);
-    // a wheel's notch arrives as one big delta: one week, whatever its size
-    if (Math.abs(delta) >= row) {
-      wheel = 0;
-      step(Math.sign(delta));
-      return;
-    }
-    wheel += delta;
-    if (Math.abs(wheel) >= row) {
-      const by = Math.sign(wheel);
-      wheel -= by * row;
-      step(by);
-    }
+    scrollTo(target + Math.max(-1, Math.min(1, delta / row)));
+    clearTimeout(rest);
+    rest = setTimeout(() => scrollTo(Math.round(target)), 120);
   }, { passive: false });
 
   // Switched off in settings: it comes back as the strip.
