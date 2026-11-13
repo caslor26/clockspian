@@ -48,6 +48,13 @@
         <span class="countdown-value" id="countdownValue"></span>
       </div>
 
+      <!-- This month, with the rest of the date and time, above the weather; js/calendar.js
+           fills it. The slot opens and closes its height, so switching it on or off
+           squeezes the clock smoothly. -->
+      <div class="calendar-slot">
+        <div class="calendar" id="calendar" aria-label="This month"></div>
+      </div>
+
       <div class="divider"></div>
 
       <div class="weather" id="weather">
@@ -65,12 +72,6 @@
           </div>
         </div>
         <div class="stale-dot" id="staleDot" title="Showing last known reading"></div>
-      </div>
-
-      <!-- This month, at the foot of the column; js/calendar.js fills it. The slot opens
-           and closes its height, so switching it on or off squeezes the clock smoothly. -->
-      <div class="calendar-slot">
-        <div class="calendar" id="calendar" aria-label="This month"></div>
       </div>
     </div>
 

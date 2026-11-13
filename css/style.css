@@ -296,7 +296,7 @@ body.show-week .date-row .week-part{ display:block; }
 
 /* ---- the calendar ---- */
 
-/* Last in the clock's column. The slot is always there, folded to nothing: no height, and
+/* Under the date (and countdown), above the weather. The slot is always there, folded to nothing: no height, and
    a margin that hands back the column's gap. Switched on, it unfolds to the calendar's
    height while js/fit.js eases the clock down to make room, so the two move as one. */
 .calendar-slot{
