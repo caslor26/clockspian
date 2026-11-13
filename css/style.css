@@ -290,10 +290,6 @@ body.no-weather .weather,
 body.no-place .divider,
 body.no-place .weather{ display:none; }
 
-/* Week number: a third part of the date line, after another dot */
-.date-row .week-part{ display:none; }
-body.show-week .date-row .week-part{ display:block; }
-
 /* ---- the calendar ---- */
 
 /* A fold: a grid with one row, folded to nothing (0fr) or open to its content (1fr), so
@@ -337,8 +333,10 @@ body.show-calendar .calendar{
 }
 .calendar:focus-visible{ outline:1px solid var(--fg-dim); outline-offset:8px; border-radius:6px; }
 .calendar.expanded .cal-after{ grid-template-rows:1fr; }
-.calendar.expanded .cal-before{ grid-template-rows:1fr; }
+.calendar.expanded .cal-before,
+.calendar.expanded .cal-heads-fold{ grid-template-rows:1fr; }
 /* the earlier weeks open upwards: their fold's content sits at its bottom edge */
+.cal-before, .cal-after{ overflow:hidden; } /* rows slide inside them as it scrolls */
 .cal-before > .fold-inner{ display:flex; flex-direction:column; justify-content:flex-end; }
 .fold-inner{ display:flex; flex-direction:column; }
 
@@ -355,13 +353,14 @@ body.show-calendar .calendar{
 }
 /* The rows around this week arrive one after another, outwards from it, and leave the
    other way round. */
-.cal-before .cal-row, .cal-after .cal-row{
+.cal-heads-fold .cal-row, .cal-before .cal-row, .cal-after .cal-row{
   opacity:0;
   transform:translateY(calc(var(--dir) * -0.6em));
   transition:opacity 0.2s ease, transform 0.2s ease;
 }
-.cal-before .cal-row{ --dir:-1; }
+.cal-heads-fold .cal-row, .cal-before .cal-row{ --dir:-1; }
 .cal-after .cal-row{ --dir:1; }
+.calendar.expanded .cal-heads-fold .cal-row,
 .calendar.expanded .cal-before .cal-row,
 .calendar.expanded .cal-after .cal-row{
   opacity:1;
@@ -381,7 +380,7 @@ body.show-calendar .calendar{
   border-right:1px solid var(--line);
 }
 /* this week's number, in the strip, is the one that matters */
-.cal-current .cal-week{ color:var(--accent); }
+.cal-current.this-week .cal-week{ color:var(--accent); }
 .cal-heads .cal-week{ border-right-color:transparent; }
 .cal-head{
   font-family:var(--font-stack);

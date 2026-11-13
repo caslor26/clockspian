@@ -25,7 +25,6 @@ export function initClock() {
   const timeEl = document.getElementById('time');
   const weekdayEl = document.getElementById('weekday');
   const dateEl = document.getElementById('date');
-  const weekEl = document.getElementById('week');
   const track = document.getElementById('secondsTrack');
 
   // The colon element is animated by CSS, so it has to survive between ticks —
@@ -47,7 +46,6 @@ export function initClock() {
     if (dayStamp !== lastDayStamp) {
       weekdayEl.textContent = WEEKDAYS[now.getDay()];
       dateEl.textContent = `${MONTHS[now.getMonth()]} ${now.getDate()}`;
-      weekEl.textContent = `Week ${isoWeek(now)}`;
       lastDayStamp = dayStamp;
     }
 

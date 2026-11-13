@@ -16,7 +16,7 @@ const STORAGE_KEY = 'clockspian.settings';
 const MODES = ['light', 'system', 'dark'];
 const systemDark = window.matchMedia('(prefers-color-scheme: dark)');
 
-const DEFAULTS = { scale: 1, blink: true, bar: true, date: true, week: false, calendar: false, weights: {}, theme: 'clockspian', mode: 'system', weather: false };
+const DEFAULTS = { scale: 1, blink: true, bar: true, date: true, calendar: false, weights: {}, theme: 'clockspian', mode: 'system', weather: false };
 
 // Settings saved before themes existed held a typeface, an accent and a Kal Studio
 // switch. Each typeface now lives in exactly one theme, so it alone decides the match.
@@ -177,7 +177,6 @@ function apply() {
   document.body.classList.toggle('no-blink', !state.blink);
   document.body.classList.toggle('no-bar', !state.bar);
   document.body.classList.toggle('no-date', !state.date);
-  document.body.classList.toggle('show-week', state.week);
   document.body.classList.toggle('show-calendar', state.calendar);
   document.body.classList.toggle('no-weather', !state.weather);
 }
@@ -214,7 +213,6 @@ export function initSettings() {
   const blinkSwitch = document.getElementById('blinkSwitch');
   const barSwitch = document.getElementById('barSwitch');
   const dateSwitch = document.getElementById('dateSwitch');
-  const weekSwitch = document.getElementById('weekSwitch');
   const calendarSwitch = document.getElementById('calendarSwitch');
   const modeSwitch = document.getElementById('modeSwitch');
   const themeRow = document.getElementById('themeChoices');
@@ -308,13 +306,12 @@ export function initSettings() {
   });
   showScale();
 
-  // --- blinking colon, bottom progress bar, date, week number, calendar ---
+  // --- blinking colon, bottom progress bar, date, calendar ---
 
   function syncSeconds() {
     blinkSwitch.setAttribute('aria-checked', String(state.blink));
     barSwitch.setAttribute('aria-checked', String(state.bar));
     dateSwitch.setAttribute('aria-checked', String(state.date));
-    weekSwitch.setAttribute('aria-checked', String(state.week));
     calendarSwitch.setAttribute('aria-checked', String(state.calendar));
   }
   blinkSwitch.addEventListener('click', () => {
@@ -329,11 +326,6 @@ export function initSettings() {
   });
   dateSwitch.addEventListener('click', () => {
     state.date = !state.date;
-    commit();
-    syncSeconds();
-  });
-  weekSwitch.addEventListener('click', () => {
-    state.week = !state.week;
     commit();
     syncSeconds();
   });

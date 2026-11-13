@@ -38,8 +38,6 @@
         <span id="weekday">—</span>
         <span class="dot"></span>
         <span id="date">—</span>
-        <span class="dot week-part"></span>
-        <span class="week-part" id="week"></span>
       </div>
 
       <div class="countdown" id="countdown" hidden>
@@ -54,6 +52,7 @@
            room as it goes; js/fit.js knows them all. -->
       <div class="calendar-slot fold">
         <button class="calendar" id="calendar" type="button" aria-expanded="false" aria-label="This week. Show the weeks around it">
+          <span class="fold cal-heads-fold"><span class="fold-inner" id="calHeads"></span></span>
           <span class="fold cal-before"><span class="fold-inner" id="calBefore"></span></span>
           <span class="cal-row cal-current" id="calCurrent"></span>
           <span class="fold cal-after"><span class="fold-inner" id="calAfter"></span></span>
@@ -145,12 +144,6 @@
     <section class="field">
       <span class="field-label">Date
         <button class="switch" id="dateSwitch" type="button" role="switch" aria-checked="true" aria-label="Date"><i></i></button>
-      </span>
-    </section>
-
-    <section class="field">
-      <span class="field-label">Week number
-        <button class="switch" id="weekSwitch" type="button" role="switch" aria-checked="false" aria-label="Week number"><i></i></button>
       </span>
     </section>
 

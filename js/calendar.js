@@ -4,14 +4,19 @@ import { onTick, isoWeek } from './clock.js';
 // days gone by faded back and today in the accent. A click unfolds the weeks around it,
 // two before and seven after, enough for "what day is the 25th?" or
 // "Thursday, week 52?" in the middle of a call. Earlier weeks open upwards, later ones
-// downwards, so this week stays put while the rest arrive around it. Another click, Esc,
-// a click anywhere else, or a minute left alone folds it back to the strip.
+// downwards, so this week stays put while the rest arrive around it. Open, the wheel, a
+// trackpad or the arrow keys scroll it a week at a time (Home comes back to this week).
+// Another click, Esc, a click anywhere else, or a minute left alone folds it back to the
+// strip, and to this week.
 
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const DAY_HEADS = ['M','T','W','T','F','S','S'];
 const WEEKS_BEFORE = 2;
 const WEEKS_AFTER = 7;
 const IDLE_MS = 60000;
+// how far the open calendar scrolls: a year back, two ahead
+const MIN_SHIFT = -52;
+const MAX_SHIFT = 104;
 
 function cell(className, text) {
   const el = document.createElement('span');
@@ -46,11 +51,13 @@ function weekRow(monday, today, { label = false, distance = 0 } = {}) {
   return row;
 }
 
-function render(now) {
+// `shift` weeks away from this one: scrolling the open calendar moves the whole run, so the
+// middle row (the strip, folded) is this week again only at 0.
+function render(now, shift) {
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const monday = new Date(today);
   monday.setDate(today.getDate() - ((today.getDay() + 6) % 7));
-  const weekFrom = (offset) => new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + offset * 7);
+  const weekFrom = (offset) => new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + (shift + offset) * 7);
 
   const heads = cell('cal-row cal-heads', '');
   heads.style.setProperty('--distance', String(WEEKS_BEFORE + 1));
@@ -58,51 +65,113 @@ function render(now) {
   DAY_HEADS.forEach((d) => heads.append(cell('cal-head', d)));
   heads.append(cell('cal-month', ''));
 
-  const before = [heads];
+  const before = [];
   for (let w = -WEEKS_BEFORE; w < 0; w++) {
     before.push(weekRow(weekFrom(w), today, { label: w === -WEEKS_BEFORE, distance: -w }));
   }
   const after = [];
   for (let w = 1; w <= WEEKS_AFTER; w++) after.push(weekRow(weekFrom(w), today, { distance: w }));
 
+  const current = document.getElementById('calCurrent');
+  document.getElementById('calHeads').replaceChildren(heads);
   document.getElementById('calBefore').replaceChildren(...before);
-  document.getElementById('calCurrent').replaceChildren(...weekRow(monday, today).childNodes);
+  current.replaceChildren(...weekRow(weekFrom(0), today).childNodes);
+  current.classList.toggle('this-week', shift === 0);
   document.getElementById('calAfter').replaceChildren(...after);
 }
 
 export function initCalendar() {
   const calendar = document.getElementById('calendar');
+  const current = document.getElementById('calCurrent');
+  const moving = ['calBefore', 'calCurrent', 'calAfter'].map((id) => document.getElementById(id));
+
+  let shift = 0;
+  let now = new Date();
+
+  // One week further on (1) or back (-1), the rows sliding up or down a row's height.
+  function step(by) {
+    const next = Math.max(MIN_SHIFT, Math.min(MAX_SHIFT, shift + by));
+    if (next === shift) return;
+    const dir = Math.sign(next - shift);
+    shift = next;
+    render(now, shift);
+    const row = current.offsetHeight;
+    for (const el of moving) {
+      el.animate([{ transform: `translateY(${dir * row}px)` }, { transform: 'none' }], {
+        duration: 180,
+        easing: 'cubic-bezier(0.33, 1, 0.68, 1)',
+      });
+    }
+  }
 
   let idle = 0;
-  function setExpanded(expanded) {
-    calendar.classList.toggle('expanded', expanded);
-    calendar.setAttribute('aria-expanded', String(expanded));
+  function setExpanded(open) {
+    calendar.classList.toggle('expanded', open);
+    calendar.setAttribute('aria-expanded', String(open));
     clearTimeout(idle);
-    if (expanded) idle = setTimeout(() => setExpanded(false), IDLE_MS);
+    if (open) idle = setTimeout(() => setExpanded(false), IDLE_MS);
+    else if (shift !== 0) {
+      // folded, it's this week again
+      shift = 0;
+      render(now, shift);
+    }
   }
   const expanded = () => calendar.classList.contains('expanded');
+  const keepOpen = () => {
+    if (expanded()) setExpanded(true);
+  };
 
   calendar.addEventListener('click', () => setExpanded(!expanded()));
-  calendar.addEventListener('pointermove', () => {
-    if (expanded()) setExpanded(true); // keeps it open while it's being read
-  });
+  calendar.addEventListener('pointermove', keepOpen); // stays open while it's being read
   document.addEventListener('click', (event) => {
     if (expanded() && !calendar.contains(event.target)) setExpanded(false);
   });
   document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && expanded()) setExpanded(false);
+    if (!expanded()) return;
+    const by = { ArrowDown: 1, ArrowUp: -1, PageDown: 4, PageUp: -4 }[event.key];
+    if (event.key === 'Escape') setExpanded(false);
+    else if (event.key === 'Home') step(-shift);
+    else if (by) step(by);
+    else return;
+    event.preventDefault();
+    keepOpen();
   });
+
+  // A wheel notch is a week; a trackpad's stream of small deltas adds up to one a row's
+  // height at a time, so the weeks follow the fingers.
+  let wheel = 0;
+  calendar.addEventListener('wheel', (event) => {
+    if (!expanded()) return;
+    event.preventDefault();
+    keepOpen();
+    const row = current.offsetHeight || 30;
+    const delta = event.deltaY * (event.deltaMode === 1 ? row : event.deltaMode === 2 ? row * 5 : 1);
+    // a wheel's notch arrives as one big delta: one week, whatever its size
+    if (Math.abs(delta) >= row) {
+      wheel = 0;
+      step(Math.sign(delta));
+      return;
+    }
+    wheel += delta;
+    if (Math.abs(wheel) >= row) {
+      const by = Math.sign(wheel);
+      wheel -= by * row;
+      step(by);
+    }
+  }, { passive: false });
+
   // Switched off in settings: it comes back as the strip.
   new MutationObserver(() => {
     if (!document.body.classList.contains('show-calendar') && expanded()) setExpanded(false);
   }).observe(document.body, { attributes: true, attributeFilter: ['class'] });
 
   let lastDay = null;
-  const update = (now) => {
-    const stamp = now.toDateString();
+  const update = (tick) => {
+    const stamp = tick.toDateString();
     if (stamp === lastDay) return;
     lastDay = stamp;
-    render(now);
+    now = tick;
+    render(now, shift);
   };
   update(new Date());
   onTick(update);
