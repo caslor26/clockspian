@@ -66,10 +66,13 @@
         </div>
         <div class="stale-dot" id="staleDot" title="Showing last known reading"></div>
       </div>
-    </div>
 
-    <!-- This month, beside the clock; js/calendar.js fills it, js/fit.js hides it when there's no room -->
-    <div class="calendar" id="calendar" aria-label="This month"></div>
+      <!-- This month, at the foot of the column; js/calendar.js fills it. The slot opens
+           and closes its height, so switching it on or off squeezes the clock smoothly. -->
+      <div class="calendar-slot">
+        <div class="calendar" id="calendar" aria-label="This month"></div>
+      </div>
+    </div>
 
     <div class="seconds-rail"><div class="seconds-track" id="secondsTrack"></div></div>
 
@@ -147,8 +150,6 @@
       <span class="field-label">Calendar
         <button class="switch" id="calendarSwitch" type="button" role="switch" aria-checked="false" aria-label="Calendar"><i></i></button>
       </span>
-      <!-- js/fit.js: shown while the window is too narrow for the calendar beside the clock -->
-      <p class="field-note calendar-note">No room beside the clock in a window this narrow. Make it wider and the calendar appears.</p>
     </section>
 
     <section class="field">

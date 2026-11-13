@@ -27,6 +27,10 @@
 /* Registered so it can transition: the clock glides between sizes instead of jumping.
    The duration and curve match the slider thumb's glide in js/settings.js. */
 @property --ui-scale{ syntax:'<number>'; inherits:true; initial-value:1; }
+/* --fit too: when the column grows or shrinks (the calendar coming and going), the clock
+   squeezes down or springs back instead of jumping. js/fit.js turns it off while the
+   window itself is being resized, and on the first frame. */
+@property --fit{ syntax:'<number>'; inherits:true; initial-value:1; }
 
 *{margin:0;padding:0;box-sizing:border-box;}
 html,body{
@@ -38,8 +42,12 @@ html,body{
   transition:background-color 0.4s ease, color 0.4s ease;
 }
 :root{
-  transition:background-color 0.4s ease, color 0.4s ease, --ui-scale 0.2s cubic-bezier(0.33, 1, 0.68, 1);
+  transition:background-color 0.4s ease, color 0.4s ease, --ui-scale 0.2s cubic-bezier(0.33, 1, 0.68, 1), --fit var(--squeeze);
 }
+/* a little give at the end, so the squeeze settles rather than stops */
+:root{ --squeeze:0.7s cubic-bezier(0.34, 1.25, 0.64, 1); }
+@media (prefers-reduced-motion:reduce){ :root{ --squeeze:0s; } }
+:root.fit-instant{ transition:background-color 0.4s ease, color 0.4s ease, --ui-scale 0.2s cubic-bezier(0.33, 1, 0.68, 1); }
 
 .stage{
   position:relative;
@@ -288,29 +296,34 @@ body.show-week .date-row .week-part{ display:block; }
 
 /* ---- the calendar ---- */
 
-/* With the calendar on, the stage becomes three columns: the clock keeps the middle one,
-   dead centre as ever, and the month sits in the middle of the room to its right. The
-   outer columns can shrink to nothing, so the calendar never nudges the clock. */
-body.show-calendar .stage{
+/* Last in the clock's column. The slot is always there, folded to nothing: no height, and
+   a margin that hands back the column's gap. Switched on, it unfolds to the calendar's
+   height while js/fit.js eases the clock down to make room, so the two move as one. */
+.calendar-slot{
   display:grid;
-  grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);
-  align-items:center;
-  justify-items:center;
+  grid-template-rows:0fr;
+  margin-top:calc(clamp(18px, 3vh, 34px) * var(--size) * -1);
+  transition:grid-template-rows var(--squeeze), margin-top var(--squeeze);
 }
-body.show-calendar .center{ grid-column:2; grid-row:1; }
-.calendar{ display:none; }
-body.show-calendar .calendar{
-  grid-column:3; grid-row:1;
+.calendar{
+  min-height:0;
+  overflow:hidden;
   display:flex;
   flex-direction:column;
   align-items:center;
-  gap:calc(14px * var(--size));
+  gap:calc(12px * var(--size));
   font-size:calc(clamp(9px,0.85vw,12px) * var(--size));
   color:var(--fg-dim);
-  transition:opacity 0.4s ease;
+  opacity:0;
+  transform:scale(0.96);
+  transition:opacity 0.3s ease, transform var(--squeeze);
 }
-/* js/fit.js: not enough room beside the clock. Still laid out, so it can be measured. */
-body.show-calendar .calendar.cramped{ visibility:hidden; opacity:0; }
+body.show-calendar .calendar-slot{ grid-template-rows:1fr; margin-top:0; }
+body.show-calendar .calendar{
+  opacity:1;
+  transform:none;
+  transition:opacity 0.45s ease 0.15s, transform var(--squeeze);
+}
 
 .calendar-title{
   letter-spacing:0.24em;
@@ -320,6 +333,9 @@ body.show-calendar .calendar.cramped{ visibility:hidden; opacity:0; }
   display:grid;
   grid-template-columns:repeat(8, 2.2em);
   grid-auto-rows:2.2em;
+  /* as much again on the right as the week column takes on the left, so the days, not the
+     days plus week numbers, sit on the clock's centre line */
+  padding-right:2.2em;
   place-items:center;
   font-family:var(--font-display);
   font-variant-numeric:tabular-nums lining-nums;
@@ -355,10 +371,6 @@ body.show-calendar .calendar.cramped{ visibility:hidden; opacity:0; }
   background:var(--accent);
   color:var(--bg);
 }
-
-/* the settings note that says why a switched-on calendar isn't showing */
-.calendar-note{ display:none; }
-body.show-calendar.calendar-cramped .calendar-note{ display:block; }
 
 /* ---- the opening ---- */
 
