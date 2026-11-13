@@ -83,22 +83,23 @@ function render(now, shift) {
 export function initCalendar() {
   const calendar = document.getElementById('calendar');
   const current = document.getElementById('calCurrent');
-  const moving = ['calBefore', 'calCurrent', 'calAfter'].map((id) => document.getElementById(id));
 
   let shift = 0;
   let now = new Date();
 
-  // One week further on (1) or back (-1), the rows sliding up or down a row's height.
+  // One week further on (1) or back (-1). Every row stays where it is and rolls its new
+  // week in from the way it's going, like an odometer, so nothing slides across the edges
+  // of the folds (which would clip it there) and no row is left empty mid-step.
   function step(by) {
     const next = Math.max(MIN_SHIFT, Math.min(MAX_SHIFT, shift + by));
     if (next === shift) return;
     const dir = Math.sign(next - shift);
     shift = next;
     render(now, shift);
-    const row = current.offsetHeight;
-    for (const el of moving) {
-      el.animate([{ transform: `translateY(${dir * row}px)` }, { transform: 'none' }], {
-        duration: 180,
+    const nudge = current.offsetHeight * 0.35;
+    for (const row of calendar.querySelectorAll('#calBefore .cal-row, #calCurrent, #calAfter .cal-row')) {
+      row.animate([{ transform: `translateY(${dir * nudge}px)`, opacity: 0.3 }, { transform: 'none', opacity: 1 }], {
+        duration: 170,
         easing: 'cubic-bezier(0.33, 1, 0.68, 1)',
       });
     }

@@ -336,7 +336,6 @@ body.show-calendar .calendar{
 .calendar.expanded .cal-before,
 .calendar.expanded .cal-heads-fold{ grid-template-rows:1fr; }
 /* the earlier weeks open upwards: their fold's content sits at its bottom edge */
-.cal-before, .cal-after{ overflow:hidden; } /* rows slide inside them as it scrolls */
 .cal-before > .fold-inner{ display:flex; flex-direction:column; justify-content:flex-end; }
 .fold-inner{ display:flex; flex-direction:column; }
 
