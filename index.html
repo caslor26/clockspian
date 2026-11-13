@@ -48,11 +48,18 @@
         <span class="countdown-value" id="countdownValue"></span>
       </div>
 
-      <!-- This month, with the rest of the date and time, above the weather; js/calendar.js
-           fills it. The slot opens and closes its height, so switching it on or off
-           squeezes the clock smoothly. -->
-      <div class="calendar-slot">
-        <div class="calendar" id="calendar" aria-label="This month"></div>
+      <!-- This week, as a strip under the date; js/calendar.js fills it. A click unfolds
+           the weeks around it, earlier ones upwards and later ones down, and folds them
+           away again. Each fold opens and closes its height, so the clock squeezes to make
+           room as it goes; js/fit.js knows them all. -->
+      <div class="calendar-slot fold">
+        <button class="calendar" id="calendar" type="button" aria-expanded="false" aria-label="This week. Show the weeks around it">
+          <span class="fold cal-before"><span class="fold-inner" id="calBefore"></span></span>
+          <span class="cal-row cal-current" id="calCurrent"></span>
+          <span class="fold cal-after"><span class="fold-inner" id="calAfter"></span></span>
+          <!-- "chevron-down" from Lucide (lucide.dev), ISC licence -->
+          <svg class="cal-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
       </div>
 
       <div class="divider"></div>

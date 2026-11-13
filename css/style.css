@@ -296,81 +296,132 @@ body.show-week .date-row .week-part{ display:block; }
 
 /* ---- the calendar ---- */
 
-/* Under the date (and countdown), above the weather. The slot is always there, folded to nothing: no height, and
-   a margin that hands back the column's gap. Switched on, it unfolds to the calendar's
-   height while js/fit.js eases the clock down to make room, so the two move as one. */
-.calendar-slot{
+/* A fold: a grid with one row, folded to nothing (0fr) or open to its content (1fr), so
+   its height eases open and shut. js/fit.js counts each at the height it's heading for. */
+.fold{
   display:grid;
   grid-template-rows:0fr;
+  transition:grid-template-rows var(--squeeze);
+}
+.fold > *{ min-height:0; overflow:hidden; }
+
+/* Under the date (and countdown), above the weather. Folded, the slot also hands back the
+   column's gap with a negative margin, so it takes up no room at all. */
+.calendar-slot{
   margin-top:calc(clamp(18px, 3vh, 34px) * var(--size) * -1);
   transition:grid-template-rows var(--squeeze), margin-top var(--squeeze);
 }
+body.show-calendar .calendar-slot{ grid-template-rows:1fr; margin-top:0; }
+
+/* The strip reads as a second line of the date: the same colour, the same tracking. */
 .calendar{
-  min-height:0;
-  overflow:hidden;
   display:flex;
   flex-direction:column;
   align-items:center;
-  gap:calc(12px * var(--size));
-  font-size:calc(clamp(9px,0.85vw,12px) * var(--size));
+  padding:0;
+  border:0;
+  background:none;
+  font:inherit;
+  font-size:calc(clamp(11px,1.15vw,15px) * var(--size));
   color:var(--fg-dim);
+  cursor:pointer;
   opacity:0;
   transform:scale(0.96);
   transition:opacity 0.3s ease, transform var(--squeeze);
+  -webkit-tap-highlight-color:transparent;
 }
-body.show-calendar .calendar-slot{ grid-template-rows:1fr; margin-top:0; }
 body.show-calendar .calendar{
   opacity:1;
   transform:none;
   transition:opacity 0.45s ease 0.15s, transform var(--squeeze);
 }
+.calendar:focus-visible{ outline:1px solid var(--fg-dim); outline-offset:8px; border-radius:6px; }
+.calendar.expanded .cal-after{ grid-template-rows:1fr; }
+.calendar.expanded .cal-before{ grid-template-rows:1fr; }
+/* the earlier weeks open upwards: their fold's content sits at its bottom edge */
+.cal-before > .fold-inner{ display:flex; flex-direction:column; justify-content:flex-end; }
+.fold-inner{ display:flex; flex-direction:column; }
 
-.calendar-title{
-  letter-spacing:0.24em;
-  text-transform:uppercase;
-}
-.calendar-grid{
+/* Every row: the week number, seven days, and a month's name where one starts. The month
+   column is as wide as the week column, so the days sit on the clock's centre line. */
+.cal-row{
   display:grid;
-  grid-template-columns:repeat(8, 2.2em);
-  grid-auto-rows:2.2em;
-  /* as much again on the right as the week column takes on the left, so the days, not the
-     days plus week numbers, sit on the clock's centre line */
-  padding-right:2.2em;
+  grid-template-columns:repeat(9, 2.3em);
+  height:2.3em;
   place-items:center;
   font-family:var(--font-display);
   font-variant-numeric:tabular-nums lining-nums;
   font-feature-settings:'tnum' 1, 'lnum' 1;
 }
-.calendar-head{
-  font-family:var(--font-stack);
-  font-size:0.85em;
-  letter-spacing:0.1em;
-  color:var(--fg-dim);
+/* The rows around this week arrive one after another, outwards from it, and leave the
+   other way round. */
+.cal-before .cal-row, .cal-after .cal-row{
+  opacity:0;
+  transform:translateY(calc(var(--dir) * -0.6em));
+  transition:opacity 0.2s ease, transform 0.2s ease;
 }
-/* the week numbers: a quiet column of their own, in the second accent */
-.calendar-week{
+.cal-before .cal-row{ --dir:-1; }
+.cal-after .cal-row{ --dir:1; }
+.calendar.expanded .cal-before .cal-row,
+.calendar.expanded .cal-after .cal-row{
+  opacity:1;
+  transform:none;
+  transition:
+    opacity 0.35s ease calc(var(--distance) * 35ms + 60ms),
+    transform 0.5s cubic-bezier(0.34, 1.4, 0.64, 1) calc(var(--distance) * 35ms + 60ms);
+}
+
+.cal-week{
   justify-self:stretch;
   align-self:stretch;
   display:grid;
   place-items:center;
-  font-size:0.85em;
+  font-size:0.8em;
   color:var(--accent-2);
   border-right:1px solid var(--line);
 }
-.calendar-day{
-  width:1.9em; height:1.9em;
+/* this week's number, in the strip, is the one that matters */
+.cal-current .cal-week{ color:var(--accent); }
+.cal-heads .cal-week{ border-right-color:transparent; }
+.cal-head{
+  font-family:var(--font-stack);
+  font-size:0.75em;
+  letter-spacing:0.1em;
+}
+.cal-day{
+  width:1.85em; height:1.85em;
   display:grid;
   place-items:center;
-  font-size:1.1em;
-  /* a step back from the date line's weight, so the clock keeps the stage */
-  color:color-mix(in srgb, var(--fg) 75%, transparent);
+  color:var(--fg-dim);
 }
-.calendar-day.past{ opacity:0.35; }
-.calendar-day.today{
+.cal-day.past{ opacity:0.4; }
+.cal-day.first{ color:var(--fg); }
+.cal-day.today{
   border-radius:50%;
   background:var(--accent);
   color:var(--bg);
 }
+.cal-month{
+  justify-self:start;
+  padding-left:0.6em;
+  font-family:var(--font-stack);
+  font-size:0.75em;
+  letter-spacing:0.16em;
+  text-transform:uppercase;
+  color:var(--accent-2);
+}
+
+/* A hint that there's more: shown, like the gear, only while the pointer moves, and
+   turned over once the weeks are open. */
+.cal-chevron{
+  width:1.1em; height:1.1em;
+  margin-top:0.1em;
+  opacity:0;
+  transition:opacity 0.5s ease, transform var(--squeeze);
+}
+body.pointer-active .cal-chevron{ opacity:0.4; }
+.calendar:hover .cal-chevron{ opacity:0.8; }
+.calendar.expanded .cal-chevron{ transform:rotate(180deg); }
 
 /* ---- the opening ---- */
 

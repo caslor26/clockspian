@@ -4,21 +4,19 @@
 // far enough that it all stays on screen, with a margin all round. A window with room to
 // spare stays at 1, so the Scale slider is untouched there.
 //
-// --fit transitions (see style.css), so when the calendar unfolds the clock squeezes down
-// to make room as it opens, and springs back as it folds away.
+// --fit transitions (see style.css), so when the calendar unfolds — switched on, or opened
+// from its strip to the weeks around — the clock squeezes down to make room as it opens,
+// and springs back as it folds away.
 
 // how much of the window's height and width the column may take up
 const ROOM = 0.86;
-// With the calendar on, the clock always steps down to this, even with room to spare, so
-// the month reads as part of the clock's group under a slightly smaller clock, not a
-// second thing crowding the bottom of the screen.
-const WITH_CALENDAR = 0.8;
 
 export function initFit() {
   const root = document.documentElement;
   const center = document.querySelector('.center');
   const slot = document.querySelector('.calendar-slot');
   const calendar = document.getElementById('calendar');
+  const weekFolds = [...calendar.querySelectorAll('.fold')];
   let target = 1;
 
   // No squeeze on the first frame: the clock opens at the size it belongs at.
@@ -28,17 +26,22 @@ export function initFit() {
     const box = center.getBoundingClientRect();
     if (!box.height) return;
     // Mid-squeeze, the column is drawn at the --fit of that moment, not the target, and the
-    // calendar's slot is part-way open. So measure at the current --fit, and count the slot
-    // at the height it is heading for rather than the height it has reached.
+    // calendar's folds are part-way open. So measure at the current --fit, and count each
+    // fold at the height it is heading for rather than the height it has reached.
     const current = parseFloat(getComputedStyle(root).getPropertyValue('--fit')) || 1;
     const gap = parseFloat(getComputedStyle(center).rowGap) || 0;
-    const slotNow = slot.offsetHeight + parseFloat(getComputedStyle(slot).marginTop) + gap;
     const shown = document.body.classList.contains('show-calendar');
-    const slotThen = shown ? calendar.scrollHeight + gap : 0;
+    let ahead = (shown ? calendar.scrollHeight + gap : 0)
+      - (slot.offsetHeight + parseFloat(getComputedStyle(slot).marginTop) + gap);
+    // The weeks' folds sit inside the slot, whose scrollHeight above has them as they are now.
+    if (shown) {
+      const open = calendar.classList.contains('expanded');
+      for (const fold of weekFolds) ahead += (open ? fold.firstElementChild.scrollHeight : 0) - fold.offsetHeight;
+    }
     // the column's size as if --fit were 1
-    const height = (box.height - slotNow + slotThen) / current;
+    const height = (box.height + ahead) / current;
     const width = box.width / current;
-    const next = Math.min(shown ? WITH_CALENDAR : 1, (innerHeight * ROOM) / height, (innerWidth * ROOM) / width);
+    const next = Math.min(1, (innerHeight * ROOM) / height, (innerWidth * ROOM) / width);
     if (Math.abs(next - target) < 0.005) return;
     target = next;
     root.style.setProperty('--fit', target.toFixed(3));
@@ -60,6 +63,8 @@ export function initFit() {
   // The calendar's switch flips a class on <body>; refit then, so the squeeze starts with
   // the unfolding rather than a frame or more behind it.
   new MutationObserver(refit).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+  // Likewise the calendar opening from its strip, or folding back.
+  new MutationObserver(refit).observe(calendar, { attributes: true, attributeFilter: ['class'] });
   refit();
   requestAnimationFrame(() => requestAnimationFrame(() => root.classList.remove('fit-instant')));
 }
