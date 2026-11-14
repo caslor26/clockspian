@@ -4,6 +4,7 @@ import { openWhatsNew } from './whatsnew.js';
 import { VERSION } from './version.js';
 import { getCountdown, setCountdown, onCountdownChange, countdownStatus } from './countdown.js';
 import { primeAudio } from './insane.js';
+import { shiftMood } from './splash.js';
 import { labelFamily, loadLabelFont } from './fonts.js';
 import { THEMES } from './themes.js';
 
@@ -114,16 +115,20 @@ export function onWeatherShownChange(listener) {
 // The mood, for js/zen.js, js/warp.js and js/insane.js, the same way.
 const moodListeners = new Set();
 
+// The mood the clock is showing. It trails the stored one by the length of the splash
+// that covers the change, so nothing changes in sight of it.
+let shownMood = state.mood;
+
 export function getMood() {
-  return state.mood;
+  return shownMood;
 }
 
 export function onMoodChange(listener) {
   moodListeners.add(listener);
 }
 
-export const isZen = () => state.mood === 'zen';
-export const isInsane = () => state.mood === 'insane';
+export const isZen = () => shownMood === 'zen';
+export const isInsane = () => shownMood === 'insane';
 
 const themeById = (id) => THEMES.find((t) => t.id === id) || THEMES[0];
 
@@ -203,8 +208,8 @@ function apply() {
   document.body.classList.toggle('no-date', !state.date);
   document.body.classList.toggle('show-calendar', state.calendar);
   document.body.classList.toggle('no-weather', !state.weather);
-  document.body.classList.toggle('zen-mode', state.mood === 'zen');
-  document.body.classList.toggle('insane-mode', state.mood === 'insane');
+  document.body.classList.toggle('zen-mode', shownMood === 'zen');
+  document.body.classList.toggle('insane-mode', shownMood === 'insane');
 }
 
 // Each theme's name is set in its own display face. Only the active theme's font is
@@ -668,12 +673,18 @@ export function initSettings() {
       button.setAttribute('aria-checked', String(button.dataset.mood === state.mood));
     });
   }
+  // The switch moves at once; the clock changes under a short splash (js/splash.js).
   function setMood(mood) {
     if (state.mood === mood) return;
     state.mood = mood;
-    commit();
+    save();
     syncMood();
-    moodListeners.forEach((listener) => listener(mood));
+    shiftMood(mood, () => {
+      if (shownMood === state.mood) return;
+      shownMood = state.mood;
+      apply();
+      moodListeners.forEach((listener) => listener(shownMood));
+    });
   }
   moodButtons.forEach((button) => {
     button.addEventListener('click', () => {

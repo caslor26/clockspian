@@ -10,6 +10,9 @@ import { isShowRunning } from './insane.js';
 //   every minute   a shockwave and a spray of sparks go out from the time
 //   every hour     two seconds of full warp, then it settles back to cruising
 //
+// And the progress bar is a lit fuse: it burns along the bottom edge throwing sparks off
+// its head, and goes up in a burst where it runs out at the end of the minute.
+//
 // Easy to live with on purpose: the full show (js/insane.js) is saved for a countdown.
 // With reduced motion asked for, it's a still starfield and nothing moves.
 
@@ -41,6 +44,7 @@ export function initWarp() {
   const ctx = canvas.getContext('2d');
   const timeEl = document.getElementById('time');
   const center = document.querySelector('.center');
+  const track = document.getElementById('secondsTrack');
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
 
   let W = 0;
@@ -56,6 +60,8 @@ export function initWarp() {
   let waves = [];
   let sparks = [];
   let warpAt = -1e9;
+  let embers = [];
+  let emberDebt = 0;
 
   function readLook() {
     const light = document.querySelector('meta[name="color-scheme"]')?.content === 'light';
@@ -173,6 +179,7 @@ export function initWarp() {
       ctx.stroke();
       return true;
     });
+    drawFuse(now, dt);
     ctx.globalAlpha = 1;
 
     // The figures: a kick each second that rings out in a few tenths, and the colour
@@ -186,6 +193,67 @@ export function initWarp() {
     timeEl.style.setProperty('--fringe', `${(1.5 + kick * 5 * big + warp * 6).toFixed(2)}px`);
     const s = warp * 9;
     center.style.transform = s > 0.05 ? `translate(${rand(-1, 1) * s}px, ${rand(-1, 1) * s}px)` : '';
+  }
+
+  // The fuse's head: a flickering hot glow where the bar has burnt to, spitting sparks up
+  // and back that arc over and fall. Embers from the end-of-minute burst live here too.
+  // On paper, white-hot and pale yellow vanish, so the light fire burns deeper.
+  const EMBER_COLOURS = { dark: ['#ffffff', '#ffe08a', '#ffb347', '#ff7a1a', '#e8264f'], light: ['#ff9a2e', '#ff6a1a', '#e8264f', '#c2410c'] };
+  function emit(x, y, count, spread) {
+    for (let i = 0; i < count; i++) {
+      embers.push({
+        x, y,
+        vx: spread ? rand(-1, 1) * spread : rand(-320, 90),
+        vy: spread ? rand(-1.6, -0.2) * spread : rand(-430, -90),
+        age: 0, life: rand(0.25, 0.75),
+        colour: pick(EMBER_COLOURS[look.light ? 'light' : 'dark']),
+      });
+    }
+  }
+  const pick = (list) => list[Math.floor(rand(0, list.length))];
+  function fuseHead() {
+    if (document.body.classList.contains('no-bar')) return null;
+    const box = track.getBoundingClientRect();
+    if (!box.height) return null;
+    return { x: box.right, y: box.top + box.height / 2, h: box.height };
+  }
+  function drawFuse(now, dt) {
+    const head = fuseHead();
+    if (head && head.x > 1 && dt > 0) {
+      emberDebt += dt * 140;
+      const count = Math.floor(emberDebt);
+      emberDebt -= count;
+      emit(head.x, head.y, count, 0);
+      const flicker = 0.75 + 0.25 * Math.sin(now / 37) * Math.sin(now / 91);
+      const r = (14 + head.h * 4) * flicker;
+      const glow = ctx.createRadialGradient(head.x, head.y, 0, head.x, head.y, r);
+      glow.addColorStop(0, 'rgba(255,255,255,0.95)');
+      glow.addColorStop(0.2, 'rgba(255,200,90,0.8)');
+      glow.addColorStop(0.55, 'rgba(255,110,30,0.35)');
+      glow.addColorStop(1, 'rgba(232,38,79,0)');
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = glow;
+      ctx.beginPath();
+      ctx.arc(head.x, head.y, r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.lineCap = 'round';
+    embers = embers.filter((ember) => {
+      ember.age += dt;
+      if (ember.age > ember.life) return false;
+      ember.vy += 900 * dt;
+      ember.vx *= Math.exp(-1.2 * dt);
+      ember.x += ember.vx * dt;
+      ember.y += ember.vy * dt;
+      ctx.globalAlpha = (1 - ember.age / ember.life) ** 0.7;
+      ctx.strokeStyle = ember.colour;
+      ctx.lineWidth = 1.6;
+      ctx.beginPath();
+      ctx.moveTo(ember.x - ember.vx * 0.02, ember.y - ember.vy * 0.02);
+      ctx.lineTo(ember.x, ember.y);
+      ctx.stroke();
+      return true;
+    });
   }
 
   function frame(now) {
@@ -256,6 +324,9 @@ export function initWarp() {
       });
     }
     if (date.getMinutes() === 0) warpAt = now;
+    // The fuse has burnt to the end: it goes up there, and a fresh one lights at the left.
+    const head = fuseHead();
+    if (head) emit(W - 2, head.y, 70, 520);
   });
 
   addEventListener('resize', () => {

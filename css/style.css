@@ -1218,6 +1218,13 @@ body.insane-mode .time{
   color:#fff;
   background:linear-gradient(90deg, #e8264f, #ff7a1a);
 }
+/* The progress bar as a lit fuse: it runs from the theme's accent into fire towards its
+   head, and glows. The head itself, and its sparks, are drawn on the sky by js/warp.js. */
+body.insane-mode .seconds-track{
+  background:linear-gradient(90deg, var(--accent) 0%, var(--accent) calc(100% - 140px), #e8264f calc(100% - 60px), #ff8a1f calc(100% - 16px), #ffe08a);
+  box-shadow:0 0 10px rgba(255, 122, 26, 0.55), 0 0 22px rgba(232, 38, 79, 0.35);
+}
+body.insane-mode .seconds-rail{ background:color-mix(in srgb, var(--line) 35%, transparent); }
 
 /* ---- the mood: zen, normal, insane ---- */
 
@@ -1278,6 +1285,67 @@ body.insane-mode .time{
   55%{ transform:scale(0.9) rotate(8deg); }
   100%{ transform:none; }
 }
+
+/* Between moods, a short splash: the mark draws itself with the name under it and the
+   mood it's going to, the clock changes behind it, and it lifts. It sits under the panel,
+   so the switch you just pressed stays in view. js/splash.js plays it. */
+.shift{
+  position:fixed;
+  inset:0;
+  z-index:4;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:clamp(18px, 2.4vh, 30px);
+  background:
+    radial-gradient(circle at 15% 85%, color-mix(in srgb, var(--accent-2) 16%, transparent), transparent 55%),
+    radial-gradient(circle at 85% 15%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 50%),
+    var(--bg);
+  pointer-events:none;
+  animation:shift-in 0.28s ease both, shift-out 0.42s ease 0.8s forwards;
+}
+.shift .splash-mark{ width:clamp(64px, 8vh, 110px); height:clamp(64px, 8vh, 110px); animation:splash-settle 0.7s cubic-bezier(0.33, 1, 0.68, 1) both; }
+.shift .splash-mark path{ stroke-dasharray:1; stroke-dashoffset:1; }
+.shift .brand-dial{ animation:splash-draw 0.42s cubic-bezier(0.65, 0, 0.35, 1) 0.05s forwards; }
+.shift .brand-hands{ animation:splash-draw 0.26s cubic-bezier(0.65, 0, 0.35, 1) 0.36s forwards; }
+.shift .brand-name{ font-size:clamp(13px, 1.7vh, 22px); opacity:0; animation:splash-rise 0.32s cubic-bezier(0.33, 1, 0.68, 1) 0.3s forwards; }
+.shift-mood{
+  margin-top:calc(clamp(18px, 2.4vh, 30px) * -0.55);
+  font-family:'Jost Label','Jost','Helvetica Neue',Arial,sans-serif;
+  font-size:clamp(10px, 1.2vh, 14px);
+  letter-spacing:0.32em;
+  margin-right:-0.32em;
+  text-transform:uppercase;
+  color:var(--accent);
+  opacity:0;
+  animation:splash-rise 0.32s cubic-bezier(0.33, 1, 0.68, 1) 0.4s forwards;
+}
+/* Into Zen it lingers and lifts slowly. */
+.shift.to-zen{ animation:shift-in 0.35s ease both, shift-out 0.75s ease 0.85s forwards; }
+/* Into Insane the mark rattles, its fringe splits red and cyan, and it lifts on a flash. */
+.shift.to-insane .shift-mood{ color:#ff5a3c; }
+.shift.to-insane .splash-mark{
+  animation:splash-settle 0.7s cubic-bezier(0.33, 1, 0.68, 1) both, shift-rattle 0.08s linear 0.5s 5;
+  filter:drop-shadow(2px 0 0 rgba(255, 40, 90, 0.8)) drop-shadow(-2px 0 0 rgba(0, 220, 255, 0.8));
+}
+.shift.to-insane::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:#fff;
+  opacity:0;
+  animation:shift-flash 0.5s ease-out 0.78s forwards;
+}
+.shift.to-insane{ animation:shift-in 0.2s ease both, shift-out 0.3s ease 0.85s forwards; }
+@keyframes shift-in{ from{ opacity:0; } }
+@keyframes shift-out{ to{ opacity:0; visibility:hidden; } }
+@keyframes shift-rattle{
+  25%{ transform:translate(-3px, 1px) rotate(-2deg); }
+  50%{ transform:translate(3px, -1px) rotate(2deg); }
+  75%{ transform:translate(-2px, -1px); }
+}
+@keyframes shift-flash{ 0%{ opacity:0; } 25%{ opacity:0.85; } 100%{ opacity:0; } }
 
 /* ---- zen mode ---- */
 
