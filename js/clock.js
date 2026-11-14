@@ -30,9 +30,12 @@ export function initClock() {
   // The colon element is animated by CSS, so it has to survive between ticks —
   // rewriting the whole .time innerHTML each second would restart the blink and
   // leave it permanently out of phase.
-  timeEl.innerHTML = '<span id="hours">--</span><span class="colon">:</span><span id="minutes">--</span>';
+  // The seconds are always there, but only Insane mode shows them.
+  timeEl.innerHTML = '<span id="hours">--</span><span class="colon">:</span><span id="minutes">--</span>'
+    + '<span class="secs"><span class="colon">:</span><span id="seconds">--</span></span>';
   const hoursEl = timeEl.querySelector('#hours');
   const minutesEl = timeEl.querySelector('#minutes');
+  const secondsEl = timeEl.querySelector('#seconds');
 
   let lastDayStamp = null;
 
@@ -41,6 +44,7 @@ export function initClock() {
 
     hoursEl.textContent = pad(now.getHours());
     minutesEl.textContent = pad(now.getMinutes());
+    secondsEl.textContent = pad(now.getSeconds());
 
     const dayStamp = now.toDateString();
     if (dayStamp !== lastDayStamp) {

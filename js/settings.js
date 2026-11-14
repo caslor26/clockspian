@@ -16,13 +16,22 @@ const STORAGE_KEY = 'clockspian.settings';
 const MODES = ['light', 'system', 'dark'];
 const systemDark = window.matchMedia('(prefers-color-scheme: dark)');
 
-const DEFAULTS = { scale: 1, blink: true, bar: true, date: true, calendar: false, zen: false, weights: {}, theme: 'clockspian', mode: 'system', weather: false };
+// The clock's mood. Zen lets the mark tell the time; Insane keeps it a little bit warp
+// and takes a countdown's arrival all the way.
+const MOODS = ['zen', 'normal', 'insane'];
+
+const DEFAULTS = { scale: 1, blink: true, bar: true, date: true, calendar: false, mood: 'normal', weights: {}, theme: 'clockspian', mode: 'system', weather: false };
 
 // Settings saved before themes existed held a typeface, an accent and a Kal Studio
 // switch. Each typeface now lives in exactly one theme, so it alone decides the match.
 const LEGACY_FONTS = { system: 'sand', inter: 'graphite', 'plex-mono': 'terminal', spectral: 'folio' };
 
 function migrate(stored) {
+  // Zen was a switch of its own in the first 1.9 builds.
+  if ('zen' in stored && !('mood' in stored)) {
+    const { zen, ...rest } = stored;
+    stored = { ...rest, mood: zen ? 'zen' : 'normal' };
+  }
   if ('theme' in stored || !('font' in stored || 'kal' in stored)) return stored;
   const { kal, kalMode, font, accent, ...rest } = stored;
   return {
@@ -73,6 +82,7 @@ function load() {
     loaded.theme = RENAMED_THEMES[loaded.theme] || loaded.theme;
     if (!THEMES.some((t) => t.id === loaded.theme)) loaded.theme = DEFAULTS.theme;
     if (!MODES.includes(loaded.mode)) loaded.mode = DEFAULTS.mode;
+    if (!MOODS.includes(loaded.mood)) loaded.mood = DEFAULTS.mood;
     return loaded;
   } catch {
     return { ...DEFAULTS, weights: {} };
@@ -101,16 +111,19 @@ export function onWeatherShownChange(listener) {
   weatherListeners.add(listener);
 }
 
-// Zen mode, for js/zen.js, the same way.
-const zenListeners = new Set();
+// The mood, for js/zen.js, js/warp.js and js/insane.js, the same way.
+const moodListeners = new Set();
 
-export function isZen() {
-  return state.zen;
+export function getMood() {
+  return state.mood;
 }
 
-export function onZenChange(listener) {
-  zenListeners.add(listener);
+export function onMoodChange(listener) {
+  moodListeners.add(listener);
 }
+
+export const isZen = () => state.mood === 'zen';
+export const isInsane = () => state.mood === 'insane';
 
 const themeById = (id) => THEMES.find((t) => t.id === id) || THEMES[0];
 
@@ -190,7 +203,8 @@ function apply() {
   document.body.classList.toggle('no-date', !state.date);
   document.body.classList.toggle('show-calendar', state.calendar);
   document.body.classList.toggle('no-weather', !state.weather);
-  document.body.classList.toggle('zen-mode', state.zen);
+  document.body.classList.toggle('zen-mode', state.mood === 'zen');
+  document.body.classList.toggle('insane-mode', state.mood === 'insane');
 }
 
 // Each theme's name is set in its own display face. Only the active theme's font is
@@ -226,7 +240,7 @@ export function initSettings() {
   const barSwitch = document.getElementById('barSwitch');
   const dateSwitch = document.getElementById('dateSwitch');
   const calendarSwitch = document.getElementById('calendarSwitch');
-  const zenSwitch = document.getElementById('zenSwitch');
+  const moodSwitch = document.getElementById('moodSwitch');
   const modeSwitch = document.getElementById('modeSwitch');
   const themeRow = document.getElementById('themeChoices');
   const weightInput = document.getElementById('weightInput');
@@ -247,8 +261,6 @@ export function initSettings() {
   const countdownDate = document.getElementById('countdownDate');
   const countdownTime = document.getElementById('countdownTime');
   const countdownNote = document.getElementById('countdownNote');
-  const insaneSwitch = document.getElementById('insaneSwitch');
-  const insaneNote = document.getElementById('insaneNote');
   const insaneWarning = document.getElementById('insaneWarning');
 
   panel.hidden = false; // the attribute only guards the pre-JS frame
@@ -319,14 +331,13 @@ export function initSettings() {
   });
   showScale();
 
-  // --- zen, blinking colon, bottom progress bar, date, calendar ---
+  // --- blinking colon, bottom progress bar, date, calendar ---
 
   function syncSeconds() {
     blinkSwitch.setAttribute('aria-checked', String(state.blink));
     barSwitch.setAttribute('aria-checked', String(state.bar));
     dateSwitch.setAttribute('aria-checked', String(state.date));
     calendarSwitch.setAttribute('aria-checked', String(state.calendar));
-    zenSwitch.setAttribute('aria-checked', String(state.zen));
   }
   blinkSwitch.addEventListener('click', () => {
     state.blink = !state.blink;
@@ -347,12 +358,6 @@ export function initSettings() {
     state.calendar = !state.calendar;
     commit();
     syncSeconds();
-  });
-  zenSwitch.addEventListener('click', () => {
-    state.zen = !state.zen;
-    commit();
-    syncSeconds();
-    zenListeners.forEach((listener) => listener(state.zen));
   });
   syncSeconds();
 
@@ -645,37 +650,59 @@ export function initSettings() {
     const note = COUNTDOWN_NOTES[countdownStatus()];
     countdownNote.textContent = note || '';
     countdownNote.hidden = !note;
-    insaneSwitch.setAttribute('aria-checked', String(countdown.insane));
-    insaneNote.hidden = !countdown.insane;
   }
-  // Switching the countdown off disarms Insane mode too: it's a dangerous setting, so
-  // a countdown switched back on starts polite and has to be talked into it again.
-  countdownSwitch.addEventListener('click', () => {
-    const on = !getCountdown().on;
-    setCountdown(on ? { on } : { on, insane: false });
-  });
+  countdownSwitch.addEventListener('click', () => setCountdown({ on: !getCountdown().on }));
   countdownName.addEventListener('input', () => setCountdown({ label: countdownName.value }));
   countdownDate.addEventListener('input', () => setCountdown({ date: countdownDate.value }));
   countdownTime.addEventListener('input', () => setCountdown({ time: countdownTime.value }));
   onCountdownChange(syncCountdown);
   syncCountdown();
 
-  // --- insane mode ---
-  // Off is one click. On has to get past the warning first.
+  // --- mood: zen, normal, insane ---
+  // Zen and Normal are one click. Insane has to get past the warning first.
 
-  insaneSwitch.addEventListener('click', () => {
-    if (getCountdown().insane) {
-      setCountdown({ insane: false });
-      return;
-    }
-    insaneWarning.returnValue = '';
-    insaneWarning.showModal();
+  const moodButtons = [...moodSwitch.querySelectorAll('button')];
+  function syncMood() {
+    moodSwitch.dataset.mood = state.mood;
+    moodButtons.forEach((button) => {
+      button.setAttribute('aria-checked', String(button.dataset.mood === state.mood));
+    });
+  }
+  function setMood(mood) {
+    if (state.mood === mood) return;
+    state.mood = mood;
+    commit();
+    syncMood();
+    moodListeners.forEach((listener) => listener(mood));
+  }
+  moodButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const mood = button.dataset.mood;
+      if (mood !== 'insane' || state.mood === 'insane') {
+        setMood(mood);
+        return;
+      }
+      insaneWarning.returnValue = '';
+      insaneWarning.showModal();
+    });
   });
+  // Arrows walk the three, the way a radio group does.
+  moodSwitch.addEventListener('keydown', (event) => {
+    const step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[event.key];
+    if (!step) return;
+    event.preventDefault();
+    const at = MOODS.indexOf(state.mood);
+    const next = moodButtons[Math.min(MOODS.length - 1, Math.max(0, at + step))];
+    next.focus();
+    next.click();
+  });
+  syncMood();
+
   // The click that says yes is the one the browser counts as permission to make noise
   // later, so the sound is unlocked right in it rather than in the close that follows.
   document.getElementById('insaneConfirm').addEventListener('click', primeAudio);
   insaneWarning.addEventListener('close', () => {
-    if (insaneWarning.returnValue === 'go') setCountdown({ insane: true });
+    if (insaneWarning.returnValue === 'go') setMood('insane');
   });
   // Kept from the document's outside-the-panel check, so the panel is still open behind
   // it to show the switch flip. A click on the <dialog> itself was on the backdrop.

@@ -12,6 +12,7 @@ import { playSplash } from './splash.js';
 import { initApp } from './app.js';
 import { initFit } from './fit.js';
 import { initZen } from './zen.js';
+import { initWarp } from './warp.js';
 
 const firstVisit = isFirstVisit();
 
@@ -22,6 +23,7 @@ initFit();
 initClock();
 initCalendar();
 initZen();
+initWarp();
 initCountdown();
 initInsane();
 initWeather();

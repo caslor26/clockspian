@@ -31,6 +31,8 @@
   </div>
 
   <div class="stage">
+    <!-- Insane mode's sky: js/warp.js flies through it behind the clock -->
+    <canvas class="warp" id="warp" aria-hidden="true"></canvas>
     <div class="center">
       <div class="time" id="time">--<span class="colon">:</span>--</div>
 
@@ -130,6 +132,31 @@
   </button>
 
   <aside class="panel" id="panel" aria-label="Settings" hidden>
+    <!-- The clock's mood: Zen (the mark tells the time), Normal, or Insane (always a bit
+         warp, and the full show when a countdown lands). The knob sits behind the pick. -->
+    <div class="mood-switch" id="moodSwitch" role="radiogroup" aria-label="Mode">
+      <i class="mood-knob"></i>
+      <!-- "leaf", "clock" and "zap" from Lucide (lucide.dev), ISC licence -->
+      <button type="button" role="radio" data-mood="zen">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+        </svg>
+        <span>Zen</span>
+      </button>
+      <button type="button" role="radio" data-mood="normal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+        </svg>
+        <span>Normal</span>
+      </button>
+      <button type="button" role="radio" data-mood="insane">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>
+        </svg>
+        <span>Insane</span>
+      </button>
+    </div>
+
     <h2 class="panel-title">Display</h2>
 
     <section class="field">
@@ -154,13 +181,6 @@
             </svg>
           </button>
         </div>
-      </span>
-    </section>
-
-    <!-- Swaps the clock for the slowly turning mark; a tap shows the time -->
-    <section class="field">
-      <span class="field-label">Zen mode
-        <button class="switch" id="zenSwitch" type="button" role="switch" aria-checked="false" aria-label="Zen mode"><i></i></button>
       </span>
     </section>
 
@@ -231,10 +251,6 @@
         <input class="text-input" id="countdownTime" type="time" aria-label="Time (optional)">
       </div>
       <p class="field-note" id="countdownNote" aria-live="polite" hidden></p>
-      <span class="field-label">
-        <span>Insane mode <span class="insane-armed" id="insaneNote" hidden>⚠️ Armed</span></span>
-        <button class="switch insane-switch" id="insaneSwitch" type="button" role="switch" aria-checked="false" aria-label="Insane mode"><i></i></button>
-      </span>
     </section>
 
     <!-- js/app.js shows this where the browser can install Clockspian as an app of its own -->
@@ -340,12 +356,12 @@
     </div>
   </dialog>
 
-  <!-- Asked before Insane mode is switched on; js/settings.js reads which button closed it -->
+  <!-- Asked before Insane is picked; js/settings.js reads which button closed it -->
   <dialog class="about warning" id="insaneWarning" aria-labelledby="insaneWarningTitle">
     <form method="dialog" class="warning-form">
       <div class="about-body">
         <h2 class="about-title" id="insaneWarningTitle"><span aria-hidden="true">⚠️</span> Are you sure?</h2>
-        <p class="about-lead">With Insane mode on, this clock stops being polite the moment your countdown hits zero.</p>
+        <p class="about-lead">In Insane mode this clock stops being polite. It rattles, it warps, and when a countdown hits zero it goes all the way.</p>
         <p class="about-small">Clockspian accepts no responsibility for spilled coffee.</p>
       </div>
       <div class="about-footer warning-actions">

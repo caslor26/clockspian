@@ -15,13 +15,16 @@ const STORAGE_KEY = 'clockspian.countdown';
 const AFTERGLOW_MS = 5 * 60 * 1000;
 const ARRIVAL_MS = 60 * 1000;
 
-// `insane` is Insane mode: see js/insane.js for what happens at zero.
-const DEFAULTS = { on: false, label: '', date: '', time: '', insane: false };
+// What happens at zero depends on the mood: polite in Normal, gentle in Zen (js/zen.js),
+// all the way in Insane (js/insane.js).
+const DEFAULTS = { on: false, label: '', date: '', time: '' };
 
 function load() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    return { ...DEFAULTS, ...(raw ? JSON.parse(raw) : {}) };
+    // `insane` was a per-countdown arming switch before Insane became a mood.
+    const { insane, ...stored } = raw ? JSON.parse(raw) : {};
+    return { ...DEFAULTS, ...stored };
   } catch {
     return { ...DEFAULTS };
   }

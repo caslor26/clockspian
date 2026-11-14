@@ -1,6 +1,7 @@
-import { getCountdown, setCountdown, onCountdownArrive } from './countdown.js';
+import { onCountdownArrive } from './countdown.js';
+import { isInsane } from './settings.js';
 
-// Insane mode. A countdown with it switched on arrives the usual way, and then the clock
+// Insane mode's big moment. A countdown landing in Insane arrives the usual way, and then the clock
 // trembles, blows apart, and goes to warp: everything on screen but the countdown's name
 // and its "now" is torn into letters that scatter, then come streaming back past as
 // debris while the name and the "now" are flown into through a starfield. Then a flash,
@@ -25,9 +26,12 @@ const SETTLE = 0.9;     // the white clears off the clock, back in place
 let audio = null;
 let running = false;
 
+// js/warp.js stands its own flight down while the show is on.
+export const isShowRunning = () => running;
+
 // Browsers only let a page make sound after someone has clicked or typed on it, so the
-// sound is set up in the click that switches Insane mode on, and kept ready by every
-// click or key after that — a reload, like the hourly update one, starts the count over.
+// sound is set up in the click that picks Insane, and kept ready by every click or key
+// after that — a reload, like the hourly update one, starts the count over.
 export function primeAudio() {
   const Context = window.AudioContext || window.webkitAudioContext;
   if (!Context) return;
@@ -36,15 +40,12 @@ export function primeAudio() {
 }
 
 export function initInsane() {
-  // One trip per arming: it disarms as it goes off, so the next countdown is polite
-  // unless someone switches it on again, warning and all.
-  onCountdownArrive((countdown) => {
-    if (!countdown.insane) return;
-    setCountdown({ insane: false });
-    goInsane();
+  // Every countdown that lands while the clock is Insane gets the whole show.
+  onCountdownArrive(() => {
+    if (isInsane()) goInsane();
   });
   const keepReady = () => {
-    if (getCountdown().insane) primeAudio();
+    if (isInsane()) primeAudio();
   };
   document.addEventListener('pointerdown', keepReady, true);
   document.addEventListener('keydown', keepReady, true);
@@ -540,6 +541,7 @@ function start(firstFrame) {
       overlay.remove();
       stage.classList.remove('insane-return');
       running = false;
+      document.dispatchEvent(new Event('insane-done'));
     }, SETTLE * 1000 + 100);
   }
 

@@ -1,4 +1,5 @@
-import { isZen, onZenChange } from './settings.js';
+import { isZen, onMoodChange } from './settings.js';
+import { onCountdownArrive } from './countdown.js';
 
 // Zen mode. For whoever finds the ticking clock a bit much: the time goes, and in its place
 // the mark itself tells it — the dial and its two hands, turning so slowly you never see
@@ -376,6 +377,25 @@ export function initZen() {
     zen.classList.remove('zen-digital');
   }
 
+  // A countdown landing in Zen is met gently: the mark blooms and turns once, and a ring
+  // of the accent spreads out from it and fades.
+  const box = svg.parentElement;
+  onCountdownArrive(() => {
+    if (!isZen()) return;
+    box.classList.remove('zen-arrive');
+    void box.offsetWidth; // so a second arrival starts it over
+    box.classList.add('zen-arrive');
+  });
+  box.addEventListener('animationend', (event) => {
+    if (event.animationName === 'zen-arrive') box.classList.remove('zen-arrive');
+  });
+
   if (isZen()) start();
-  onZenChange((on) => (on ? start() : stop()));
+  let wasZen = isZen();
+  onMoodChange(() => {
+    if (isZen() === wasZen) return;
+    wasZen = isZen();
+    if (wasZen) start();
+    else stop();
+  });
 }

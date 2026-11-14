@@ -52,13 +52,21 @@ Offline needs a secure origin, which `localhost` and the Vercel deploy both are.
 Move the mouse and a faint gear appears in the top-right corner; click it for the
 panel. `Esc` or a click anywhere outside closes it. Choices persist in `localStorage`.
 
-- **Zen mode** — off by default. For when a ticking clock is too much: the clock, date,
-  calendar, weather and bar fade out, and the mark itself tells the time, its two hands
-  turning too slowly to see, over pools of the theme's colours that drift as slowly.
-  A tap (or `Space` / `Enter`) reshapes the mark into the time for a few seconds; another
-  tap sends it straight back. The figures are single strokes in the mark's own line, so
-  the dial can unroll into them. All of it lives in `js/zen.js`; with reduced motion the
-  pools and the mark stand still and the time swaps in without the reshape.
+- **Mode** — the wide switch at the top of the panel: *Zen*, *Normal* (the default) or
+  *Insane*. It also decides what a countdown does when it lands.
+  - **Zen**: for when a ticking clock is too much. The clock, date, calendar, weather and
+    bar fade out, and the mark itself tells the time, its two hands turning too slowly to
+    see, over pools of the theme's colours that drift as slowly. A tap (or `Space` /
+    `Enter`) reshapes the mark into the time for a few seconds; another tap sends it
+    straight back. The figures are single strokes in the mark's own line, so the dial can
+    unroll into them. A countdown landing here makes the mark bloom and turn once. All of
+    it lives in `js/zen.js`; with reduced motion the pools and the mark stand still and
+    the time swaps in without the reshape.
+  - **Insane**: asks "Are you sure?" first. The clock flies slowly through a starfield in
+    the theme's colours, shows its seconds, runs edge to edge, and kicks every second
+    with a red and cyan fringe. Every minute a shockwave and sparks go out from the time;
+    on the hour, two seconds of full warp. That part lives in `js/warp.js`; with reduced
+    motion it's a still starfield. A countdown landing here gets the full show (below).
 - **Scale** — 50%–150%, for tuning to the screen it ends up on. Sizes the Zen mark too.
 - **Date** — on by default. Off leaves just the time, for the barest look.
 - **Blinking colon** — on by default. Off holds the colon steady.
@@ -100,8 +108,8 @@ panel. `Esc` or a click anywhere outside closes it. Choices persist in `localSto
   then steps aside. It stores the wall-clock date and time as typed, not the time
   remaining, so a closed tab is still right when it reopens. Stored separately, in
   `clockspian.countdown`.
-- **Insane mode** (under *Countdown*, only while it's on) — asks "Are you sure?" first.
-  On, the moment the countdown crosses zero the clock trembles, explodes into letters
+- **The full show** (a countdown landing in *Insane* mode) — the clock trembles,
+  explodes into letters
   and flies to warp: the countdown's name and "now" zoom in at the centre of a shaking
   starfield while the letters stream past as debris, to a synthesised boom, rocket roar
   and whooshes; ten seconds later a flash and the clock is back. It wears the setup it

@@ -1178,16 +1178,27 @@ body.panel-open .news{ opacity:0; pointer-events:none; }
 
 /* ---- insane mode ---- */
 
-/* Its switch runs hot once it's on. */
-.insane-switch[aria-checked=true]{ background:linear-gradient(90deg, #e8264f, #ff8a1f); }
-/* and its label says so */
-.insane-armed{
-  margin-left:8px;
-  font-size:11px;
-  letter-spacing:0.16em;
-  text-transform:uppercase;
-  white-space:nowrap;
-  color:#e8264f;
+/* The everyday part (js/warp.js): a sky flown through behind the clock, the seconds on,
+   and the figures run edge to edge with a red and cyan fringe that flares each second. */
+.warp{
+  position:absolute;
+  inset:0;
+  z-index:0;
+  width:100%; height:100%;
+  pointer-events:none;
+  opacity:0;
+  transition:opacity 0.8s ease;
+}
+body.insane-mode .warp{ opacity:1; }
+.time .secs{ display:none; }
+body.insane-mode .time .secs{ display:inline; }
+/* the seconds' colon holds still; the minutes' one does the blinking */
+.time .secs .colon{ animation:none; }
+body.insane-mode .time{
+  font-size:calc(clamp(72px, 14vw, 30vh) * var(--size) * var(--time-scale));
+  text-shadow:
+    var(--fringe, 1.5px) 0 0 rgba(255, 40, 90, 0.55),
+    calc(var(--fringe, 1.5px) * -1) 0 0 rgba(0, 220, 255, 0.55);
 }
 
 /* The warning before it: the release-notes dialog, narrower, with two ways out. */
@@ -1206,6 +1217,66 @@ body.panel-open .news{ opacity:0; pointer-events:none; }
 .about-close.danger{
   color:#fff;
   background:linear-gradient(90deg, #e8264f, #ff7a1a);
+}
+
+/* ---- the mood: zen, normal, insane ---- */
+
+/* At the top of the panel, wider and taller than light/dark: three icons with their
+   names, and the knob behind the picked one. Insane's runs hot. */
+.mood-switch{
+  position:relative;
+  flex-shrink:0;
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  padding:4px;
+  background:var(--line);
+  border-radius:16px;
+}
+.mood-knob{
+  position:absolute;
+  top:4px; bottom:4px; left:4px;
+  width:calc((100% - 8px) / 3);
+  border-radius:12px;
+  background:var(--bg);
+  box-shadow:0 1px 3px rgba(0,0,0,0.2);
+  transition:transform 0.25s cubic-bezier(0.3, 1.3, 0.5, 1), background 0.25s ease;
+}
+.mood-switch[data-mood=normal] .mood-knob{ transform:translateX(100%); }
+.mood-switch[data-mood=insane] .mood-knob{
+  transform:translateX(200%);
+  background:linear-gradient(90deg, #e8264f, #ff8a1f);
+}
+.mood-switch button{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+  height:56px;
+  padding:0;
+  font-family:inherit;
+  font-size:12px;
+  letter-spacing:0.04em;
+  color:var(--fg-dim);
+  background:none;
+  border:none;
+  border-radius:12px;
+  cursor:pointer;
+  transition:color 0.2s ease;
+}
+.mood-switch button:hover,
+.mood-switch button[aria-checked=true]{ color:var(--fg); }
+.mood-switch button[data-mood=insane][aria-checked=true]{ color:#fff; }
+.mood-switch svg{ width:20px; height:20px; }
+.mood-switch button:focus-visible{ outline:1px solid var(--fg-dim); outline-offset:-1px; }
+/* a little jolt as the knob lands on Insane */
+.mood-switch[data-mood=insane] button[data-mood=insane][aria-checked=true] svg{ animation:mood-zap 0.45s ease-out; }
+@keyframes mood-zap{
+  0%{ transform:scale(1); }
+  30%{ transform:scale(1.35) rotate(-12deg); }
+  55%{ transform:scale(0.9) rotate(8deg); }
+  100%{ transform:none; }
 }
 
 /* ---- zen mode ---- */
@@ -1281,8 +1352,33 @@ body:not(.zen-mode) .zen-clock{ animation-play-state:paused; }
 .zen-piece{ stroke:color-mix(in srgb, var(--fg) calc(var(--turn) * 100%), var(--accent)); }
 .zen-hand{ stroke:color-mix(in srgb, var(--accent) calc(var(--turn) * 100%), var(--fg)); }
 
+/* A countdown landing in Zen: the mark blooms and turns once, and a ring of the accent
+   spreads from it and fades. */
+.zen-clock-box::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  border-radius:50%;
+  border:2px solid var(--accent);
+  opacity:0;
+  pointer-events:none;
+}
+.zen-clock-box.zen-arrive{ animation:zen-arrive 2.6s cubic-bezier(0.45, 0, 0.2, 1); }
+.zen-clock-box.zen-arrive::after{ animation:zen-ring 2.6s cubic-bezier(0.2, 0.7, 0.2, 1); }
+@keyframes zen-arrive{
+  0%{ transform:translate(-50%, -50%); }
+  40%{ transform:translate(-50%, -50%) scale(1.14) rotate(200deg); }
+  100%{ transform:translate(-50%, -50%) rotate(360deg); }
+}
+@keyframes zen-ring{
+  0%{ transform:scale(0.9); opacity:0; }
+  15%{ opacity:0.7; }
+  100%{ transform:scale(2.6); opacity:0; }
+}
+
 @media (prefers-reduced-motion: reduce){
   .zen-pool, .zen-clock{ animation:none; }
+  .zen-clock-box.zen-arrive{ animation:none; }
 }
 
 /* What js/insane.js puts over the page: a canvas of space and debris that shakes, the
@@ -1310,6 +1406,7 @@ body:not(.zen-mode) .zen-clock{ animation-play-state:paused; }
   .panel{ transition:none; }
   .seconds-track{ transition:none; }
   html,body,.stage{ transition:none; }
-  .switch,.switch i,.mode-knob,.mode-switch button,.choice,.theme-dot{ transition:none; }
+  .switch,.switch i,.mode-knob,.mode-switch button,.mood-knob,.mood-switch button,.choice,.theme-dot{ transition:none; }
+  .mood-switch svg{ animation:none !important; }
   .about[open],.about[open]::backdrop,.news.shown{ animation:none; }
 }
