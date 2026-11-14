@@ -16,7 +16,7 @@ const STORAGE_KEY = 'clockspian.settings';
 const MODES = ['light', 'system', 'dark'];
 const systemDark = window.matchMedia('(prefers-color-scheme: dark)');
 
-const DEFAULTS = { scale: 1, blink: true, bar: true, date: true, calendar: false, weights: {}, theme: 'clockspian', mode: 'system', weather: false };
+const DEFAULTS = { scale: 1, blink: true, bar: true, date: true, calendar: false, zen: false, weights: {}, theme: 'clockspian', mode: 'system', weather: false };
 
 // Settings saved before themes existed held a typeface, an accent and a Kal Studio
 // switch. Each typeface now lives in exactly one theme, so it alone decides the match.
@@ -101,6 +101,17 @@ export function onWeatherShownChange(listener) {
   weatherListeners.add(listener);
 }
 
+// Zen mode, for js/zen.js, the same way.
+const zenListeners = new Set();
+
+export function isZen() {
+  return state.zen;
+}
+
+export function onZenChange(listener) {
+  zenListeners.add(listener);
+}
+
 const themeById = (id) => THEMES.find((t) => t.id === id) || THEMES[0];
 
 // The clock's weight as the theme was designed, and as it's set now. Each theme remembers
@@ -179,6 +190,7 @@ function apply() {
   document.body.classList.toggle('no-date', !state.date);
   document.body.classList.toggle('show-calendar', state.calendar);
   document.body.classList.toggle('no-weather', !state.weather);
+  document.body.classList.toggle('zen-mode', state.zen);
 }
 
 // Each theme's name is set in its own display face. Only the active theme's font is
@@ -214,6 +226,7 @@ export function initSettings() {
   const barSwitch = document.getElementById('barSwitch');
   const dateSwitch = document.getElementById('dateSwitch');
   const calendarSwitch = document.getElementById('calendarSwitch');
+  const zenSwitch = document.getElementById('zenSwitch');
   const modeSwitch = document.getElementById('modeSwitch');
   const themeRow = document.getElementById('themeChoices');
   const weightInput = document.getElementById('weightInput');
@@ -306,13 +319,14 @@ export function initSettings() {
   });
   showScale();
 
-  // --- blinking colon, bottom progress bar, date, calendar ---
+  // --- zen, blinking colon, bottom progress bar, date, calendar ---
 
   function syncSeconds() {
     blinkSwitch.setAttribute('aria-checked', String(state.blink));
     barSwitch.setAttribute('aria-checked', String(state.bar));
     dateSwitch.setAttribute('aria-checked', String(state.date));
     calendarSwitch.setAttribute('aria-checked', String(state.calendar));
+    zenSwitch.setAttribute('aria-checked', String(state.zen));
   }
   blinkSwitch.addEventListener('click', () => {
     state.blink = !state.blink;
@@ -333,6 +347,12 @@ export function initSettings() {
     state.calendar = !state.calendar;
     commit();
     syncSeconds();
+  });
+  zenSwitch.addEventListener('click', () => {
+    state.zen = !state.zen;
+    commit();
+    syncSeconds();
+    zenListeners.forEach((listener) => listener(state.zen));
   });
   syncSeconds();
 

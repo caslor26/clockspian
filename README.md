@@ -52,7 +52,14 @@ Offline needs a secure origin, which `localhost` and the Vercel deploy both are.
 Move the mouse and a faint gear appears in the top-right corner; click it for the
 panel. `Esc` or a click anywhere outside closes it. Choices persist in `localStorage`.
 
-- **Scale** — 50%–150%, for tuning to the screen it ends up on.
+- **Zen mode** — off by default. For when a ticking clock is too much: the clock, date,
+  calendar, weather and bar fade out, and the mark itself tells the time, its two hands
+  turning too slowly to see, over pools of the theme's colours that drift as slowly.
+  A tap (or `Space` / `Enter`) reshapes the mark into the time for a few seconds; another
+  tap sends it straight back. The figures are single strokes in the mark's own line, so
+  the dial can unroll into them. All of it lives in `js/zen.js`; with reduced motion the
+  pools and the mark stand still and the time swaps in without the reshape.
+- **Scale** — 50%–150%, for tuning to the screen it ends up on. Sizes the Zen mark too.
 - **Date** — on by default. Off leaves just the time, for the barest look.
 - **Blinking colon** — on by default. Off holds the colon steady.
 - **Bottom progress bar** — the thin line along the bottom edge that fills once a

@@ -11,6 +11,7 @@ import { watchForUpdates } from './updates.js';
 import { playSplash } from './splash.js';
 import { initApp } from './app.js';
 import { initFit } from './fit.js';
+import { initZen } from './zen.js';
 
 const firstVisit = isFirstVisit();
 
@@ -20,6 +21,7 @@ initSettings();
 initFit();
 initClock();
 initCalendar();
+initZen();
 initCountdown();
 initInsane();
 initWeather();

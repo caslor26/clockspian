@@ -1208,6 +1208,83 @@ body.panel-open .news{ opacity:0; pointer-events:none; }
   background:linear-gradient(90deg, #e8264f, #ff7a1a);
 }
 
+/* ---- zen mode ---- */
+
+/* The clock, its date, calendar, weather and bar all step back, and js/zen.js's layer
+   comes up in their place. Faded rather than removed, so the column keeps its layout and
+   js/fit.js its measurements, and switching back is a crossfade too. */
+.center,
+.seconds-rail{ transition:opacity 0.8s ease, visibility 0s linear 0s, background-color 0.4s ease; }
+body.zen-mode .center,
+body.zen-mode .seconds-rail{ opacity:0; visibility:hidden; transition:opacity 0.8s ease, visibility 0s linear 0.8s, background-color 0.4s ease; }
+
+.zen{
+  position:absolute;
+  inset:0;
+  z-index:3;
+  overflow:hidden;
+  opacity:0;
+  visibility:hidden;
+  transition:opacity 0.8s ease, visibility 0s linear 0.8s;
+  -webkit-tap-highlight-color:transparent;
+}
+body.zen-mode .zen{ opacity:1; visibility:visible; transition:opacity 0.8s ease, visibility 0s linear 0s; }
+
+/* Big soft pools of the theme's own colours, drifting so slowly that you only notice
+   they've moved when you look away and back. Still while Zen is off. */
+.zen-field{ position:absolute; inset:0; }
+.zen-pool{
+  position:absolute;
+  width:95vmax; height:95vmax;
+  border-radius:50%;
+  animation:zen-drift linear infinite alternate;
+  will-change:transform;
+}
+body:not(.zen-mode) .zen-pool{ animation-play-state:paused; }
+.zen-pool.a{ left:-35vmax; top:-40vmax; --dx:38vmax; --dy:22vmax; animation-duration:170s;
+  background:radial-gradient(circle, color-mix(in srgb, var(--accent-2) 55%, transparent) 0%, transparent 62%); }
+.zen-pool.b{ right:-40vmax; bottom:-45vmax; --dx:-30vmax; --dy:-26vmax; animation-duration:230s;
+  background:radial-gradient(circle, color-mix(in srgb, var(--accent) 30%, transparent) 0%, transparent 60%); }
+.zen-pool.c{ left:10vmax; bottom:-55vmax; --dx:24vmax; --dy:-34vmax; animation-duration:290s;
+  background:radial-gradient(circle, color-mix(in srgb, var(--accent-2) 40%, transparent) 0%, transparent 58%); }
+.zen-pool.d{ right:-20vmax; top:-50vmax; --dx:-36vmax; --dy:30vmax; animation-duration:350s;
+  background:radial-gradient(circle, color-mix(in srgb, var(--fg) 9%, transparent) 0%, transparent 55%); }
+@keyframes zen-drift{
+  from{ transform:translate(0, 0) scale(1); }
+  to{ transform:translate(var(--dx), var(--dy)) scale(1.18); }
+}
+
+/* The mark, sized with the Scale slider. As the time it runs wider than the dial, out
+   past the box on either side. */
+.zen-clock-box{
+  position:absolute;
+  left:50%; top:50%;
+  width:calc(min(40vmin, 380px) * var(--ui-scale));
+  aspect-ratio:1;
+  transform:translate(-50%, -50%);
+  cursor:pointer;
+}
+.zen-clock{
+  display:block;
+  width:100%; height:100%;
+  overflow:visible;
+  animation:zen-breathe 11s ease-in-out infinite alternate;
+  --turn:0;
+}
+body:not(.zen-mode) .zen-clock{ animation-play-state:paused; }
+@keyframes zen-breathe{ to{ transform:scale(1.025); } }
+/* Square ends and corners, as in the mark. Corners sharper than about 60° (the top of the
+   4, the foot of the 2) are cut flat rather than left to spike out. */
+.zen-clock path{ fill:none; stroke-linecap:butt; stroke-linejoin:miter; stroke-miterlimit:2; }
+/* As the mark: the dial in the accent, the hands in ink. As the time it turns over, the
+   way the clock colours its figures and colon. --turn follows the movement itself. */
+.zen-piece{ stroke:color-mix(in srgb, var(--fg) calc(var(--turn) * 100%), var(--accent)); }
+.zen-hand{ stroke:color-mix(in srgb, var(--accent) calc(var(--turn) * 100%), var(--fg)); }
+
+@media (prefers-reduced-motion: reduce){
+  .zen-pool, .zen-clock{ animation:none; }
+}
+
 /* What js/insane.js puts over the page: a canvas of space and debris that shakes, the
    countdown line flying in the middle of it, and a white sheet for the flashes. */
 .insane{ position:fixed; inset:0; z-index:50; }
