@@ -17,6 +17,36 @@
 // film has the stage; the older notes are still under the version number in settings.
 export const RELEASES = [
   {
+    version: '1.9.0',
+    date: '2026-11-16',
+    notes: [
+      {
+        group: 'New',
+        emoji: '📅',
+        title: 'A calendar',
+        text: 'Switch on Calendar and this week appears under the date, week number and all, with today in your theme’s colour. Click it and it unfolds into the weeks around it, two back and seven ahead. Scroll through them, then click again to fold it away.',
+      },
+      {
+        group: 'New',
+        emoji: '🍃',
+        title: 'Zen mode',
+        text: 'For when a ticking clock is a bit much. The logo itself tells the time, its hands turning too slowly to see, over colours that drift just as slowly. Tap anywhere and it reshapes into the time for a few seconds.',
+      },
+      {
+        group: 'New',
+        emoji: '⚡',
+        title: 'Insane, all the time',
+        text: 'Insane used to wait for a countdown. Now it’s a mode of its own. The clock flies through space, shows its seconds and rattles on every one of them, while the progress bar burns like a fuse. Every minute something goes off. Every hour, warp. Countdowns still get the whole show, every single time.',
+      },
+      {
+        group: 'Improved',
+        emoji: '🎚️',
+        title: 'Zen, Normal, Insane',
+        text: 'One switch at the top of settings sets the clock’s mood. It also decides what a countdown does when it lands: polite, gentle, or not polite at all. The old Insane switch under Countdown has retired, warning and all.',
+      },
+    ],
+  },
+  {
     version: '1.8.2',
     date: '2026-11-04',
     notes: [
