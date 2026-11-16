@@ -19,6 +19,7 @@ export const RELEASES = [
   {
     version: '1.9.0',
     date: '2026-11-16',
+    film: { src: '/media/clockspian-1.9.mp4', poster: '/media/clockspian-1.9.jpg' },
     notes: [
       {
         group: 'New',
