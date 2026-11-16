@@ -202,7 +202,7 @@ video{
   border:1px solid var(--line);
   border-radius:12px;
 }
-/* The countdown film has a portrait cut. On a portrait phone that one shows instead;
+/* The countdown and 1.9 films have portrait cuts. On a portrait phone that one shows instead;
    preload="none" means the hidden one never downloads. */
 .portrait{ display:none; }
 @media (orientation:portrait) and (max-width:600px){
@@ -379,8 +379,11 @@ video{
         <p class="when"><time datetime="2026-11-16">16 Nov 2026</time> · Version 1.9</p>
         <h3><span aria-hidden="true">🎚️</span>Zen, Normal or Insane</h3>
         <p>A calendar a click away, a Zen mode where the logo tells the time, and Insane mode all the time, not just at zero. Thirty-three seconds, sound on.</p>
-        <video controls playsinline preload="none" poster="/media/clockspian-1.9.jpg" width="1920" height="1080">
+        <video class="landscape" controls playsinline preload="none" poster="/media/clockspian-1.9.jpg" width="1920" height="1080">
           <source src="/media/clockspian-1.9.mp4" type="video/mp4">
+        </video>
+        <video class="portrait" controls playsinline preload="none" poster="/media/clockspian-1.9-vertical.jpg" width="1080" height="1920">
+          <source src="/media/clockspian-1.9-vertical.mp4" type="video/mp4">
         </video>
       </li>
 
