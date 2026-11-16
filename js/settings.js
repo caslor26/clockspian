@@ -266,7 +266,6 @@ export function initSettings() {
   const countdownDate = document.getElementById('countdownDate');
   const countdownTime = document.getElementById('countdownTime');
   const countdownNote = document.getElementById('countdownNote');
-  const insaneWarning = document.getElementById('insaneWarning');
 
   panel.hidden = false; // the attribute only guards the pre-JS frame
 
@@ -664,7 +663,6 @@ export function initSettings() {
   syncCountdown();
 
   // --- mood: zen, normal, insane ---
-  // Zen and Normal are one click. Insane has to get past the warning first.
 
   const moodButtons = [...moodSwitch.querySelectorAll('button')];
   function syncMood() {
@@ -688,13 +686,10 @@ export function initSettings() {
   }
   moodButtons.forEach((button) => {
     button.addEventListener('click', () => {
-      const mood = button.dataset.mood;
-      if (mood !== 'insane' || state.mood === 'insane') {
-        setMood(mood);
-        return;
-      }
-      insaneWarning.returnValue = '';
-      insaneWarning.showModal();
+      // The click that picks Insane is the one the browser counts as permission to make
+      // noise later, so the sound for a countdown's full show is unlocked right in it.
+      if (button.dataset.mood === 'insane') primeAudio();
+      setMood(button.dataset.mood);
     });
   });
   // Arrows walk the three, the way a radio group does.
@@ -708,21 +703,6 @@ export function initSettings() {
     next.click();
   });
   syncMood();
-
-  // The click that says yes is the one the browser counts as permission to make noise
-  // later, so the sound is unlocked right in it rather than in the close that follows.
-  document.getElementById('insaneConfirm').addEventListener('click', primeAudio);
-  insaneWarning.addEventListener('close', () => {
-    if (insaneWarning.returnValue === 'go') setMood('insane');
-  });
-  // Kept from the document's outside-the-panel check, so the panel is still open behind
-  // it to show the switch flip. A click on the <dialog> itself was on the backdrop.
-  insaneWarning.addEventListener('click', (event) => {
-    event.stopPropagation();
-    if (event.target === insaneWarning) insaneWarning.close();
-  });
-  // Likewise its Esc, which should close the warning and leave the panel open.
-  insaneWarning.addEventListener('keydown', (event) => event.stopPropagation());
 
   // --- panel visibility ---
 

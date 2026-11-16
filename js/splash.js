@@ -52,7 +52,7 @@ export function playSplash() {
 // the switch again mid-way finishes the first change at once and starts over. With
 // reduced motion the change is simply made.
 const MOOD_NAMES = { zen: 'Zen', normal: 'Normal', insane: 'Insane' };
-const SWAP_MS = { zen: 340, normal: 320, insane: 260 };
+const SWAP_MS = { zen: 460, normal: 380, insane: 320 };
 let shifting = null;
 
 export function shiftMood(mood, swap) {

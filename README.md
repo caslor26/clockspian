@@ -54,7 +54,7 @@ panel. `Esc` or a click anywhere outside closes it. Choices persist in `localSto
 
 - **Mode** — the wide switch at the top of the panel: *Zen*, *Normal* (the default) or
   *Insane*. It also decides what a countdown does when it lands. Each change plays under
-  a one-second splash (the mark, the name and the mood's name; `shiftMood` in
+  a two-second splash (the mark, the name and the mood's name; `shiftMood` in
   `js/splash.js`) that sits under the panel; into Insane it rattles and lifts on a flash.
   - **Zen**: for when a ticking clock is too much. The clock, date, calendar, weather and
     bar fade out, and the mark itself tells the time, its two hands turning too slowly to
@@ -64,7 +64,7 @@ panel. `Esc` or a click anywhere outside closes it. Choices persist in `localSto
     unroll into them. A countdown landing here makes the mark bloom and turn once. All of
     it lives in `js/zen.js`; with reduced motion the pools and the mark stand still and
     the time swaps in without the reshape.
-  - **Insane**: asks "Are you sure?" first. The clock flies slowly through a starfield in
+  - **Insane**: the clock flies slowly through a starfield in
     the theme's colours, shows its seconds, runs edge to edge, and kicks every second
     with a red and cyan fringe. Every minute a shockwave and sparks go out from the time;
     on the hour, two seconds of full warp. The progress bar is a lit fuse, throwing sparks

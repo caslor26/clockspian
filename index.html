@@ -356,21 +356,6 @@
     </div>
   </dialog>
 
-  <!-- Asked before Insane is picked; js/settings.js reads which button closed it -->
-  <dialog class="about warning" id="insaneWarning" aria-labelledby="insaneWarningTitle">
-    <form method="dialog" class="warning-form">
-      <div class="about-body">
-        <h2 class="about-title" id="insaneWarningTitle"><span aria-hidden="true">⚠️</span> Are you sure?</h2>
-        <p class="about-lead">In Insane mode this clock stops being polite. It rattles, it warps, and when a countdown hits zero it goes all the way.</p>
-        <p class="about-small">Clockspian accepts no responsibility for spilled coffee.</p>
-      </div>
-      <div class="about-footer warning-actions">
-        <button class="about-close secondary" value="cancel" autofocus>Keep it polite</button>
-        <button class="about-close danger" id="insaneConfirm" value="go">I’m sure. Go insane</button>
-      </div>
-    </form>
-  </dialog>
-
   <script type="module" src="js/main.js"></script>
 </body>
 </html>

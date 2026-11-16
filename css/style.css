@@ -1201,23 +1201,6 @@ body.insane-mode .time{
     calc(var(--fringe, 1.5px) * -1) 0 0 rgba(0, 220, 255, 0.55);
 }
 
-/* The warning before it: the release-notes dialog, narrower, with two ways out. */
-.about.warning{ width:min(440px, calc(100vw - 32px)); }
-.warning-form{ display:flex; flex-direction:column; flex:1 1 auto; min-height:0; }
-.warning p + p{ margin-top:10px; }
-.warning .about-small{ font-size:12.5px; font-style:italic; }
-.warning-actions{ display:flex; flex-wrap:wrap; gap:0 10px; }
-.warning-actions::before{ flex-basis:100%; }
-.warning-actions .about-close{ flex:1 1 0; }
-.about-close.secondary{
-  color:var(--fg);
-  background:none;
-  box-shadow:inset 0 0 0 1px var(--line);
-}
-.about-close.danger{
-  color:#fff;
-  background:linear-gradient(90deg, #e8264f, #ff7a1a);
-}
 /* The progress bar as a lit fuse: it runs from the theme's accent into fire towards its
    head, and glows. The head itself, and its sparks, are drawn on the sky by js/warp.js. */
 body.insane-mode .seconds-track{
@@ -1303,13 +1286,13 @@ body.insane-mode .seconds-rail{ background:color-mix(in srgb, var(--line) 35%, t
     radial-gradient(circle at 85% 15%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 50%),
     var(--bg);
   pointer-events:none;
-  animation:shift-in 0.28s ease both, shift-out 0.42s ease 0.8s forwards;
+  animation:shift-in 0.35s ease both, shift-out 0.55s ease 1.35s forwards;
 }
-.shift .splash-mark{ width:clamp(64px, 8vh, 110px); height:clamp(64px, 8vh, 110px); animation:splash-settle 0.7s cubic-bezier(0.33, 1, 0.68, 1) both; }
+.shift .splash-mark{ width:clamp(64px, 8vh, 110px); height:clamp(64px, 8vh, 110px); animation:splash-settle 1s cubic-bezier(0.33, 1, 0.68, 1) both; }
 .shift .splash-mark path{ stroke-dasharray:1; stroke-dashoffset:1; }
-.shift .brand-dial{ animation:splash-draw 0.42s cubic-bezier(0.65, 0, 0.35, 1) 0.05s forwards; }
-.shift .brand-hands{ animation:splash-draw 0.26s cubic-bezier(0.65, 0, 0.35, 1) 0.36s forwards; }
-.shift .brand-name{ font-size:clamp(13px, 1.7vh, 22px); opacity:0; animation:splash-rise 0.32s cubic-bezier(0.33, 1, 0.68, 1) 0.3s forwards; }
+.shift .brand-dial{ animation:splash-draw 0.6s cubic-bezier(0.65, 0, 0.35, 1) 0.1s forwards; }
+.shift .brand-hands{ animation:splash-draw 0.36s cubic-bezier(0.65, 0, 0.35, 1) 0.55s forwards; }
+.shift .brand-name{ font-size:clamp(13px, 1.7vh, 22px); opacity:0; animation:splash-rise 0.45s cubic-bezier(0.33, 1, 0.68, 1) 0.5s forwards; }
 .shift-mood{
   margin-top:calc(clamp(18px, 2.4vh, 30px) * -0.55);
   font-family:'Jost Label','Jost','Helvetica Neue',Arial,sans-serif;
@@ -1319,14 +1302,14 @@ body.insane-mode .seconds-rail{ background:color-mix(in srgb, var(--line) 35%, t
   text-transform:uppercase;
   color:var(--accent);
   opacity:0;
-  animation:splash-rise 0.32s cubic-bezier(0.33, 1, 0.68, 1) 0.4s forwards;
+  animation:splash-rise 0.45s cubic-bezier(0.33, 1, 0.68, 1) 0.65s forwards;
 }
 /* Into Zen it lingers and lifts slowly. */
-.shift.to-zen{ animation:shift-in 0.35s ease both, shift-out 0.75s ease 0.85s forwards; }
+.shift.to-zen{ animation:shift-in 0.45s ease both, shift-out 0.9s ease 1.4s forwards; }
 /* Into Insane the mark rattles, its fringe splits red and cyan, and it lifts on a flash. */
 .shift.to-insane .shift-mood{ color:#ff5a3c; }
 .shift.to-insane .splash-mark{
-  animation:splash-settle 0.7s cubic-bezier(0.33, 1, 0.68, 1) both, shift-rattle 0.08s linear 0.5s 5;
+  animation:splash-settle 1s cubic-bezier(0.33, 1, 0.68, 1) both, shift-rattle 0.08s linear 0.85s 6;
   filter:drop-shadow(2px 0 0 rgba(255, 40, 90, 0.8)) drop-shadow(-2px 0 0 rgba(0, 220, 255, 0.8));
 }
 .shift.to-insane::after{
@@ -1335,9 +1318,9 @@ body.insane-mode .seconds-rail{ background:color-mix(in srgb, var(--line) 35%, t
   inset:0;
   background:#fff;
   opacity:0;
-  animation:shift-flash 0.5s ease-out 0.78s forwards;
+  animation:shift-flash 0.55s ease-out 1.3s forwards;
 }
-.shift.to-insane{ animation:shift-in 0.2s ease both, shift-out 0.3s ease 0.85s forwards; }
+.shift.to-insane{ animation:shift-in 0.3s ease both, shift-out 0.4s ease 1.4s forwards; }
 @keyframes shift-in{ from{ opacity:0; } }
 @keyframes shift-out{ to{ opacity:0; visibility:hidden; } }
 @keyframes shift-rattle{
