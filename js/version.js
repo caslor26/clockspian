@@ -17,6 +17,17 @@
 // film has the stage; the older notes are still under the version number in settings.
 export const RELEASES = [
   {
+    version: '1.9.1',
+    date: '2026-11-27',
+    notes: [
+      {
+        emoji: '📦',
+        title: 'A new address',
+        text: 'Clockspian now lives at clockspian.lorenlabs.se. Same clock, nicer address. The old one still works for now, and points the way.',
+      },
+    ],
+  },
+  {
     version: '1.9.0',
     date: '2026-11-16',
     film: { src: '/media/clockspian-1.9.mp4', poster: '/media/clockspian-1.9.jpg' },

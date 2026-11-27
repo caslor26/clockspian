@@ -131,6 +131,16 @@
     What’s new
   </button>
 
+  <!-- only on the old address, clockspian.vercel.app (js/moved.js) -->
+  <button class="news" id="moved" type="button">
+    <!-- "map-pin" from Lucide (lucide.dev), ISC licence -->
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/>
+      <circle cx="12" cy="10" r="3"/>
+    </svg>
+    We’ve moved
+  </button>
+
   <aside class="panel" id="panel" aria-label="Settings" hidden>
     <!-- The clock's mood: Zen (the mark tells the time), Normal, or Insane (always a bit
          warp, and the full show when a countdown lands). The knob sits behind the pick. -->
@@ -353,6 +363,26 @@
     </div>
     <div class="about-footer">
       <button class="about-close" id="whatsNewClose" type="button" autofocus>Lovely, thanks</button>
+    </div>
+  </dialog>
+
+  <dialog class="about" id="movedDialog" aria-labelledby="movedTitle">
+    <div class="about-body">
+      <div class="dialog-brand small" aria-hidden="true">
+        <svg viewBox="0 0 64 64" fill="none" stroke-width="7">
+          <path class="brand-dial" d="M47.56 16.44A22 22 0 1 0 47.56 47.56"/>
+          <path class="brand-hands" d="M32 15V32H46"/>
+        </svg>
+        <span class="brand-name">Clockspian</span>
+      </div>
+      <h2 class="about-title" id="movedTitle"><span aria-hidden="true">📦</span> Clockspian has moved</h2>
+      <p class="about-lead">Same clock, new address: <strong>clockspian.lorenlabs.se</strong></p>
+      <p id="movedBookmark">Update your bookmark, or your home page if Clockspian is on it. This old address will stop working one day.</p>
+      <p id="movedApp">This app still opens the old address, and it can’t follow on its own. Open the new one, install the app again from settings there, then remove this one.</p>
+      <p>Your theme and settings stay here, so take a moment to pick them again over there.</p>
+    </div>
+    <div class="about-footer">
+      <a class="about-close" href="https://clockspian.lorenlabs.se/" target="_blank" rel="noopener">Take me there</a>
     </div>
   </dialog>
 
