@@ -1,6 +1,10 @@
 # Deploying Clockspian
 
-Live at <https://clockspian.vercel.app>.
+Live at <https://clockspian.lorenlabs.se>.
+
+It used to live at <https://clockspian.vercel.app>, which still serves the same deploy.
+There, and only there, a "We've moved" pill points people to the new address and asks
+anyone with the app installed to install it again from there (see `js/moved.js`).
 
 Source lives at <https://github.com/caslor26/clockspian>. The Vercel project is linked to
 that repo, so **every push to `main` redeploys automatically** — there is no manual
@@ -99,7 +103,7 @@ Open the URL and set it as the home page or new-tab page — Chrome:
 For a clean window with no browser chrome at all:
 
 ```bash
-chrome.exe --app=https://clockspian.vercel.app --start-fullscreen
+chrome.exe --app=https://clockspian.lorenlabs.se --start-fullscreen
 ```
 
 Nothing to install on that end, and no login.

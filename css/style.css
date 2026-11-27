@@ -901,6 +901,11 @@ input[type=range]:disabled{ opacity:0.35; cursor:default; }
 /* the open panel sits right below; the pill steps out of its way */
 body.panel-open .news{ opacity:0; pointer-events:none; }
 @keyframes news-in{ from{ opacity:0; transform:translateY(-4px); } }
+/* On the old address "We've moved" takes the pill's place (js/moved.js); release news
+   can wait for the new one. */
+body.moved #news{ display:none; }
+/* the moved dialog's way out is a link, dressed as the other dialogs' button */
+a.about-close{ display:block; text-align:center; text-decoration:none; box-sizing:border-box; }
 
 /* one block per release in the dialog, newest first, under a version-and-date line */
 .release-version{

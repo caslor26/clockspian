@@ -13,6 +13,7 @@ import { initApp } from './app.js';
 import { initFit } from './fit.js';
 import { initZen } from './zen.js';
 import { initWarp } from './warp.js';
+import { initMoved } from './moved.js';
 
 const firstVisit = isFirstVisit();
 
@@ -30,6 +31,7 @@ initWeather();
 initWhatsNew(firstVisit);
 watchForUpdates();
 initApp();
+initMoved();
 
 // The theme is painted, so the mark can draw in its colours.
 const splashDone = playSplash();
